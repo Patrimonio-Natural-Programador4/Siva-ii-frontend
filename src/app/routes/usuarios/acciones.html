@@ -1,0 +1,294 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Usuarios - {{ accion }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+          <mat-step [stepControl]="fGeneral.control">
+            <form novalidate #fGeneral="ngForm" class="usuarios-step-form">
+              <ng-template matStepLabel>Información general</ng-template>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="first_name" class="form-label">Primer nombre*</label>
+                  <input
+                    id="first_name"
+                    type="text"
+                    class="form-control"
+                    required
+                    maxlength="255"
+                    placeholder="Primer nombre"
+                    [(ngModel)]="usuarioData.first_name"
+                    name="first_name"
+                    #firstName="ngModel"
+                    [class.is-invalid]="firstName.invalid && (firstName.dirty || firstName.touched)"
+                  />
+                  @if (firstName.invalid && (firstName.dirty || firstName.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="other_name" class="form-label">Segundo nombre</label>
+                  <input
+                    id="other_name"
+                    type="text"
+                    class="form-control"
+                    maxlength="255"
+                    placeholder="Segundo nombre"
+                    [(ngModel)]="usuarioData.other_name"
+                    name="other_name"
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="last_name" class="form-label">Primer apellido*</label>
+                  <input
+                    id="last_name"
+                    type="text"
+                    class="form-control"
+                    required
+                    maxlength="255"
+                    placeholder="Primer apellido"
+                    [(ngModel)]="usuarioData.last_name"
+                    name="last_name"
+                    #lastName="ngModel"
+                    [class.is-invalid]="lastName.invalid && (lastName.dirty || lastName.touched)"
+                  />
+                  @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="other_last_name" class="form-label">Segundo apellido</label>
+                  <input
+                    id="other_last_name"
+                    type="text"
+                    class="form-control"
+                    maxlength="255"
+                    placeholder="Segundo apellido"
+                    [(ngModel)]="usuarioData.other_last_name"
+                    name="other_last_name"
+                  />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="identification_type" class="form-label">Tipo identificación*</label>
+                  <input
+                    id="identification_type"
+                    type="number"
+                    class="form-control"
+                    required
+                    placeholder="Tipo identificación"
+                    [(ngModel)]="usuarioData.identification_type"
+                    name="identification_type"
+                    #identificationType="ngModel"
+                    [class.is-invalid]="identificationType.invalid && (identificationType.dirty || identificationType.touched)"
+                  />
+                  @if (identificationType.invalid && (identificationType.dirty || identificationType.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="identification_number" class="form-label">Número identificación*</label>
+                  <input
+                    id="identification_number"
+                    type="number"
+                    class="form-control"
+                    required
+                    placeholder="Número identificación"
+                    [(ngModel)]="usuarioData.identification_number"
+                    name="identification_number"
+                    #identificationNumber="ngModel"
+                    [class.is-invalid]="identificationNumber.invalid && (identificationNumber.dirty || identificationNumber.touched)"
+                  />
+                  @if (identificationNumber.invalid && (identificationNumber.dirty || identificationNumber.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">Correo*</label>
+                  <input
+                    id="email"
+                    type="email"
+                    class="form-control"
+                    required
+                    maxlength="255"
+                    placeholder="Correo"
+                    [(ngModel)]="usuarioData.email"
+                    name="email"
+                    #email="ngModel"
+                    [class.is-invalid]="email.invalid && (email.dirty || email.touched)"
+                  />
+                  @if (email.invalid && (email.dirty || email.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="position" class="form-label">Cargo</label>
+                  <input
+                    id="position"
+                    type="text"
+                    class="form-control"
+                    maxlength="255"
+                    placeholder="Cargo"
+                    [(ngModel)]="usuarioData.position"
+                    name="position"
+                  />
+                </div>
+
+                <div class="col-12 mb-3">
+                  <mat-checkbox [(ngModel)]="usuarioData.is_active" name="is_active" color="primary">Usuario activo</mat-checkbox>
+                </div>
+              </div>
+
+              <div class="usuarios-step-actions">
+                <button mat-flat-button color="primary" type="button" matStepperNext [disabled]="!fGeneral.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fProgramas.control">
+            <form novalidate #fProgramas="ngForm" class="usuarios-step-form">
+              <ng-template matStepLabel>Programas</ng-template>
+
+              <div class="mb-3">
+                <mat-checkbox
+                  [checked]="asignarTodosProgramas"
+                  (change)="onAsignarTodosProgramasChange($event)"
+                  color="primary"
+                  name="asignar_todos_programas"
+                >
+                  Asignar todos los programas
+                </mat-checkbox>
+              </div>
+
+              <div class="usuarios-selection-grid">
+                @for (programa of programasCatalogo; track programa.id_programa) {
+                  <mat-checkbox
+                    [checked]="isProgramaSeleccionado(programa.id_programa)"
+                    (change)="onProgramaChange(programa.id_programa!, $event)"
+                    color="primary"
+                  >
+                    {{ programa.name }}
+                  </mat-checkbox>
+                }
+              </div>
+
+              <div class="usuarios-step-actions">
+                <button mat-stroked-button type="button" matStepperPrevious>Volver</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext>Continuar</button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fRoles.control">
+            <form novalidate #fRoles="ngForm" class="usuarios-step-form">
+              <ng-template matStepLabel>Roles</ng-template>
+
+              <div class="usuarios-roles-add">
+                <div class="usuarios-roles-add__field">
+                  <label for="id_rol" class="form-label">Rol</label>
+                  <select
+                    id="id_rol"
+                    class="form-select"
+                    required
+                    [(ngModel)]="idRolSeleccionado"
+                    name="id_rol"
+                    #idRol="ngModel"
+                    [class.is-invalid]="idRol.invalid && (idRol.dirty || idRol.touched)"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione el rol</option>
+                    @for (rol of rolesDisponibles; track rol.id_rol) {
+                      <option [ngValue]="rol.id_rol">{{ rol.rol }}</option>
+                    }
+                  </select>
+                  @if (idRol.invalid && (idRol.dirty || idRol.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Seleccione un rol.</span>
+                    </div>
+                  }
+                </div>
+
+                <button mat-flat-button color="primary" class="mt-4" type="button" (click)="asignarRol()" [disabled]="!idRolSeleccionado">
+                  <mat-icon>add</mat-icon>
+                  Agregar rol
+                </button>
+              </div>
+
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="rolesAsignados" class="app-data-table mat-elevation-z1">
+                  <ng-container matColumnDef="numero">
+                    <th mat-header-cell *matHeaderCellDef>No.</th>
+                    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="rol">
+                    <th mat-header-cell *matHeaderCellDef>Rol</th>
+                    <td mat-cell *matCellDef="let element">{{ element.rol }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                    <td mat-cell *matCellDef="let element">{{ element.descripcion || '-' }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button type="button" (click)="eliminarRol(element.id_rol)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="columnasRoles"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnasRoles"></tr>
+                </table>
+              </div>
+<!-- 
+              <div class="usuarios-role-hint">
+                Los roles se guardan en model_has_roles usando model_id = id del usuario.
+              </div> -->
+
+              <div class="usuarios-step-actions">
+                <button mat-stroked-button type="button" matStepperPrevious>Volver</button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button" (click)="guardarUsuario()" [disabled]="isLoading">
+          @if (isLoading) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

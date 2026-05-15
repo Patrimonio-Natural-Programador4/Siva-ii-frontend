@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Validar Usuario Corporativo</h2>
+
+<mat-dialog-content>
+  <div class="vum-container">
+    <mat-form-field appearance="outline" class="vum-field">
+      <mat-label>Nombre</mat-label>
+      <input matInput [value]="getNombreCompleto()" readonly />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="vum-field">
+      <mat-label>Correo</mat-label>
+      <input matInput [value]="usuario.email ?? ''" readonly />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="vum-field">
+      <mat-label>GUID Microsoft</mat-label>
+      <input matInput [value]="guidMsft() ?? 'Sin validar'" readonly />
+    </mat-form-field>
+
+    @if (mensajeError()) {
+      <div class="vum-alert vum-alert--error">
+        <mat-icon>warning</mat-icon>
+        <span>{{ mensajeError() }}</span>
+      </div>
+    }
+
+    @if (mensajeExito()) {
+      <div class="vum-alert vum-alert--success">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ mensajeExito() }}</span>
+      </div>
+    }
+
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      class="vum-field"
+      [disabled]="validando()"
+      (click)="validarCorreo()">
+      <mat-icon>{{ validando() ? 'hourglass_empty' : 'manage_accounts' }}</mat-icon>
+      {{ validando() ? 'Validando...' : 'Validar correo corporativo' }}
+    </button>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cerrar()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="!guidMsft() || guardando()"
+    (click)="guardar()">
+    {{ guardando() ? 'Guardando...' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

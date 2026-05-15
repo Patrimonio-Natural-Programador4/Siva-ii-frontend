@@ -1,0 +1,71 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Roles</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="app-data-card__content">
+        <div class="app-data-card__toolbar">
+          <button mat-flat-button color="primary" type="button" (click)="crearRol()">
+            <mat-icon>add</mat-icon>
+            Crear rol
+          </button>
+        </div>
+
+        <!-- <mat-form-field class="app-data-table__search">
+          <mat-label>Buscar rol</mat-label>
+          <input matInput (keyup)="buscarRoles($event)" placeholder="Nombre o descripción" />
+        </mat-form-field> -->
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2 text-right">
+          <small>Total de registros [{{ rolesTable.filteredData.length }}]</small>
+        </div>
+
+        <div class="app-data-table-wrapper">
+          <table mat-table [dataSource]="rolesTable" class="app-data-table mat-elevation-z1">
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef>No.</th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ getRowNumber(i) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef>Rol</th>
+              <td mat-cell *matCellDef="let row">{{ row.rol | uppercase }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef>Descripción</th>
+              <td mat-cell *matCellDef="let row">{{ row.descripcion | uppercase }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let row" class="app-data-table__actions">
+                <button mat-icon-button type="button" aria-label="Editar rol" (click)="editarRol(row)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell app-data-table__empty" [attr.colspan]="displayedColumns.length">
+                No se encontraron roles con ese criterio.
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions"
+          showFirstLastButtons
+          aria-label="Paginación de roles">
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="roles-card">
+      <mat-card-header>
+        <mat-card-title>Delegación de usuarios - {{ accion }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form novalidate #f="ngForm" class="roles-step-form">
+          <div class="roles-grid">
+            <div>
+              <label for="id_rol_aprobacion" class="form-label">Rol de aprobación*</label>
+              <select
+                id="id_rol_aprobacion"
+                class="form-select"
+                required
+                name="id_rol_aprobacion"
+                [(ngModel)]="delegacionData.id_rol_aprobacion"
+                (change)="filtrarUsuarios()"
+              >
+                <option [ngValue]="null" disabled>Seleccione el rol de aprobación</option>
+                @for (rol of listados[1]?.lista_generica ?? []; track rol.identity) {
+                  <option [ngValue]="rol.identity">{{ rol.valor }}</option>
+                }
+              </select>
+            </div>
+
+            <div>
+              <label for="id_usuario" class="form-label">Usuario de aprobación*</label>
+              <select id="id_usuario" class="form-select" required name="id_usuario" [(ngModel)]="delegacionData.id_usuario">
+                <option [ngValue]="null" disabled>Seleccione el usuario de aprobación</option>
+                @for (usuario of usuariosFiltro; track usuario.identity) {
+                  <option [ngValue]="usuario.identity">{{ usuario.valor }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="roles-modulo-add mt-3">
+            <div class="roles-modulo-add__field">
+              <label for="id_usuario_delegado" class="form-label">Asignar usuario</label>
+              <select id="id_usuario_delegado" class="form-select" name="id_usuario_delegado" [(ngModel)]="idUsuarioDelegado">
+                <option [ngValue]="null" disabled>Seleccione el usuario</option>
+                @for (usuario of usuariosList; track usuario.identity) {
+                  <option [ngValue]="usuario.identity">{{ usuario.valor }}</option>
+                }
+              </select>
+            </div>
+
+            <button mat-flat-button color="primary" class="mt-4" type="button" (click)="asignarUsuario()" [disabled]="idUsuarioDelegado === null">
+              <mat-icon>add</mat-icon>
+              Asignar usuario
+            </button>
+          </div>
+
+          <div class="app-data-table-wrapper">
+            <table mat-table [dataSource]="delegacionData.usuarios_delegados || []" class="app-data-table mat-elevation-z1">
+              <ng-container matColumnDef="posicion">
+                <th mat-header-cell *matHeaderCellDef>No.</th>
+                <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button type="button" (click)="eliminarUsuario(element.id_usuario)">
+                    <mat-icon class="mat-icon-danger">delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+            </table>
+          </div>
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button" (click)="guardarDelegacion()" [disabled]="isLoading || !f.valid">
+          @if (isLoading) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "dashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "usuarios",
+      "name": "usuarios",
+      "type": "link",
+      "icon": "people"     
+    },
+    {
+      "route": "roles",
+      "name": "roles",
+      "type": "link",
+      "icon": "people"     
+    },
+    {
+      "route": "programas",
+      "name": "programas",
+      "type": "link",
+      "icon": "people"     
+    },
+    {
+      "route": "design",
+      "name": "administracion",
+      "type": "sub",
+      "icon": "color_lens",
+      "children": [
+        {
+          "route": "colors",
+          "name": "usuarios",
+          "type": "link",
+          "icon": "colorize"
+        }
+      ]
+    },
+    {
+      "route": "flujos-aprobacion",
+      "name": "flujos-aprobacion",
+      "type": "sub",
+      "icon": "color_lens",
+      "children": [
+        {
+          "route": "listar",
+          "name": "flujos",
+          "type": "link",
+          "icon": "colorize"
+        },
+        {
+          "route": "roles",
+          "name": "roles",
+          "type": "link",
+          "icon": "colorize"
+        }
+      ]
+    }
+  ]
+}
+
+

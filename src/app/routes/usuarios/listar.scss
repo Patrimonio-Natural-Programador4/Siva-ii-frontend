@@ -1,0 +1,39 @@
+.app-data-card__toolbar {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 1rem;
+}
+
+.app-data-table__search {
+	width: min(100%, 420px);
+}
+
+.app-data-table {
+	width: 100%;
+}
+
+.app-data-table__actions {
+	width: 88px;
+}
+
+.app-data-table__empty {
+	padding: 1rem;
+	text-align: center;
+}
+
+mat-paginator {
+	margin-top: 1rem;
+}
+
+.fila-sin-guid {
+	background-color: rgba(244, 67, 54, 0.07);
+
+	td {
+		color: #b71c1c;
+	}
+}
+
+.btn-warning-guid {
+	color: #e65100;
+}
+

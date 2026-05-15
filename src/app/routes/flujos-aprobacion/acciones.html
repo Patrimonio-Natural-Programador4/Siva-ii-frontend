@@ -1,0 +1,149 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="roles-card">
+      <mat-card-header>
+        <mat-card-title>Flujos de aprobación - {{ accion }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+          <mat-step [stepControl]="fGeneral.control">
+            <form novalidate #fGeneral="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Información general</ng-template>
+
+              <div class="roles-form-stack">
+                <div class="mb-2">
+                  <label for="nombre" class="form-label">Nombre del flujo*</label>
+                  <input
+                    id="nombre"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre del flujo"
+                    required
+                    [(ngModel)]="flujoData.nombre"
+                    name="nombre"
+                    maxlength="255"
+                    #nombre="ngModel"
+                    [class.is-invalid]="nombre.invalid && (nombre.dirty || nombre.touched)"
+                  />
+                  @if (nombre.invalid && (nombre.dirty || nombre.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_categoria" class="form-label">Categoría*</label>
+                  <select id="id_categoria" class="form-select" required [(ngModel)]="flujoData.id_categoria" name="id_categoria">
+                    <option [ngValue]="null" disabled>Seleccione la categoría</option>
+                    @for (categoria of listados[1]?.lista_generica ?? []; track categoria.identity) {
+                      <option [ngValue]="categoria.identity">{{ categoria.valor }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="descripcion" class="form-label">Descripción</label>
+                  <textarea
+                    id="descripcion"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Descripción del flujo"
+                    [(ngModel)]="flujoData.descripcion"
+                    name="descripcion"
+                    maxlength="255"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="roles-step-actions">
+                <button mat-flat-button color="primary" type="button" matStepperNext [disabled]="!fGeneral.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fCount.control">
+            <form novalidate #fCount="ngForm">
+              <input type="hidden" required name="numeroRolesAsignados" [(ngModel)]="numeroRolesAsignados" />
+            </form>
+
+            <form novalidate #fRutas="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Crear ruta de aprobación</ng-template>
+
+              <div class="roles-modulo-add">
+                <div class="roles-modulo-add__field">
+                  <label for="id_rol_aprobacion" class="form-label">Rol de aprobación</label>
+                  <select
+                    id="id_rol_aprobacion"
+                    class="form-select"
+                    required
+                    [(ngModel)]="flujoRuta.id_rol_aprobacion"
+                    name="id_rol_aprobacion"
+                    #idRolAprobacion="ngModel"
+                    [class.is-invalid]="idRolAprobacion.invalid && (idRolAprobacion.dirty || idRolAprobacion.touched)"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione el rol</option>
+                    @for (rol of listaRoles; track rol.identity) {
+                      <option [ngValue]="rol.identity">{{ rol.valor }}</option>
+                    }
+                  </select>
+                </div>
+
+                <button mat-flat-button color="primary" class="mt-4" type="button" (click)="asignarRol()" [disabled]="!fRutas.valid">
+                  <mat-icon>add</mat-icon>
+                  Asignar rol
+                </button>
+              </div>
+
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="flujoData.rutas || []" class="app-data-table mat-elevation-z1">
+                  <ng-container matColumnDef="posicion">
+                    <th mat-header-cell *matHeaderCellDef>Orden</th>
+                    <td mat-cell *matCellDef="let element">{{ element.orden }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="rol">
+                    <th mat-header-cell *matHeaderCellDef>Rol</th>
+                    <td mat-cell *matCellDef="let element">{{ element.rol }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                    <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button type="button" (click)="eliminarRuta(element.id_ruta)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+                </table>
+              </div>
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button" (click)="guardarFlujo()" [disabled]="isLoading">
+          @if (isLoading) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

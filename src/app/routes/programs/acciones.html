@@ -1,0 +1,73 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>{{ accion }} Programa</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form novalidate #fPrograma="ngForm" class="programs-form">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">Nombre del programa*</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                placeholder="Nombre del programa"
+                required
+                [(ngModel)]="programaData.name"
+                name="name"
+                maxlength="255"
+                #name="ngModel"
+                [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+              />
+              @if (name.invalid && (name.dirty || name.touched)) {
+                <div class="invalid-feedback d-block">
+                  <span class="text-danger">Este campo es requerido.</span>
+                </div>
+              }
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="code" class="form-label">Código</label>
+              <input
+                id="code"
+                type="text"
+                class="form-control"
+                placeholder="Código del programa"
+                [(ngModel)]="programaData.code"
+                name="code"
+                maxlength="100"
+              />
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea
+                id="description"
+                class="form-control"
+                rows="3"
+                placeholder="Descripción del programa"
+                [(ngModel)]="programaData.description"
+                name="description"
+                maxlength="255"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button" (click)="guardarPrograma()" [disabled]="isLoading || !fPrograma.valid">
+          @if (isLoading) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

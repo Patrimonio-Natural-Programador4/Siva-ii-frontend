@@ -1,0 +1,86 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Usuarios</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="app-data-card__content">
+        <div style="width:100%;">
+            <mat-form-field style="width:100%;">
+                <mat-label>Buscar usuario</mat-label>
+                <input matInput (keyup)="buscarUsuarios($event)" placeholder="Nombre o correo" #input>
+            </mat-form-field>
+          </div>
+          <div style="width:100%;">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2 text-right"><small>Total de registros
+              [{{ usuariosTable.filteredData.length }}]
+                </small></div>
+          </div>
+        <div class="app-data-table-wrapper">
+          <table mat-table [dataSource]="usuariosTable" class="app-data-table mat-elevation-z1">
+            <ng-container matColumnDef="numero">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let usuario; let i = index">{{ getRowNumber(i) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="usuario">
+              <th mat-header-cell *matHeaderCellDef>Usuario</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.full_name | uppercase }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="correo">
+              <th mat-header-cell *matHeaderCellDef>Correo</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.email | uppercase }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="cargo">
+              <th mat-header-cell *matHeaderCellDef>Cargo</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.position | uppercase  }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let usuario" class="app-data-table__actions">
+                @if (!usuario.guid_msft) {
+                  <button
+                    mat-icon-button
+                    type="button"
+                    class="btn-warning-guid"
+                    title="Usuario sin GUID corporativo — click para validar"
+                    (click)="abrirModalValidacion(usuario)">
+                    <mat-icon>warning</mat-icon>
+                  </button>
+                }
+                <button
+                  mat-icon-button
+                  type="button"
+                  aria-label="Editar usuario"
+                  (click)="onEditar(usuario)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.fila-sin-guid]="!row.guid_msft"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell app-data-table__empty" [attr.colspan]="displayedColumns.length">
+                No se encontraron usuarios con ese criterio.
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions"
+          showFirstLastButtons
+          aria-label="Paginación de usuarios">
+        </mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Solicitar ajuste</h2>
+<mat-dialog-content>
+  <div class="mb-3">
+    <label for="idRolAprobacion" class="form-label">Rol de aprobación</label>
+    <select id="idRolAprobacion" class="form-select" [(ngModel)]="idRolAprobacion" name="idRolAprobacion">
+      <option [ngValue]="null" disabled>Seleccione el rol</option>
+      @for (usuario of data.usuariosDisponibles ?? []; track usuario.id_usuario_ajuste) {
+        <option [ngValue]="usuario.id_rol_aprobacion_ajuste">{{ usuario.usuario }}</option>
+      }
+    </select>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Cancelar</button>
+  <button mat-flat-button color="primary" type="button" (click)="solicitarAjuste()" [disabled]="idRolAprobacion === null">
+    Solicitar ajuste
+  </button>
+</mat-dialog-actions>

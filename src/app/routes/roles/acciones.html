@@ -1,0 +1,196 @@
+<page-header/>
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Roles - Nuevo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+          <mat-step [stepControl]="fGeneral.control">
+            <form novalidate #fGeneral="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Información general</ng-template>
+
+              <div class="roles-form-stack">
+                <div class="mb-2">
+                  <label for="rol" class="form-label">Nombre del rol*</label>
+                  <input
+                    id="rol"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre del rol"
+                    required
+                    [(ngModel)]="rolData.rol"
+                    name="rol"
+                    maxlength="255"
+                    #rol="ngModel"
+                    [class.is-invalid]="rol.invalid && (rol.dirty || rol.touched)"
+                  />
+                  @if (rol.invalid && (rol.dirty || rol.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="descripcion" class="form-label">Descripción</label>
+                  <textarea
+                    id="descripcion"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Descripcion del rol"
+                    [(ngModel)]="rolData.descripcion"
+                    name="descripcion"
+                    maxlength="255"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="roles-step-actions">
+                <button mat-flat-button color="primary" type="button" matStepperNext [disabled]="!fGeneral.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fModulosCount.control">
+            <form novalidate #fModulosCount="ngForm">
+              <input type="hidden" required name="numero_modulos_asignados" [(ngModel)]="numero_modulos_asignados" />
+            </form>
+
+            <form novalidate #fModulos="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Asociar módulos</ng-template>
+
+              <div class="roles-modulo-add">
+                <div class="roles-modulo-add__field">
+                  <label for="id_modulo" class="form-label">Módulo</label>
+                  <select
+                    id="id_modulo"
+                    class="form-select"
+                    required
+                    [(ngModel)]="accesoModulo.id_modulo"
+                    name="id_modulo"
+                    #idModulo="ngModel"
+                    [class.is-invalid]="idModulo.invalid && (idModulo.dirty || idModulo.touched)"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione el módulo</option>
+                    @for (modulo of listaGenerica; track modulo.identity) {
+                      <option [ngValue]="modulo.identity">{{ modulo.valor }}</option>
+                    }
+                  </select>
+                  @if (idModulo.invalid && (idModulo.dirty || idModulo.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Seleccione un módulo.</span>
+                    </div>
+                  }
+                </div>
+
+                <button mat-flat-button color="primary" class="mt-4" type="button" (click)="asignarModulo()" [disabled]="!fModulos.valid">
+                  <mat-icon>add</mat-icon>
+                  Asignar módulo
+                </button>
+              </div>
+
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="rolData.acceso_modulos || []" class="app-data-table mat-elevation-z1">
+                  <ng-container matColumnDef="posicion">
+                    <th mat-header-cell *matHeaderCellDef>No.</th>
+                    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="modulo">
+                    <th mat-header-cell *matHeaderCellDef>Módulo</th>
+                    <td mat-cell *matCellDef="let element">{{ element.modulo | uppercase }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                    <td mat-cell *matCellDef="let element">{{ element.descripcion | uppercase }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button type="button" (click)="eliminarModulo(element.id_modulo)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+                </table>
+              </div>
+
+              @if (controles!.length > 0) {
+                <div class="roles-step-actions">
+                  <button mat-flat-button color="primary" type="button" matStepperNext [disabled]="!fModulosCount.valid">
+                    Continuar
+                  </button>
+                </div>
+              }
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fControles.control" [optional]="!(controles.length)"  *ngIf="controles!.length > 0">
+            <form novalidate #fControles="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Asociar controles</ng-template>
+
+              @if (rolData.acceso_modulos && rolData.acceso_modulos.length > 0) {
+                <div class="app-data-table-wrapper">
+                  <table mat-table [dataSource]="rolData.acceso_modulos" class="app-data-table mat-elevation-z1">
+                    <ng-container matColumnDef="posicion">
+                      <th mat-header-cell *matHeaderCellDef>No.</th>
+                      <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="modulo">
+                      <th mat-header-cell *matHeaderCellDef>Módulo</th>
+                      <td mat-cell *matCellDef="let element">{{ element.modulo | uppercase }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcion">
+                      <th mat-header-cell *matHeaderCellDef>Controles</th>
+                      <td mat-cell *matCellDef="let element">
+                        <div class="roles-controls-list">
+                          @for (control of controlesDeModulo(element.id_modulo); track control.identity) {
+                            <mat-checkbox [(ngModel)]="control.checked" [name]="'check_' + control.identity + '_' + element.id_modulo" color="primary">
+                              {{ control.valor }}
+                            </mat-checkbox>
+                          }
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="acciones">
+                      <th mat-header-cell *matHeaderCellDef style="display: none">Acciones</th>
+                      <td mat-cell *matCellDef="let element" style="display: none"></td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+                  </table>
+                </div>
+              } @else {
+                <p class="roles-empty">Asigne módulos para habilitar controles.</p>
+              }
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button" (click)="guardarRol()" [disabled]="isLoading">
+          @if (isLoading) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
