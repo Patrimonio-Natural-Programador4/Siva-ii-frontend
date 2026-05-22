@@ -100,7 +100,15 @@
               </div>
 
               <div class="app-data-table-wrapper">
-                <table mat-table [dataSource]="flujoData.rutas || []" class="app-data-table mat-elevation-z1">
+                <table mat-table [dataSource]="flujoData.rutas || []" class="app-data-table mat-elevation-z1"
+                  cdkDropList (cdkDropListDropped)="dropRuta($event)">
+                  <ng-container matColumnDef="drag">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element" class="drag-handle-cell">
+                      <mat-icon cdkDragHandle class="drag-handle-icon">drag_indicator</mat-icon>
+                    </td>
+                  </ng-container>
+
                   <ng-container matColumnDef="posicion">
                     <th mat-header-cell *matHeaderCellDef>Orden</th>
                     <td mat-cell *matCellDef="let element">{{ element.orden }}</td>
@@ -126,7 +134,10 @@
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-                  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnas" cdkDrag class="dnd-row"
+                    [cdkDragData]="row">
+                    <div *cdkDragPlaceholder class="dnd-placeholder"></div>
+                  </tr>
                 </table>
               </div>
             </form>

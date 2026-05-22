@@ -1,3 +1,4 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +23,7 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, FormsModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatStepperModule, MatTableModule],
+  imports: [PageHeader, FormsModule, DragDropModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatStepperModule, MatTableModule],
 })
 export class AccionesFlujosAprobacion implements OnInit {
   @ViewChild('fRutas') fRutasForm!: NgForm;
@@ -36,7 +37,7 @@ export class AccionesFlujosAprobacion implements OnInit {
   idFlujo: number | null = null;
   isLoading = false;
   isLinear = true;
-  columnas = ['posicion', 'rol', 'descripcion', 'acciones'];
+  columnas = ['drag', 'posicion', 'rol', 'descripcion', 'acciones'];
   listados: Listados[] = [];
   listaRoles: ListaGenerica[] = [];
   numeroRolesAsignados: number | null = null;
@@ -136,6 +137,12 @@ export class AccionesFlujosAprobacion implements OnInit {
       .filter(item => item.id_ruta !== idRuta)
       .map((item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 }));
     this.actualizarRolesDisponibles();
+  }
+
+  dropRuta(event: CdkDragDrop<FlujosAprobacionRuta[]>): void {
+    const rutas = [...(this.flujoData.rutas ?? [])];
+    moveItemInArray(rutas, event.previousIndex, event.currentIndex);
+    this.flujoData.rutas = rutas.map((item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 }));
   }
 
   guardarFlujo(): void {

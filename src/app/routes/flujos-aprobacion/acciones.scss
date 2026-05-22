@@ -102,6 +102,38 @@ textarea.form-control {
   width: 100%;
 }
 
+.drag-handle-cell {
+  width: 40px;
+  cursor: default;
+}
+
+.drag-handle-icon {
+  cursor: grab;
+  color: rgba(0, 0, 0, 0.38);
+  vertical-align: middle;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.dnd-row {
+  &.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.cdk-drop-list-dragging .dnd-row:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dnd-placeholder {
+  background: #e3f2fd;
+  border: 2px dashed #90caf9;
+  height: 48px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 mat-card-actions {
   gap: 0.5rem;
 }
