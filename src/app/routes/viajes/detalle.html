@@ -1,0 +1,366 @@
+<page-header />
+
+<div class="row">
+	<div class="col-sm-12">
+		<mat-card class="app-data-card">
+			<mat-card-header class="app-data-card__header">
+				<mat-card-title>Viajes - Detalle</mat-card-title>
+			</mat-card-header>
+
+			<mat-card-content>
+				<div class="loading-box" *ngIf="isLoading">
+					<mat-spinner diameter="36"></mat-spinner>
+					<span>Cargando informacion del viaje...</span>
+				</div>
+
+				<div *ngIf="!isLoading && !viajeData.guid" class="empty-state">
+					<p>No se encontro informacion para este viaje.</p>
+					<button mat-raised-button color="primary" (click)="volver()">Volver al listado</button>
+				</div>
+
+				<mat-vertical-stepper *ngIf="!isLoading && viajeData.guid" orientation="vertical" [linear]="isLinear">
+					<mat-step>
+						<ng-template matStepLabel>Informacion general</ng-template>
+
+						<div class="table_a mt-3">
+							<div class="row_a header_a">
+								<div class="cell_a" style="flex: 1">Campo</div>
+								<div class="cell_a" style="flex: 3">Detalle</div>
+							</div>
+
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Codigo de viaje</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.codigo || '--' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Fecha y hora de salida</div>
+								<div class="cell_a info_a" style="flex: 3">
+									{{ viajeData.fecha_inicio_viaje | date: 'yyyy-MM-dd' }} {{ viajeData.hora_inicio || '' }}
+								</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Fecha y hora de llegada</div>
+								<div class="cell_a info_a" style="flex: 3">
+									{{ viajeData.fecha_fin_viaje | date: 'yyyy-MM-dd' }} {{ viajeData.hora_fin || '' }}
+								</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Fecha de solicitud</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.fecha_solicitud | date: 'yyyy-MM-dd' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Usuario</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.usuario || '--' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Objetivo de la actividad</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.objetivo || '--' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Observaciones adicionales</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.observaciones_adicionales || '--' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Requiere anticipo</div>
+								<div class="cell_a info_a" style="flex: 3">{{ mostrarSiNo(viajeData.requiere_anticipo) }}</div>
+							</div>
+							<!-- <div class="row_a" *ngIf="viajeData.requiere_anticipo">
+								<div class="cell_a info_b" style="flex: 1">Informacion bancaria</div>
+								<div class="cell_a info_a" style="flex: 3">
+									Tipo de cuenta: {{ viajeData.tipo_cuenta || '--' }}<br />
+									Numero de cuenta: {{ viajeData.numero_cuenta || '--' }}<br />
+									Entidad bancaria: {{ viajeData.entidad_bancaria || '--' }}
+								</div>
+							</div>
+							<div class="row_a" *ngIf="viajeData.requiere_anticipo === false">
+								<div class="cell_a info_b" style="flex: 1">Proyecto - Rubro</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.proyecto_rubro || 'Sin informacion' }}</div>
+							</div> -->
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Es un viaje internacional</div>
+								<div class="cell_a info_a" style="flex: 3">{{ mostrarSiNo(viajeData.viaje_internacional) }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">El viaje es para un invitado</div>
+								<div class="cell_a info_a" style="flex: 3">{{ mostrarSiNo(viajeData.es_invitado) }}</div>
+							</div>
+							<div class="row_a" *ngIf="viajeData.es_invitado">
+								<div class="cell_a info_b" style="flex: 1">Informacion de la persona invitada</div>
+								<div class="cell_a info_a" style="flex: 3">
+									Nombre: {{ viajeData.persona_invitada || '--' }}<br />
+									Numero de identificacion: {{ viajeData.documento_persona_invitada || '--' }}<br />
+									Correo: {{ viajeData.correo_persona_invitada || '--' }}<br />
+									Telefono: {{ viajeData.telefono_persona_invitada || '--' }}
+								</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Fecha de nacimiento</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.fecha_nacimiento_viajero | date: 'yyyy-MM-dd' }}</div>
+							</div>
+							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">Estado de la solicitud</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.estado || '--' }}</div>
+							</div>
+							<div class="row_a" *ngIf="viajeData.id_estado === 8">
+								<div class="cell_a info_b" style="flex: 1">Fecha en que se anula</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.fecha_anulo | date: 'yyyy-MM-dd' }}</div>
+							</div>
+							<div class="row_a" *ngIf="viajeData.id_estado === 8">
+								<div class="cell_a info_b" style="flex: 1">Motivo de anulacion</div>
+								<div class="cell_a info_a" style="flex: 3">{{ viajeData.motivo_anulo || '--' }}</div>
+							</div>
+						</div>
+
+						<div class="step-actions">
+							<button mat-raised-button color="primary" matStepperNext>Continuar</button>
+						</div>
+					</mat-step>
+
+					<mat-step>
+						<ng-template matStepLabel>Requerimiento de transporte y tiquetes aereos</ng-template>
+
+						<div class="table-wrap mt-3" *ngIf="hasItinerario; else noItinerario">
+							<table mat-table [dataSource]="viajeData.itinerario ?? []" class="mat-elevation-z2 full-width-table">
+								<ng-container matColumnDef="origen">
+									<th mat-header-cell *matHeaderCellDef>Origen</th>
+									<td mat-cell *matCellDef="let item">{{ item.departamento_origen }} - {{ item.municipio_origen }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="fecha">
+									<th mat-header-cell *matHeaderCellDef>Fecha - Hora</th>
+									<td mat-cell *matCellDef="let item">{{ item.fecha | date: 'yyyy-MM-dd' }} {{ item.hora || '' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="destino">
+									<th mat-header-cell *matHeaderCellDef>Destino</th>
+									<td mat-cell *matCellDef="let item">{{ item.departamento_destino }} - {{ item.municipio_destino }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="requiere_tiquetes">
+									<th mat-header-cell *matHeaderCellDef>Requiere tiquetes</th>
+									<td mat-cell *matCellDef="let item">{{ mostrarSiNo(item.requiere_tiquetes_aereos) }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="zona_rural">
+									<th mat-header-cell *matHeaderCellDef>Destino zona rural</th>
+									<td mat-cell *matCellDef="let item">{{ mostrarSiNo(item.es_zona_rural) }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="observaciones">
+									<th mat-header-cell *matHeaderCellDef>Observaciones</th>
+									<td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+								</ng-container>
+
+								<!-- <ng-container matColumnDef="proyecto">
+									<th mat-header-cell *matHeaderCellDef>Proyecto</th>
+									<td mat-cell *matCellDef="let item">{{ item.proyecto || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="rubro">
+									<th mat-header-cell *matHeaderCellDef>Rubro</th>
+									<td mat-cell *matCellDef="let item">{{ item.rubro || '--' }}</td>
+								</ng-container> -->
+
+								<tr mat-header-row *matHeaderRowDef="displayedColumnsItinerario"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedColumnsItinerario"></tr>
+							</table>
+						</div>
+
+						<ng-template #noItinerario>
+							<div class="empty-step">No hay registros de itinerario.</div>
+						</ng-template>
+
+						<div class="step-actions between">
+							<button mat-stroked-button matStepperPrevious>Atras</button>
+							<button mat-raised-button color="primary" matStepperNext>Continuar</button>
+						</div>
+					</mat-step>
+
+					<mat-step>
+						<ng-template matStepLabel>Requerimiento de hotel</ng-template>
+
+						<div class="table-wrap mt-3" *ngIf="hasHotel; else noHotel">
+							<table mat-table [dataSource]="viajeData.hotel ?? []" class="mat-elevation-z2 full-width-table">
+								<ng-container matColumnDef="ciudad">
+									<th mat-header-cell *matHeaderCellDef>Ciudad</th>
+									<td mat-cell *matCellDef="let item">{{ item.departamento }} - {{ item.municipio }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="fecha_llegada">
+									<th mat-header-cell *matHeaderCellDef>Fecha llegada</th>
+									<td mat-cell *matCellDef="let item">{{ item.fecha_llegada | date: 'yyyy-MM-dd' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="fecha_salida">
+									<th mat-header-cell *matHeaderCellDef>Fecha salida</th>
+									<td mat-cell *matCellDef="let item">{{ item.fecha_salida | date: 'yyyy-MM-dd' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="tipo_alojamiento">
+									<th mat-header-cell *matHeaderCellDef>Tipo alojamiento</th>
+									<td mat-cell *matCellDef="let item">{{ item.tipo_alojamiento === 'ZR' ? 'Zona rural' : 'Ciudad' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="gestiona">
+									<th mat-header-cell *matHeaderCellDef>Gestiona fundacion</th>
+									<td mat-cell *matCellDef="let item">{{ mostrarSiNo(item.pago_gestiona_fundacion) }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="observaciones">
+									<th mat-header-cell *matHeaderCellDef>Observaciones</th>
+									<td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="proyecto">
+									<th mat-header-cell *matHeaderCellDef>Proyecto</th>
+									<td mat-cell *matCellDef="let item">{{ item.proyecto || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="rubro">
+									<th mat-header-cell *matHeaderCellDef>Rubro</th>
+									<td mat-cell *matCellDef="let item">{{ item.rubro || '--' }}</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedColumnsHotel"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedColumnsHotel"></tr>
+							</table>
+						</div>
+
+						<ng-template #noHotel>
+							<div class="empty-step">No hay registros de hotel.</div>
+						</ng-template>
+
+						<div class="step-actions between">
+							<button mat-stroked-button matStepperPrevious>Atras</button>
+							<button mat-raised-button color="primary" matStepperNext>Continuar</button>
+						</div>
+					</mat-step>
+                    
+					<mat-step>
+						<ng-template matStepLabel>Flujo de aprobación</ng-template>
+
+						<div class="table-wrap mt-3" *ngIf="!isLoadingAprobacion && hasHistorialAprobacion; else flujoAprobacionEstado">
+							<table mat-table [dataSource]="historialAprobacion" class="mat-elevation-z2 full-width-table">
+								<ng-container matColumnDef="rol">
+									<th mat-header-cell *matHeaderCellDef>Rol</th>
+									<td mat-cell *matCellDef="let item">{{ item.rol || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="usuario">
+									<th mat-header-cell *matHeaderCellDef>Usuario</th>
+									<td mat-cell *matCellDef="let item">{{ item.usuario || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="fecha_requerimiento">
+									<th mat-header-cell *matHeaderCellDef>Fecha requerimiento</th>
+									<td mat-cell *matCellDef="let item">{{ item.fecha_crea | date: 'yyyy-MM-dd HH:mm' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="fecha_aprobacion">
+									<th mat-header-cell *matHeaderCellDef>Fecha aprobación</th>
+									<td mat-cell *matCellDef="let item">{{ item.fecha_aprobacion ? (item.fecha_aprobacion | date: 'yyyy-MM-dd HH:mm') : '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="estado">
+									<th mat-header-cell *matHeaderCellDef>Estado</th>
+									<td mat-cell *matCellDef="let item">{{ item.estado_aprobacion_ruta || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="observaciones">
+									<th mat-header-cell *matHeaderCellDef>Observaciones</th>
+									<td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedColumnsAprobacion"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedColumnsAprobacion"></tr>
+							</table>
+						</div>
+
+						<ng-template #flujoAprobacionEstado>
+							<div class="empty-step" *ngIf="isLoadingAprobacion">Cargando flujo de aprobación...</div>
+							<div class="empty-step" *ngIf="!isLoadingAprobacion">No hay historial de aprobación registrado.</div>
+						</ng-template>
+
+						<div class="approval-actions">
+							<label class="form-label" for="comentariosAprobacion">Comentarios</label>
+							<textarea
+								id="comentariosAprobacion"
+								name="comentariosAprobacion"
+								class="form-control"
+								rows="4"
+								[(ngModel)]="comentariosAprobacion"
+								placeholder="Ingrese observaciones para la aprobación o la solicitud de ajustes"
+							></textarea>
+
+							<div class="approval-actions__buttons">
+								<button mat-raised-button color="primary" type="button" (click)="aprobarSolicitud()" [disabled]="isSavingAprobacion">
+									Aprobar
+								</button>
+								<button
+									mat-stroked-button
+									type="button"
+									(click)="solicitarAjustes()"
+									[disabled]="isSavingAprobacion || !accionesAprobacion.habilitar_solicitar_ajustes"
+								>
+									Solicitar ajustes
+								</button>
+							</div>
+						</div>
+
+						<!-- <div class="step-actions between">
+							<button mat-stroked-button matStepperPrevious>Atras</button>
+							<div class="end-actions">
+								<button mat-stroked-button (click)="volver()">Volver al listado</button>
+								<button mat-raised-button color="primary" (click)="editarViaje()">
+									<mat-icon>edit</mat-icon>
+									Editar solicitud
+								</button>
+							</div>
+						</div> -->
+					</mat-step>
+
+					<!-- <mat-step>
+						<ng-template matStepLabel>Anticipo</ng-template>
+
+						<div class="table-wrap mt-3" *ngIf="hasAnticipo; else noAnticipo">
+							<table mat-table [dataSource]="viajeData.anticipo?.detalle ?? []" class="mat-elevation-z2 full-width-table">
+								<ng-container matColumnDef="concepto">
+									<th mat-header-cell *matHeaderCellDef>Concepto</th>
+									<td mat-cell *matCellDef="let item">{{ item.concepto || '--' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="valor">
+									<th mat-header-cell *matHeaderCellDef>Valor</th>
+									<td mat-cell *matCellDef="let item">{{ item.valor_anticipo || 0 | currency: 'COP':'symbol':'1.0-0' }}</td>
+								</ng-container>
+
+								<ng-container matColumnDef="observaciones">
+									<th mat-header-cell *matHeaderCellDef>Observaciones</th>
+									<td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedColumnsAnticipo"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedColumnsAnticipo"></tr>
+							</table>
+						</div>
+
+						<ng-template #noAnticipo>
+							<div class="empty-step">No hay conceptos de anticipo registrados.</div>
+						</ng-template>
+
+						<div class="step-actions between">
+							<button mat-stroked-button matStepperPrevious>Atras</button>
+							<div class="end-actions">
+								<button mat-stroked-button (click)="volver()">Volver al listado</button>
+								<button mat-raised-button color="primary" (click)="editarViaje()">
+									<mat-icon>edit</mat-icon>
+									Editar solicitud
+								</button>
+							</div>
+						</div>
+					</mat-step> -->
+				</mat-vertical-stepper>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

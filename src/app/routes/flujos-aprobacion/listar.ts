@@ -14,15 +14,21 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   selector: 'app-flujos-aprobacion-listar',
   templateUrl: './listar.html',
   styleUrl: './listar.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, MatCardModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule],
+  imports: [
+    PageHeader,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTableModule,
+  ],
 })
 export class ListarFlujosAprobacion implements OnInit, AfterViewInit {
   private readonly service = inject(FlujosAprobacionService);
   private readonly router = inject(Router);
   readonly paginator = viewChild(MatPaginator);
 
-  readonly displayedColumns = ['numero', 'nombre', 'descripcion', 'categoria', 'acciones'];
+  readonly displayedColumns = ['numero', 'programa', 'nombre', 'descripcion', 'categoria', 'acciones'];
   readonly pageSizeOptions = [20];
   readonly dataSource = new MatTableDataSource<FlujosAprobacion>([]);
 

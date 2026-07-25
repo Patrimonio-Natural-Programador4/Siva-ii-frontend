@@ -8,6 +8,8 @@ export class FlujosAprobacion {
   categoria?: string;
   rutas?: FlujosAprobacionRuta[];
   id_categoria?: number;
+  id_programa?: number | null;
+  programa?: string | null;
 
   constructor(data?: Partial<FlujosAprobacion>) {
     this.rutas = [];

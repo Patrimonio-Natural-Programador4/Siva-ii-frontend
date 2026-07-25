@@ -23,7 +23,6 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
   selector: 'app-usuarios-acciones',
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     FormsModule,

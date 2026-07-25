@@ -16,7 +16,6 @@ import { RolesService } from 'src/app/services/roles.service';
   selector: 'app-roles-listar',
   templateUrl: './listar.html',
   styleUrl: './listar.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     UpperCasePipe,

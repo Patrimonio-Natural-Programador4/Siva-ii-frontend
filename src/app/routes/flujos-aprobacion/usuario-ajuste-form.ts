@@ -17,7 +17,6 @@ interface UsuarioAjusteDialogData {
   selector: 'app-usuario-ajuste-form',
   templateUrl: './usuario-ajuste-form.html',
   styleUrl: './usuario-ajuste-form.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, MatButtonModule, MatDialogModule],
 })
 export class UsuarioAjusteForm {

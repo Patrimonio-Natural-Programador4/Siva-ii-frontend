@@ -62,7 +62,7 @@
         <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
         <button mat-flat-button color="primary" type="button" (click)="guardarPrograma()" [disabled]="isLoading || !fPrograma.valid">
           @if (isLoading) {
-            <mat-spinner diameter="18"></mat-spinner>
+            <mat-spinner diameter="18" />
           } @else {
             Guardar
           }

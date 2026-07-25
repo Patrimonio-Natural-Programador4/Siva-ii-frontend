@@ -16,7 +16,6 @@ import { ProgramsService } from 'src/app/services/programs.service';
   selector: 'app-programs-listar',
   templateUrl: './listar.html',
   styleUrl: './listar.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     UpperCasePipe,

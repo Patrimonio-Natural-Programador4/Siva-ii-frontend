@@ -1,0 +1,25 @@
+.roles-card {
+  margin-bottom: 1rem;
+}
+
+.roles-form-stack {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.roles-step-form {
+  padding-top: 0.5rem;
+}
+
+.roles-modulo-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.roles-modulo-add__field {
+  min-width: 280px;
+  flex: 1;
+}

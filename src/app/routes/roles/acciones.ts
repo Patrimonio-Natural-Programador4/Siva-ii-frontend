@@ -23,7 +23,6 @@ import { RolesService } from 'src/app/services/roles.service';
   selector: 'app-roles-acciones',
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     UpperCasePipe,
@@ -55,7 +54,7 @@ export class AccionesRoles implements OnInit {
   listados: Listados[] = [];
   listaGenerica: ListaGenerica[] = [];
   controles: ListaGenerica[] = [];
-  modulosAsignados: Set<number> = new Set();
+  modulosAsignados = new Set<number>();
   numero_modulos_asignados: number | null = null;
 
   accesoModulo: AccesoModulos = new AccesoModulos({

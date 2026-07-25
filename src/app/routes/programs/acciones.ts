@@ -15,7 +15,6 @@ import { ProgramsService } from 'src/app/services/programs.service';
   selector: 'app-programs-acciones',
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     FormsModule,

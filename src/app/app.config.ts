@@ -8,10 +8,9 @@ import {
   LOCALE_ID,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
-
+import localeEsCo from '@angular/common/locales/es-CO';
 import { provideDateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { MAT_CARD_CONFIG } from '@angular/material/card';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
@@ -24,7 +23,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { NgxPermissionsModule } from 'ngx-permissions';
-
+import { registerLocaleData } from '@angular/common';
 import {
   BASE_URL,
   AuthService,
@@ -49,7 +48,7 @@ import {
   MsalGuard,
   MsalBroadcastService,
 } from '@azure/msal-angular';
-
+registerLocaleData(localeEsCo);
 
 let msalInstance: IPublicClientApplication;
 
@@ -85,7 +84,7 @@ export function initializeMsalInstance() {
 }
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string>>();
+  const protectedResourceMap = new Map<string, string[]>();
   //have this set if more microservice used or requires different scope for different controllers
   protectedResourceMap.set(
     `${environment.adConfig.apiEndpointUrl}/*`, // Protect child API routes under /api
@@ -145,7 +144,6 @@ export const appConfig: ApplicationConfig = {
     MsalGuard,
     MsalBroadcastService,
     provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
     { provide: BASE_URL, useValue: environment.baseUrl },
     provideAppInitializer(() => inject(TranslateLangService).load()),
     provideAppInitializer(() => inject(StartupService).load()),

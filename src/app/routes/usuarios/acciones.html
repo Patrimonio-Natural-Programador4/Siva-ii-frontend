@@ -283,7 +283,7 @@
         <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
         <button mat-flat-button color="primary" type="button" (click)="guardarUsuario()" [disabled]="isLoading">
           @if (isLoading) {
-            <mat-spinner diameter="18"></mat-spinner>
+            <mat-spinner diameter="18" />
           } @else {
             Guardar
           }

@@ -15,8 +15,15 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   selector: 'app-flujos-aprobacion-delegacion-listar',
   templateUrl: './delegacion-listar.html',
   styleUrl: './delegacion-listar.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, UpperCasePipe, MatCardModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule],
+  imports: [
+    PageHeader,
+    UpperCasePipe,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTableModule,
+  ],
 })
 export class ListarDelegacionesAprobacion implements OnInit, AfterViewInit {
   private readonly service = inject(FlujosAprobacionService);

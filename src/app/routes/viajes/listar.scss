@@ -1,0 +1,23 @@
+.viajes-table-wrapper {
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.viajes-table {
+	min-width: 1280px;
+}
+
+.viajes-table :is(.mat-mdc-header-cell, .mat-mdc-cell) {
+	white-space: nowrap;
+}
+
+.viajes-table :is(.mat-mdc-header-cell, .mat-mdc-cell).mat-mdc-table-sticky {
+	background: #fff;
+	z-index: 2;
+	box-shadow: -8px 0 8px -8px rgba(0, 0, 0, 0.25);
+}
+
+.viajes-table .mat-mdc-header-cell.mat-mdc-table-sticky {
+	z-index: 3;
+}

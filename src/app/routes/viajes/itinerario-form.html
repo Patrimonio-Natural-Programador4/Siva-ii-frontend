@@ -1,0 +1,221 @@
+<div class="drawer-container">
+  <div class="drawer-header">
+    <h2 class="d-flex align-items-center justify-content-between m-t-0 f-w-400 m-b-0">
+      <span>Registrar itinerario</span>
+      <button mat-icon-button (click)="cancelar()" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+  </div>
+  <div class="drawer-content">
+    <form novalidate #f="ngForm">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="id_departamento_origen" class="form-label">Departamento de origen*</label>
+                <select id="id_departamento_origen" class="form-select" 
+                    #departamentoOrigen="ngModel" required (change)="municipioOrigen();"
+                    [(ngModel)]="itinerario.id_departamento_origen"
+                    name="id_departamento_origen">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el departamento</option>
+                    @for (data of listados[0]?.lista_generica ?? []; track data.identity) {
+                        <option [ngValue]="data.identity">{{ data.valor }}
+                        </option>
+                    }
+                </select>
+                @if (departamentoOrigen.invalid && (departamentoOrigen.dirty || departamentoOrigen.touched)) {
+                    <div class="invalid-feedback d-block">
+                        <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                }
+
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="id_municipio_origen" class="form-label">Municipio de origen*</label>
+                <select id="id_municipio_origen" class="form-select"
+                    #municipioOrigenM="ngModel" required
+                    [(ngModel)]="itinerario.id_municipio_origen"
+                    name="id_municipio_origen">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el  municipio</option>
+                    @for (data of municipiosOrigen; track data.identity) {
+                    <option [ngValue]="data.identity">{{ data.valor }}
+                    </option>
+                    }
+                </select>
+                @if (municipioOrigenM.invalid && (municipioOrigenM.dirty || municipioOrigenM.touched)) {
+                    <div class="invalid-feedback d-block">
+                        <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                }
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="id_departamento_destino" class="form-label">Departamento de destino*</label>
+                <select id="id_departamento_destino" class="form-select" (change)="municipioDestino();"
+                    #departamentoDestino="ngModel" required 
+                    [(ngModel)]="itinerario.id_departamento_destino"
+                    name="id_departamento_destino">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el departamento</option>
+                    @for (data of listados[0]?.lista_generica ?? []; track data.identity) {
+                        <option [ngValue]="data.identity">{{ data.valor }}
+                        </option>
+                    }
+                </select>
+                @if (departamentoDestino.invalid && (departamentoDestino.dirty || departamentoDestino.touched)) {
+                    <div class="invalid-feedback d-block">
+                        <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                }
+
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="id_municipio_destino" class="form-label">Municipio de destino*</label>
+                <select id="id_municipio_destino" class="form-select"
+                    #municipioDestinoM="ngModel" required
+                    [(ngModel)]="itinerario.id_municipio_destino"
+                    name="id_municipio_destino">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el  municipio</option>
+                    @for (data of municipiosDestino; track data.identity) {
+                        <option [ngValue]="data.identity">{{ data.valor }}
+                        </option>
+                    }
+                </select>
+                @if (municipioDestinoM.invalid && (municipioDestinoM.dirty || municipioDestinoM.touched)) {
+                    <div class="invalid-feedback d-block">
+                        <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                }
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="requiere_tiquetes_aereos" class="form-label">Requiere tiquetes aéreos*</label>
+                <div>
+                    <input type="radio" [value]="true" id="requiere_tiquetes_aereos_n" required
+                        name="requiere_tiquetes_aereos" [(ngModel)]="itinerario.requiere_tiquetes_aereos">
+                    <label class="" for="requiere_tiquetes_aereos_n">&nbsp;Si</label> &nbsp;
+                    <input type="radio" [value]="false" id="requiere_tiquetes_aereos_c" required
+                        name="requiere_tiquetes_aereos" [(ngModel)]="itinerario.requiere_tiquetes_aereos">
+                    <label class="" for="requiere_tiquetes_aereos_c">&nbsp;No</label>
+                </div>
+                <div class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            @if (itinerario.requiere_tiquetes_aereos) {
+                 <div class="col-12 col-md-6 col-lg-6">
+                    <label for="requiere_itinerario" class="form-label">¿Es ida y regreso?*</label>
+                    <div>
+                        <input type="radio" [value]="true" id="regreso_n" required
+                            name="regreso" [(ngModel)]="itinerario.regreso">
+                        <label class="" for="regreso_n">&nbsp;Si</label> &nbsp;
+                        <input type="radio" [value]="false" id="regreso" required
+                            name="regreso" [(ngModel)]="itinerario.regreso">
+                        <label class="" for="regreso">&nbsp;No</label>
+                    </div>
+                    <div class="invalid-feedback">
+                        Este campo es requerido.
+                    </div>
+                </div>
+            }
+           
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="fecha" class="form-label">Fecha de viaje 
+                    @if (itinerario.regreso) {
+                        de ida*
+                    } @else {
+                        *
+                    }</label>
+                <mat-form-field class="small" appearance="outline">
+                    <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" (click)="picker.open()" [(ngModel)]="itinerario.fecha"
+                        name="fecha" id="fecha" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <div class="invalid-feedback">
+                        Este campo es requerido.
+                    </div>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <label for="hora" class="form-label">Hora estimada de viaje
+                    @if (itinerario.regreso) {
+                        de ida*
+                    } @else {
+                        *
+                    }</label>
+                <mat-form-field class="small" appearance="outline">
+                    <input matInput [matTimepicker]="timepicker" [(ngModel)]="horaViaje" name="hora" id="hora" required>
+                    <mat-timepicker-toggle matSuffix [for]="timepicker"></mat-timepicker-toggle>
+                    <mat-timepicker #timepicker></mat-timepicker>
+                </mat-form-field>
+            </div>
+
+            @if(itinerario.regreso) {
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="fecha_regreso" class="form-label">Fecha de regreso*</label>
+                    <mat-form-field class="small" appearance="outline">
+                        <input matInput [matDatepicker]="pickerRegreso" [min]="minDate" [max]="maxDate" (click)="pickerRegreso.open()" [(ngModel)]="itinerario.fecha_regreso"
+                            name="fecha_regreso" id="fecha_regreso" required>
+                        <mat-datepicker-toggle matSuffix [for]="pickerRegreso"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerRegreso></mat-datepicker>
+                        <div class="invalid-feedback">
+                            Este campo es requerido.
+                        </div>
+                    </mat-form-field>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <label for="hora_regreso" class="form-label">Hora estimada de regreso*</label>
+                    <mat-form-field class="small" appearance="outline">
+                        <input matInput [matTimepicker]="timepickerRegreso" [(ngModel)]="horaRegreso" name="hora_regreso" id="hora_regreso" required>
+                        <mat-timepicker-toggle matSuffix [for]="timepickerRegreso"></mat-timepicker-toggle>
+                        <mat-timepicker #timepickerRegreso></mat-timepicker>
+                    </mat-form-field>
+                </div>
+            }
+           
+
+
+             <div class="col-12 col-md-6 col-lg-6">
+                <label for="es_zona_rural" class="form-label">El destino es una zona rural*</label>
+                <div>
+                    <input type="radio" [value]="true" id="es_zona_rural_n" required
+                        name="es_zona_rural" [(ngModel)]="itinerario.es_zona_rural">
+                    <label class="" for="es_zona_rural_n">&nbsp;Si</label> &nbsp;
+                    <input type="radio" [value]="false" id="es_zona_rural_c" required
+                        name="es_zona_rural" [(ngModel)]="itinerario.es_zona_rural">
+                    <label class="" for="es_zona_rural_c">&nbsp;No</label>
+                </div>
+                <div class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12" *ngIf="itinerario.es_zona_rural">
+                <label for="observaciones_zona_rural" class="form-label">Detalle la zona donde va a pernoctar *</label>
+                <br>
+                <textarea style="width: 100%;" class="form-control" id="observaciones_zona_rural" name="observaciones_zona_rural"
+                placeholder="Detalle la zona donde va a pernoctar (ejemplo: nombre de la vereda, corregimiento, resguardo indígena o comunidad)" required
+                [(ngModel)]="itinerario.observaciones_zona_rural" #observacionesZonaRural="ngModel"
+                [class.is-invalid]="observacionesZonaRural.invalid && (observacionesZonaRural.dirty || observacionesZonaRural.touched)"
+                rows="2"></textarea>
+                <div class="invalid-feedback">
+                    Este campo es requerido.
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+                <label for="observaciones" class="form-label">Observaciones adicionales</label>
+                <br>
+                <textarea id="observaciones" class="form-control" rows="2" required
+                                        #observaciones="ngModel" placeholder="Observaciones adicionales"
+                                        [(ngModel)]="itinerario.observaciones" name="observaciones"
+                                        [class.is-invalid]="observaciones.invalid && (observaciones.dirty || observaciones.touched)"
+                                        maxlength="255"></textarea>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <!-- <span class="text-danger ng-star-inserted" *ngIf="errorEnItinerario" [innerHTML]="error_itinerario"></span> -->
+            </div>
+        </div>
+    </form>
+  </div>
+  <div class="drawer-footer">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" type="button" (click)="guardar()" [disabled]="!f.valid">
+        Guardar itinerario
+    </button>
+  </div>
+</div>

@@ -22,8 +22,18 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   selector: 'app-flujos-aprobacion-acciones',
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, FormsModule, DragDropModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatStepperModule, MatTableModule],
+  imports: [
+    PageHeader,
+    FormsModule,
+    DragDropModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatStepperModule,
+    MatTableModule,
+  ],
 })
 export class AccionesFlujosAprobacion implements OnInit {
   @ViewChild('fRutas') fRutasForm!: NgForm;
@@ -47,7 +57,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     id_rol_aprobacion: null!,
     rol: '',
     orden: null!,
-    descripcion: '',
+    descripcion: ''
   });
 
   responseRequest = new ResponseRequest({
@@ -62,6 +72,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     descripcion: '',
     id_categoria: null!,
     rutas: [],
+    id_programa: null
   });
 
   ngOnInit(): void {

@@ -1,0 +1,45 @@
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    data: {
+      title: 'Viajes',
+    },
+    children: [
+      {
+        path: '',
+        redirectTo: 'listar',
+        pathMatch: 'full',
+      },
+      {
+        path: 'listar',
+        loadComponent: () => import('./listar').then(m => m.ListarViajes),
+        data: {
+          title: 'Lista de viajes',
+        },
+      },
+      {
+        path: 'crear',
+        loadComponent: () => import('./acciones').then(m => m.AccionesViajes),
+        data: {
+          title: 'Crear solicitud de viaje',
+        },
+      },
+      {
+        path: 'editar/:id',
+        loadComponent: () => import('./acciones').then(m => m.AccionesViajes),
+        data: {
+          title: 'Editar solicitud de viaje',
+        },
+      },
+      {
+        path: 'detalle/:id',
+        loadComponent: () => import('./detalle').then(m => m.Detalle),
+        data: {
+          title: 'Detalle de viaje',
+        },
+      }
+    ],
+  },
+];

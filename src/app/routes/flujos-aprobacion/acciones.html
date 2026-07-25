@@ -44,6 +44,16 @@
                   </select>
                 </div>
 
+                 <div class="mb-3">
+                  <label for="id_programa" class="form-label">Programa*</label>
+                  <select id="id_programa" class="form-select" required [(ngModel)]="flujoData.id_programa" name="id_programa">
+                    <option [ngValue]="null" disabled>Seleccione el programa</option>
+                    @for (programa of listados[2]?.lista_generica ?? []; track programa.identity) {
+                      <option [ngValue]="programa.identity">{{ programa.valor }}</option>
+                    }
+                  </select>
+                </div>
+
                 <div class="mb-3">
                   <label for="descripcion" class="form-label">Descripción</label>
                   <textarea
@@ -149,7 +159,7 @@
         <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
         <button mat-flat-button color="primary" type="button" (click)="guardarFlujo()" [disabled]="isLoading">
           @if (isLoading) {
-            <mat-spinner diameter="18"></mat-spinner>
+            <mat-spinner diameter="18" />
           } @else {
             Guardar
           }

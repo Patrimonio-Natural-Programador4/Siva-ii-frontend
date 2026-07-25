@@ -27,7 +27,6 @@ interface ValidarCorreoResponse {
   selector: 'app-validar-usuario-modal',
   templateUrl: './validar-usuario-modal.html',
   styleUrl: './validar-usuario-modal.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatDialogModule,

@@ -8,7 +8,8 @@
     "programas": "Programas",
     "flujos-aprobacion": "Flujos de aprobación",
     "flujos-aprobacion.flujos": "Flujos",
-    "flujos-aprobacion.roles": "Roles"
+    "flujos-aprobacion.roles": "Roles",
+    "viajes": "Viajes"
   },
   "paginator": {
     "items_per_page_label": "Items per page:",

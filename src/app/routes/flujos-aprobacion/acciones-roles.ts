@@ -21,8 +21,17 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   selector: 'app-flujos-aprobacion-acciones-roles',
   templateUrl: './acciones-roles.html',
   styleUrl: './acciones-roles.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, FormsModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatStepperModule, MatTableModule],
+  imports: [
+    PageHeader,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatStepperModule,
+    MatTableModule,
+  ],
 })
 export class AccionesRolesAprobacion implements OnInit {
   @ViewChild('fUsuarios') fUsuariosForm!: NgForm;

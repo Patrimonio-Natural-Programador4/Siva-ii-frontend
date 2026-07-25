@@ -24,7 +24,6 @@ interface UsuarioRow extends Usuarios {
   selector: 'app-listar',
   templateUrl: './listar.html',
   styleUrl: './listar.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeader,
     UpperCasePipe,

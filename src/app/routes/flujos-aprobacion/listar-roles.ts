@@ -16,8 +16,16 @@ import { NumeroCaracteresPipe } from './numero-caracteres.pipe';
   selector: 'app-flujos-aprobacion-listar-roles',
   templateUrl: './listar-roles.html',
   styleUrl: './listar-roles.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeader, UpperCasePipe, NumeroCaracteresPipe, MatCardModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule],
+  imports: [
+    PageHeader,
+    UpperCasePipe,
+    NumeroCaracteresPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTableModule,
+  ],
 })
 export class ListarRolesAprobacion implements OnInit, AfterViewInit {
   private readonly service = inject(FlujosAprobacionService);

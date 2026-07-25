@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 import { DelegacionRolesUsuarios } from '../models/delegacion-roles-usuarios';
 import { FlujosAprobacion } from '../models/flujos-aprobacion';
 import { Listados } from '../models/listados';

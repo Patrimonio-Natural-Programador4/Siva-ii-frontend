@@ -1,0 +1,62 @@
+<div class="drawer-container">
+  <div class="drawer-header">
+    <h2 class="d-flex align-items-center justify-content-between m-t-0 f-w-400 m-b-0">
+      <span>Registrar anticipo</span>
+      <button mat-icon-button (click)="cancelar()" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+  </div>
+  <div class="drawer-content">
+    <form novalidate #f="ngForm">
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+                <label for="id_concepto" class="form-label">Concepto*</label>
+                <select id="id_concepto" class="form-select" 
+                    #concepto="ngModel" required 
+                    [(ngModel)]="anticipo.id_concepto"
+                    name="id_concepto">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el concepto</option>
+                    @for (data of listados[4]?.lista_generica ?? []; track data.identity) {
+                        <option [ngValue]="data.identity">{{ data.valor }}
+                        </option>
+                    }
+                </select>
+                @if (concepto.invalid && (concepto.dirty || concepto.touched)) {
+                    <div class="invalid-feedback d-block">
+                        <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                }
+
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+                <label for="valor_anticipo" class="form-label">Valor del anticipo</label>
+                <br>
+                <input type="number" class="form-control" id="valor_anticipo"
+                    name="valor_anticipo" placeholder="Valor del anticipo"
+                    [(ngModel)]="anticipo.valor_anticipo"
+                    #valor_anticipo="ngModel"
+                    [class.is-invalid]="valor_anticipo.invalid && (valor_anticipo.dirty || valor_anticipo.touched)"/>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+                <label for="observaciones" class="form-label">Observaciones</label>
+                <br>
+                <textarea id="observaciones" class="form-control" rows="2" required
+                                        #observaciones="ngModel" placeholder="Observaciones"
+                                        [(ngModel)]="anticipo.observaciones" name="observaciones"
+                                        [class.is-invalid]="observaciones.invalid && (observaciones.dirty || observaciones.touched)"
+                                        maxlength="255"></textarea>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <!-- <span class="text-danger ng-star-inserted" *ngIf="errorEnanticipo" [innerHTML]="error_anticipo"></span> -->
+            </div>
+        </div>
+    </form>
+  </div>
+  <div class="drawer-footer">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" type="button" (click)="guardar()" [disabled]="!f.valid">
+        Guardar anticipo
+    </button>
+  </div>
+</div>
