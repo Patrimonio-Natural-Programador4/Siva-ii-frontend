@@ -21,21 +21,21 @@ export const routes: Routes = [
       },
       {
         path: 'crear',
-        loadComponent: () => import('./acciones').then(m => m.AccionesViajes),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesViajes),
         data: {
           title: 'Crear solicitud de viaje',
         },
       },
       {
         path: 'editar/:id',
-        loadComponent: () => import('./acciones').then(m => m.AccionesViajes),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesViajes),
         data: {
           title: 'Editar solicitud de viaje',
         },
       },
       {
         path: 'detalle/:id',
-        loadComponent: () => import('./detalle').then(m => m.Detalle),
+        loadComponent: () => import('./detalle/detalle').then(m => m.Detalle),
         data: {
           title: 'Detalle de viaje',
         },

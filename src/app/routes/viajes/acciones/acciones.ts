@@ -21,18 +21,18 @@ import { MatInputModule } from '@angular/material/input';
 import { Viajes } from 'src/app/models/viajes';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
-import { ItinerarioForm } from './itinerario-form';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
 import { ViajesItinerario } from 'src/app/models/viajes-itinerario';
 import { ViajesHotel } from 'src/app/models/viajes-hotel';
-import { HotelForm } from './hotel-form';
 import { AnticiposDetalle } from 'src/app/models/anticipos-detalle';
 import { AnticipoForm } from 'src/app/shared/anticipo-form';
 import { ChoiceWithIndices, NgxMentionsModule } from 'ngx-mentions';
 import { format } from 'date-fns';
 import { DomSanitizer } from '@angular/platform-browser';
 import { getFormattedHighlightText, parentCommentStatusBasedStyles } from 'src/app/shared/utilmentions';
+import { HotelForm } from '../hotel/hotel-form';
+import { ItinerarioForm } from '../itinerario/itinerario-form';
 // import { ToastrService } from 'ngx-toastr';
 
 
@@ -172,6 +172,38 @@ export class AccionesViajes implements OnInit {
 
   }
 
+  private ordenarItinerario(itinerario: ViajesItinerario[] = []): ViajesItinerario[] {
+    return [...itinerario].sort((a, b) => {
+      const fechaA = a.fecha ? new Date(a.fecha).getTime() : 0;
+      const fechaB = b.fecha ? new Date(b.fecha).getTime() : 0;
+
+      if (fechaA !== fechaB) {
+        return fechaA - fechaB;
+      }
+
+      const horaA = this.parsearHora(a.hora);
+      const horaB = this.parsearHora(b.hora);
+      return horaA - horaB;
+    });
+  }
+
+  private parsearHora(hora?: string): number {
+    if (!hora) {
+      return 0;
+    }
+
+    const [horas = 0, minutos = 0] = hora.split(':').map(Number);
+    return horas * 60 + minutos;
+  }
+
+  private ordenarHoteles(hoteles: ViajesHotel[] = []): ViajesHotel[] {
+    return [...hoteles].sort((a, b) => {
+      const fechaLlegadaA = a.fecha_llegada ? new Date(a.fecha_llegada).getTime() : 0;
+      const fechaLlegadaB = b.fecha_llegada ? new Date(b.fecha_llegada).getTime() : 0;
+      return fechaLlegadaA - fechaLlegadaB;
+    });
+  }
+
    getHistorialAprobacion() {
     // this.viajeService.getHistorialAprobacion(this.id_viaje, 'SV').subscribe(data => {
     //   if (data) {
@@ -267,10 +299,10 @@ export class AccionesViajes implements OnInit {
       result.departamento = depto;
       result.municipio = municipio;
 
-      this.viajeData.hotel = [
+      this.viajeData.hotel = this.ordenarHoteles([
         ...(this.viajeData.hotel ?? []),
         result
-      ];
+      ]);
       this.dataSourceHotel.data = this.viajeData.hotel;
 
       this.snackBar.open('Hotel agregado correctamente', '', { duration: 3000 });
@@ -390,10 +422,10 @@ export class AccionesViajes implements OnInit {
       result.departamento_destino = deptoDestino;
       result.municipio_destino = munDestino;
 
-      this.viajeData.itinerario = [
+      this.viajeData.itinerario = this.ordenarItinerario([
         ...(this.viajeData.itinerario ?? []),
         result
-      ];
+      ]);
       this.dataSourceItinerario.data = this.viajeData.itinerario;
 
       this.snackBar.open('Itinerario agregado correctamente', '', { duration: 3000 });
@@ -411,10 +443,10 @@ export class AccionesViajes implements OnInit {
       result.departamento_destino = deptoDestino;
       result.municipio_destino = munDestino;
 
-      this.viajeData.itinerario = [
+      this.viajeData.itinerario = this.ordenarItinerario([
         ...(this.viajeData.itinerario ?? []),
         result
-      ];
+      ]);
       this.dataSourceItinerario.data = this.viajeData.itinerario;
 
       // this.snackBar.open('Itinerario agregado correctamente', '', { duration: 3000 });

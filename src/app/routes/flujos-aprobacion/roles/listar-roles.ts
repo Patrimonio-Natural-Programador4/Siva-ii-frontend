@@ -10,7 +10,7 @@ import { PageHeader } from '@shared';
 
 import { RolesAprobacion } from 'src/app/models/roles-aprobacion';
 import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
-import { NumeroCaracteresPipe } from './numero-caracteres.pipe';
+import { NumeroCaracteresPipe } from '../numero-caracteres.pipe';
 
 @Component({
   selector: 'app-flujos-aprobacion-listar-roles',

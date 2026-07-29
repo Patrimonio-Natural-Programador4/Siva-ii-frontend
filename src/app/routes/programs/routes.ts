@@ -21,14 +21,14 @@ export const routes: Routes = [
       },
       {
         path: 'crear',
-        loadComponent: () => import('./acciones').then(m => m.AccionesPrograms),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesPrograms),
         data: {
           title: 'Crear Programa',
         },
       },
       {
         path: 'editar/:id',
-        loadComponent: () => import('./acciones').then(m => m.AccionesPrograms),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesPrograms),
         data: {
           title: 'Editar Programa',
         },

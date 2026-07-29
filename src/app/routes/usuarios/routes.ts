@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Listar } from './listar';
-import { AccionesUsuarios } from 'src/app/routes/usuarios/acciones';
+import { AccionesUsuarios } from 'src/app/routes/usuarios/acciones/acciones';
 
 export const routes: Routes = [
   { 

@@ -21,14 +21,14 @@ export const routes: Routes = [
       },
       {
         path: 'crear',
-        loadComponent: () => import('./acciones').then(m => m.AccionesRoles),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesRoles),
         data: {
           title: 'Crear Rol',
         },
       },
       {
         path: 'editar/:id',
-        loadComponent: () => import('./acciones').then(m => m.AccionesRoles),
+        loadComponent: () => import('./acciones/acciones').then(m => m.AccionesRoles),
         data: {
           title: 'Editar Rol',
         },

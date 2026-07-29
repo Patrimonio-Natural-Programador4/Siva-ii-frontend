@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { PageHeader } from '@shared';
 import { Usuarios } from 'src/app/models/usuarios';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { ValidarUsuarioModal, ValidarUsuarioModalResult } from './validar-usuario-modal';
+import { ValidarUsuarioModal, ValidarUsuarioModalResult } from './validar-usuario/validar-usuario-modal';
 
 interface UsuarioRow extends Usuarios {
   nombreCompleto: string;
