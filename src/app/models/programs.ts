@@ -1,4 +1,4 @@
-// modelo programas
+// modelo programas prueba
 
 export class Programs {
   id_programa?: number;
