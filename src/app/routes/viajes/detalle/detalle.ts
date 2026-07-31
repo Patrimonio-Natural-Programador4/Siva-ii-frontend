@@ -11,7 +11,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeader } from '@shared';
+import { AccionAprobacion, DialogResult } from '@shared/components/accion-aprobacion/accion-aprobacion';
 import { AccionesSolicitudAprobacion, UsuarioDisponibleAjuste } from 'src/app/models/acciones-solicitud-aprobacion';
+import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { Viajes } from 'src/app/models/viajes';
 import { UsuarioAjusteForm } from 'src/app/routes/flujos-aprobacion/usuario-ajuste-form';
@@ -48,7 +50,8 @@ export class Detalle implements OnInit {
   isLinear = false;
   guidViaje = '';
   comentariosAprobacion = '';
-
+  habilitarAcciones: boolean = false;
+  
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
@@ -88,6 +91,12 @@ export class Detalle implements OnInit {
   ];
   historialAprobacion: SolicitudAprobacionHistorial[] = [];
   accionesAprobacion: AccionesSolicitudAprobacion = {};
+
+  public responseRequest: ResponseRequest = {
+    mensaje: "",
+    identity: null!,
+    solicitud_exitosa: false
+  }
 
   ngOnInit(): void {
     this.guidViaje = this.activatedRoute.snapshot.params['id'];
@@ -133,34 +142,97 @@ export class Detalle implements OnInit {
     return !!this.accionesAprobacion.id_solicitud_aprobacion;
   }
 
-  aprobarSolicitud(): void {
-    this.ejecutarAccionAprobacion('APROBAR');
-  }
-
-  solicitarAjustes(): void {
-    const usuarios = this.accionesAprobacion.usuarios_disponibles_ajustes ?? [];
-    if (!usuarios.length) {
-      this.snackBar.open('No hay usuarios disponibles para solicitar ajustes', '', { duration: 3000 });
-      return;
-    }
-
-    if (usuarios.length === 1) {
-      this.ejecutarAccionAprobacion('AJUSTAR', usuarios[0]);
-      return;
-    }
-
-    const dialogRef = this.dialog.open(UsuarioAjusteForm, {
+  abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
+    const titulo = tipoAccion === 'APROBAR' ? 'Aprobar solicitud' : 'Solicitar ajustes';
+    const dialogRef = this.dialog.open(AccionAprobacion, {
       width: '520px',
-      data: { usuariosDisponibles: usuarios },
+      disableClose: true,
+      data: {
+        titulo,
+        tipoAccion,
+        comentarios: this.accionesAprobacion.comentarios || ''
+      }
     });
 
-    dialogRef.afterClosed().subscribe((result?: UsuarioDisponibleAjuste) => {
+    dialogRef.componentInstance.usuarios_disponibles = this.accionesAprobacion.usuarios_disponibles_ajustes || [];
+
+    dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {
       if (!result) {
         return;
       }
-      this.ejecutarAccionAprobacion('AJUSTAR', result);
+      this.accionesAprobacion.comentarios = result.comentarios;
+      if(tipoAccion === 'AJUSTAR') {
+        this.accionesAprobacion.id_usuario_ajuste = result.id_usuario_ajuste;
+        this.accionesAprobacion.id_rol_aprobacion_ajuste = result.id_rol_aprobacion_ajuste;
+      }
+      this.accionSolicitud(result.tipoAccion);
     });
   }
+
+  accionSolicitud(tipo_accion: string) {
+    // Validar que si habilitar_pago es true, debe haber detalles de pago
+    
+
+    this.accionesAprobacion.tipo_accion = tipo_accion;
+    this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
+    // this.viajeData.itinerario?.forEach(item => {
+    //   if (item.fecha) {
+    //     // (item as any).fecha = new Date(item.fecha).toISOString();
+    //     // Assign formatted date to a new property
+    //     (item as any).fecha = item.fecha.toISOString().split('T')[0];
+    //   }
+    // });
+    this.isLoading = true; //  Mostrar spinner o deshabilitar botón
+    this.accionesAprobacion.viaje = this.viajeData;
+    // this.accionesAprobacion.id_solicitud_aprobacion = this.informe.id_solicitud_aprobacion;
+    const request$ = this.service.accionSolicitudAprobacion(this.guidViaje, this.accionesAprobacion);
+
+    request$.subscribe({
+      next: (response) => {
+        this.responseRequest = response;
+        if (this.responseRequest.solicitud_exitosa) {
+          this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.router.navigate(['/viajes/listar']);
+        } else {
+          this.snackBar.open('La operación no fue exitosa', '', { duration: 3000 });
+        }
+      },
+      error: () => {
+        this.isLoading = false; //  Ocultar spinner si hay error
+        const mensajeError = "Error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.";
+        this.snackBar.open(mensajeError, '', { duration: 3000 });
+      }
+    });
+  }
+
+  // aprobarSolicitud(): void {
+  //   this.ejecutarAccionAprobacion('APROBAR');
+  // }
+
+  // solicitarAjustes(): void {
+  //   const usuarios = this.accionesAprobacion.usuarios_disponibles_ajustes ?? [];
+  //   if (!usuarios.length) {
+  //     this.snackBar.open('No hay usuarios disponibles para solicitar ajustes', '', { duration: 3000 });
+  //     return;
+  //   }
+
+  //   if (usuarios.length === 1) {
+  //     this.ejecutarAccionAprobacion('AJUSTAR', usuarios[0]);
+  //     return;
+  //   }
+
+  //   const dialogRef = this.dialog.open(UsuarioAjusteForm, {
+  //     width: '520px',
+  //     data: { usuariosDisponibles: usuarios },
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result?: UsuarioDisponibleAjuste) => {
+  //     if (!result) {
+  //       return;
+  //     }
+  //     this.ejecutarAccionAprobacion('AJUSTAR', result);
+  //   });
+  // }
 
   private getViaje(): void {
     this.isLoading = true;
@@ -194,12 +266,18 @@ export class Detalle implements OnInit {
   private getValidacionAccionesAprobacion(): void {
     this.service.getValidacionAccionesAprobacion(this.guidViaje, this.tipoSolicitudAprobacion).subscribe({
       next: response => {
+        console.log('response', response);
         if (!response.solicitud_exitosa || !response.mensaje) {
           this.accionesAprobacion = {};
           return;
         }
 
+        this.habilitarAcciones = response.solicitud_exitosa;
+        
         const acciones = JSON.parse(response.mensaje) as AccionesSolicitudAprobacion;
+        if (acciones.usuario_solicito && this.habilitarAcciones) {
+          this.router.navigate(['/viajes/editar', this.guidViaje]);
+        }
         this.accionesAprobacion = {
           ...acciones,
           id_solicitud_aprobacion: this.viajeData.id_solicitud_aprobacion,

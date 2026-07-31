@@ -282,7 +282,7 @@
 						</ng-template>
 
 						<div class="approval-actions">
-							<label class="form-label" for="comentariosAprobacion">Comentarios</label>
+							<!-- <label class="form-label" for="comentariosAprobacion">Comentarios</label>
 							<textarea
 								id="comentariosAprobacion"
 								name="comentariosAprobacion"
@@ -290,16 +290,16 @@
 								rows="4"
 								[(ngModel)]="comentariosAprobacion"
 								placeholder="Ingrese observaciones para la aprobación o la solicitud de ajustes"
-							></textarea>
+							></textarea> -->
 
-							<div class="approval-actions__buttons">
-								<button mat-raised-button color="primary" type="button" (click)="aprobarSolicitud()" [disabled]="isSavingAprobacion">
+							<div class="approval-actions__buttons" *ngIf="habilitarAcciones">
+								<button mat-raised-button color="primary" type="button" (click)="abrirModalAccion('APROBAR')" [disabled]="isSavingAprobacion">
 									Aprobar
 								</button>
 								<button
 									mat-stroked-button
 									type="button"
-									(click)="solicitarAjustes()"
+									(click)="abrirModalAccion('AJUSTAR')"
 									[disabled]="isSavingAprobacion || !accionesAprobacion.habilitar_solicitar_ajustes"
 								>
 									Solicitar ajustes

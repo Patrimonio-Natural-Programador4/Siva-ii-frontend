@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>{{ data.titulo }}</h2>
+
+<div mat-dialog-content>
+  <div class="col-md-12">
+    <label for="comentarios-modal" class="form-label">Comentarios:</label>
+    <textarea
+      id="comentarios-modal"
+      class="form-control"
+      rows="4"
+      [(ngModel)]="comentarios"
+      placeholder="Escriba sus comentarios"></textarea>
+  </div>
+  <div class="col-md-12" *ngIf="data.tipoAccion == 'AJUSTAR'">
+      <label for="comentarios-modal" class="form-label">Seleccione el usuario a quien se le va a solicitar el ajuste:</label>
+      <select aria-label="Small select example" class="form-select" sizing="sm"
+          name="id_rol_aprobacion_ajuste" id="id_rol_aprobacion_ajuste" required
+          [(ngModel)]="id_rol_aprobacion_ajuste">
+          <option [ngValue]="null" [disabled]="true">Seleccione el usuario</option>
+          <option *ngFor="let data of usuarios_disponibles" [value]="data.id_rol_aprobacion_ajuste">{{ data.usuario |
+              uppercase}}</option>
+      </select>
+      <div class="invalid-feedback">
+          Este campo es requerido.
+      </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end" class="mt-3">
+  <button type="button" mat-button (click)="onCancel()">Cancelar</button>
+  <button type="button" mat-raised-button color="primary" (click)="onSave()">{{data.titulo}}</button>
+</div>
