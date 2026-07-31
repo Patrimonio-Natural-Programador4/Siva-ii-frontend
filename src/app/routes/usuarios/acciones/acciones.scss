@@ -1,13 +1,13 @@
 .usuarios-step-form {
-  padding-top: 0.5rem;
   width: 100%;
+  padding-top: 0.5rem;
 }
 
 .usuarios-step-actions {
-  margin-top: 1rem;
   display: flex;
-  justify-content: flex-end;
   gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .usuarios-selection-grid {
@@ -26,8 +26,8 @@
 }
 
 .usuarios-roles-add__field {
-  min-width: 280px;
   flex: 1;
+  min-width: 280px;
 }
 
 .mat-icon-danger {
@@ -36,6 +36,6 @@
 
 .usuarios-role-hint {
   margin-top: 0.5rem;
-  color: #6c757d;
   font-size: 0.875rem;
+  color: #6c757d;
 }

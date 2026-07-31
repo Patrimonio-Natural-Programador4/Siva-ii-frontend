@@ -4,8 +4,8 @@
 
 .roles-grid {
   display: grid;
-  gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -19,9 +19,9 @@
 }
 
 .roles-step-actions {
-  margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .roles-modulo-add {
@@ -33,8 +33,8 @@
 }
 
 .roles-modulo-add__field {
-  min-width: 280px;
   flex: 1;
+  min-width: 280px;
 }
 
 .roles-modulos-list {
@@ -45,12 +45,12 @@
 
 .roles-modulo-chip {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
+  justify-content: space-between;
   padding: 0.5rem 0.75rem;
   background: #fafafa;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
 }
 
 .roles-modulo-chip__title {
@@ -67,10 +67,10 @@
 }
 
 .roles-controls-group {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
   padding: 0.75rem;
   margin-bottom: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
 }
 
 .roles-controls-group h4 {
@@ -83,6 +83,6 @@
 }
 
 .roles-empty {
-  color: #777;
   font-style: italic;
+  color: #777;
 }

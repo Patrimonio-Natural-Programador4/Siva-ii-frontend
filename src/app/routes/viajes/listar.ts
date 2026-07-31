@@ -17,6 +17,9 @@ import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Listados } from 'src/app/models/listados';
+import {
+  MsalService
+} from '@azure/msal-angular';
 
 @Component({
   selector: 'app-listar',
@@ -45,6 +48,7 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   readonly paginator = viewChild(MatPaginator);
   private readonly service = inject(ViajesService);
+  private readonly authService = inject(MsalService);
   private readonly cdr = inject(ChangeDetectorRef);
   columnasViaje = ['posicion', 'nombre', 'fecha_solicitud', 'fecha_inicio', 'fecha_fin', 'requiere_anticipo', 'valor_anticipo', 'dias_despues_finalizado', 'estado', 'acciones'];
   readonly pageSizeOptions = [20];
@@ -58,11 +62,18 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   fechaFin?: any = null;
   filtrobusqueda: string = "";
   listados: Listados[] = [];
+  guidUsr: string = '';
 
 
   ngOnInit(): void {
+    this.getUidUsr();
     this.getViajes();
     this.getListados();
+  }
+
+  getUidUsr() {
+    const account = this.authService.instance.getActiveAccount();
+    this.guidUsr = account?.idTokenClaims!['oid'] || '';
   }
 
   filtroText(newValue: any)
@@ -147,5 +158,14 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   }
   editViaje(id: string) {
     this.router.navigate(['/viajes/editar', id]);
+  }
+
+  habilitarEdicion(id: string): boolean {
+    let viaje = this.viajes.find(v => v.guid == id);
+    let habilitarEdicion = false;
+    if((viaje?.id_estado == 1 || (viaje?.id_estado == 3 && viaje.guid_msft_ajuste == this.guidUsr)) && viaje.guid_usr == this.guidUsr){
+      habilitarEdicion = true;
+    }
+    return habilitarEdicion;
   }
 }

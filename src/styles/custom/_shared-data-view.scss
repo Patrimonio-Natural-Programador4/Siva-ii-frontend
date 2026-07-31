@@ -11,6 +11,7 @@
     display: flex;
     padding: 10px 16px !important;
 }
+
 .app-data-card__content {
   padding: 1rem;
 }
@@ -34,16 +35,16 @@
 
 .app-data-table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 720px;
+  border-collapse: collapse;
 }
 
 .app-data-table th,
 .app-data-table td {
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  text-align: left;
   vertical-align: middle;
+  text-align: left;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
 
 .app-data-table thead th {
@@ -59,12 +60,12 @@
 }
 
 .app-action-icon-button {
-  border: 0;
-  background: transparent;
-  color: var(--mat-sys-primary);
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.2rem;
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
 }

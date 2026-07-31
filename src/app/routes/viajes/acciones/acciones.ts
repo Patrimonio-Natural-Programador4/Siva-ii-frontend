@@ -162,6 +162,7 @@ export class AccionesViajes implements OnInit {
     if (this.id_viaje) {
       this.getHistorialAprobacion();
       this.getValidacionAccionesAprobacion();
+      this.getViaje();
     }
     this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
     this.dataSourceHotel.data = this.viajeData.hotel ?? [];
@@ -201,6 +202,24 @@ export class AccionesViajes implements OnInit {
       const fechaLlegadaA = a.fecha_llegada ? new Date(a.fecha_llegada).getTime() : 0;
       const fechaLlegadaB = b.fecha_llegada ? new Date(b.fecha_llegada).getTime() : 0;
       return fechaLlegadaA - fechaLlegadaB;
+    });
+  }
+
+  private getViaje(): void {
+    this.isLoading = true;
+    this.service.getViajeById(this.id_viaje).subscribe(data => {
+      this.viajeData = data;
+      this.fechaInicio = this.viajeData.fecha_inicio_viaje;
+      this.fechaFin = this.viajeData.fecha_fin_viaje;
+      
+      if (this.viajeData.id_viaje) {
+        // this.getHistorialAprobacion(this.viajeData.id_viaje);
+      }
+      this.getValidacionAccionesAprobacion();
+      this.isLoading = false;
+    }, error => {
+      this.snackBar.open('Error al cargar el viaje', '', { duration: 3000 });
+      this.isLoading = false;
     });
   }
 

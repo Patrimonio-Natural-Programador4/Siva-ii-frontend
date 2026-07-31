@@ -3,11 +3,11 @@
 }
 
 .loading-box {
-	min-height: 180px;
 	display: flex;
+	gap: 12px;
 	align-items: center;
 	justify-content: center;
-	gap: 12px;
+	min-height: 180px;
 	color: #5a627c;
 }
 
@@ -25,15 +25,15 @@
 
 .row_a {
 	display: flex;
-	border-left: 1px solid #e1e3ea;
+	background-color: #fff;
 	border-right: 1px solid #e1e3ea;
 	border-bottom: 1px solid #e1e3ea;
-	background-color: #fff;
+	border-left: 1px solid #e1e3ea;
 }
 
 .header_a {
-	background-color: #5a627c;
 	color: #fff;
+	background-color: #5a627c;
 }
 
 .cell_a {
@@ -47,8 +47,8 @@
 }
 
 .info_a {
-	color: #333847;
 	font-style: italic;
+	color: #333847;
 }
 
 .table-wrap {
@@ -61,17 +61,17 @@
 }
 
 .empty-step {
-	margin-top: 1rem;
 	padding: 12px;
+	margin-top: 1rem;
+	color: #5a627c;
 	border: 1px dashed #c4cad8;
 	border-radius: 6px;
-	color: #5a627c;
 }
 
 .step-actions {
-	margin-top: 1.5rem;
 	display: flex;
 	justify-content: flex-end;
+	margin-top: 1.5rem;
 }
 
 .step-actions.between {
@@ -84,14 +84,14 @@
 }
 
 .approval-actions {
-	margin-top: 1.5rem;
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
+	margin-top: 1.5rem;
 }
 
 .approval-actions__buttons {
 	display: flex;
-	gap: 0.75rem;
 	flex-wrap: wrap;
+	gap: 0.75rem;
 }
