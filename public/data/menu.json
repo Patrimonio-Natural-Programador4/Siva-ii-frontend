@@ -10,19 +10,19 @@
       "route": "usuarios",
       "name": "usuarios",
       "type": "link",
-      "icon": "people"     
+      "icon": "people"
     },
     {
       "route": "roles",
       "name": "roles",
       "type": "link",
-      "icon": "people"     
+      "icon": "people"
     },
     {
       "route": "programas",
       "name": "programas",
       "type": "link",
-      "icon": "people"     
+      "icon": "people"
     },
     {
       "route": "design",
@@ -55,15 +55,41 @@
           "name": "roles",
           "type": "link",
           "icon": "colorize"
+        },
+        {
+          "route": "aprobacion-documentos",
+          "name": "aprobacion-documentos",
+          "type": "link",
+          "icon": "description"
         }
       ]
     },
+
      {
       "route": "viajes",
       "name": "viajes",
       "type": "link",
-      "icon": "people"     
+      "icon": "people"
+    },
+
+   {
+  "route": "acuerdos",
+  "name": "Acuerdos",
+  "type": "sub",
+  "icon": "assignment",
+  "children": [
+    {
+      "route": "",
+      "name": "Evaluación-capacidades",
+      "type": "link"
+    },
+    {
+      "route": "acuerdos/nuevo",
+      "name": "Estudios-previos",
+      "type": "link"
     }
+  ]
+}
   ]
 }
 

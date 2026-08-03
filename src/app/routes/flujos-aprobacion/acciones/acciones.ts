@@ -57,7 +57,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     id_rol_aprobacion: null!,
     rol: '',
     orden: null!,
-    descripcion: ''
+    descripcion: '',
   });
 
   responseRequest = new ResponseRequest({
@@ -72,7 +72,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     descripcion: '',
     id_categoria: null!,
     rutas: [],
-    id_programa: null
+    id_programa: null,
   });
 
   ngOnInit(): void {
@@ -110,7 +110,9 @@ export class AccionesFlujosAprobacion implements OnInit {
 
   actualizarRolesDisponibles(): void {
     const roles = this.listados[0]?.lista_generica ?? [];
-    const usados = new Set((this.flujoData.rutas ?? []).map(item => Number(item.id_rol_aprobacion)));
+    const usados = new Set(
+      (this.flujoData.rutas ?? []).map(item => Number(item.id_rol_aprobacion))
+    );
     this.listaRoles = roles.filter(item => !usados.has(Number(item.identity)));
     this.numeroRolesAsignados = (this.flujoData.rutas ?? []).length || null;
   }
@@ -134,7 +136,13 @@ export class AccionesFlujosAprobacion implements OnInit {
     });
 
     this.flujoData.rutas = [...(this.flujoData.rutas ?? []), nuevaRuta];
-    this.flujoRuta = new FlujosAprobacionRuta({ id_ruta: null!, id_rol_aprobacion: null!, rol: '', orden: null!, descripcion: '' });
+    this.flujoRuta = new FlujosAprobacionRuta({
+      id_ruta: null!,
+      id_rol_aprobacion: null!,
+      rol: '',
+      orden: null!,
+      descripcion: '',
+    });
     this.fRutasForm.resetForm();
     this.actualizarRolesDisponibles();
   }
@@ -153,7 +161,9 @@ export class AccionesFlujosAprobacion implements OnInit {
   dropRuta(event: CdkDragDrop<FlujosAprobacionRuta[]>): void {
     const rutas = [...(this.flujoData.rutas ?? [])];
     moveItemInArray(rutas, event.previousIndex, event.currentIndex);
-    this.flujoData.rutas = rutas.map((item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 }));
+    this.flujoData.rutas = rutas.map(
+      (item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 })
+    );
   }
 
   guardarFlujo(): void {
@@ -169,7 +179,9 @@ export class AccionesFlujosAprobacion implements OnInit {
 
     this.isLoading = true;
     const esNuevo = !this.flujoData.id_flujo_aprobacion || this.flujoData.id_flujo_aprobacion === 0;
-    const request$ = esNuevo ? this.service.saveFlujo(this.flujoData) : this.service.updateFlujo(this.flujoData);
+    const request$ = esNuevo
+      ? this.service.saveFlujo(this.flujoData)
+      : this.service.updateFlujo(this.flujoData);
 
     request$.subscribe({
       next: response => {
@@ -177,20 +189,30 @@ export class AccionesFlujosAprobacion implements OnInit {
         this.isLoading = false;
 
         if (response.solicitud_exitosa) {
-          this.snackBar.open(esNuevo ? 'Flujo creado correctamente' : 'Flujo actualizado correctamente', '', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            esNuevo ? 'Flujo creado correctamente' : 'Flujo actualizado correctamente',
+            '',
+            {
+              duration: 3000,
+            }
+          );
           this.router.navigate(['/flujos-aprobacion/listar']);
           return;
         }
 
-        this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', { duration: 3000 });
+        this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
+          duration: 3000,
+        });
       },
       error: () => {
         this.isLoading = false;
-        this.snackBar.open(esNuevo ? 'Error al crear el flujo' : 'Error al actualizar el flujo', '', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          esNuevo ? 'Error al crear el flujo' : 'Error al actualizar el flujo',
+          '',
+          {
+            duration: 3000,
+          }
+        );
       },
     });
   }
