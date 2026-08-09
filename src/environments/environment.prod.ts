@@ -1,25 +1,37 @@
 import { EnvironmentConfiguration } from 'src/app/models/environment-configuration';
 
+const serverUrl2='https://devapi.patrimonionatural.org.co/api';
+const URLClient='';
+
+// export const environment = {
+//   production: false,
+//   baseUrl: '',
+//   useHash: false,
+// };
+
+
 export const environment: EnvironmentConfiguration = {
-  env_name: 'prod',
+  env_name: 'dev',
   production: true,
   development: false,
-  apiUrl: '',
-  apiUrl2: '',
-  URLClient: '',
+  apiUrl2: serverUrl2,
+  URLClient,
   baseUrl: '',
   useHash: false,
   apiEndpoints: {
-    userProfile: 'user-profiles',
+    userProfile:'user-profiles'
   },
   adConfig: {
-    redirectUri: 'https://<YOUR_PROD_DOMAIN>/auth/login', // Update with real prod URL
-    clientId: '894f2a01-2c10-4f30-8a78-f13e1b6cbc3c',
-    tenantId: '6f667010-1080-4683-bd88-6c9b8a912cc7',
-    readScopeUrl: 'api://3c9eb084-f576-470c-a20b-44d576cdc891/access_as_user',
-    writeScopeUrl: 'api://3c9eb084-f576-470c-a20b-44d576cdc891/access_as_user',
-    scopeUrls: ['api://3c9eb084-f576-470c-a20b-44d576cdc891/access_as_user'],
-    apiEndpointUrl: 'https://<YOUR_PROD_API_URL>/api',
+    redirectUri: 'https://devsiva2.patrimonionatural.org.co/auth/login',
+    clientId: '6334ea41-2b5c-42b8-9d4f-15c64895d812',
+    readScopeUrl: 'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
+    writeScopeUrl: 'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
+    scopeUrls: [
+      'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
+      'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user'
+    ],
+    apiEndpointUrl: 'https://devapi.patrimonionatural.org.co/api',
+    tenantId: '138a1799-f2e2-4902-b2a1-0ca7278eb49b'
   },
   cacheTimeInMinutes: 30,
 };

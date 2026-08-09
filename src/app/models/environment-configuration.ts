@@ -2,7 +2,6 @@ export interface EnvironmentConfiguration {
     env_name: string;
     production: boolean;
     development?: boolean;
-    apiUrl: string;
     apiUrl2: string;
     URLClient: string;
     baseUrl?: string;

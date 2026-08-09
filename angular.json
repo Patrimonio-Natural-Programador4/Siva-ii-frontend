@@ -15,7 +15,7 @@
             "allowedCommonJsDependencies": [
               "base64-js"
             ],
-            "outputPath": "dist/ng-matero",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -57,7 +57,7 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/ng-matero/"
+              "baseHref": "/"
             },
             "development": {
               "optimization": false,
@@ -137,7 +137,7 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-            "baseHref": "/ng-matero/",
+            "baseHref": "/",
             "remote": "origin"
           }
         }

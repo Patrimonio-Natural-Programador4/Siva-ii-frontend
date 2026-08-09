@@ -114,4 +114,7 @@ export class Listar implements OnInit, AfterViewInit {
         }
       });
   }
+  crearUsuarioInvitado(){
+    this.router.navigate(['/usuarios/invitar']);
+  }
 }

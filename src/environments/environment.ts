@@ -1,6 +1,5 @@
 import { EnvironmentConfiguration } from 'src/app/models/environment-configuration';
 
-const serverUrl='https://localhost:44351/api';
 const serverUrl2='http://localhost:8111/api';
 const URLClient='';
 
@@ -15,7 +14,6 @@ export const environment: EnvironmentConfiguration = {
   env_name: 'dev',
   production: false,
   development: true,
-  apiUrl: serverUrl,
   apiUrl2: serverUrl2,
   URLClient,
   baseUrl: '',

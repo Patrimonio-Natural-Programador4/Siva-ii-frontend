@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Listar } from './listar';
-import { AccionesUsuarios } from 'src/app/routes/usuarios/acciones/acciones';
+import { Acciones } from 'src/app/routes/usuarios/acciones/acciones';
 
 export const routes: Routes = [
   { 
@@ -22,8 +22,15 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'invitar',
+        loadComponent: () => import('./acciones/acciones').then(m => m.Acciones),
+        data: {
+          title: 'Invitar usuario'
+        }
+      },
+      {
         path: 'editar/:id',
-        component: AccionesUsuarios,
+        loadComponent: () => import('./acciones/acciones').then(m => m.Acciones),
         data: {
           title: 'Editar Usuario'
         }

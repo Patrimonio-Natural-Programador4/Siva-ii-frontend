@@ -16,6 +16,7 @@ export class Usuarios {
     full_name?: string;
     program_ids?: number[];
     role_ids?: number[];
+    is_guest?: boolean;
     // roles?: Roles[];
     constructor(
         data?: Partial<Usuarios>

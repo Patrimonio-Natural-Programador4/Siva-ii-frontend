@@ -1,38 +1,46 @@
-name: Deploy
+name: Deploy Frontend - Developp
 
 on:
   push:
     branches:
-      - main
+      - developp
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    env:
-      PUBLISH_DIR: ./dist/ng-matero/browser
+    runs-on: [self-hosted, Linux, X64, siva-ii-frontend]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Verify environment
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          docker --version
+          docker compose version
+          rsync --version
 
-      - name: Install dependencies
-        run: yarn
+      - name: Sync frontend
+        run: |
+          rsync -av --delete \
+            --exclude='.env' \
+            --exclude='node_modules' \
+            --exclude='dist' \
+            "$GITHUB_WORKSPACE/" \
+            /opt/apps/devsiva2/front/
 
-      - name: Build site
-        run: npm run build
+      - name: Build frontend
+        run: |
+          cd /opt/apps/devsiva2
+          docker compose build --no-cache front
 
-      - name: Create 404.html
-        run: cp ${{ env.PUBLISH_DIR }}/index.html ${{ env.PUBLISH_DIR }}/404.html
+      - name: Restart frontend
+        run: |
+          cd /opt/apps/devsiva2
+          docker compose up -d front
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.PUBLISH_DIR }}
-          publish_branch: gh-pages
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Verify deployment
+        run: |
+          docker ps --filter "name=devsiva2-front"
+          docker exec devsiva2-front sh -c "ls -lah /usr/share/nginx/html"

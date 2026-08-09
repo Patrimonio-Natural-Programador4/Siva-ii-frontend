@@ -36,7 +36,7 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
     MatTableModule,
   ],
 })
-export class AccionesUsuarios implements OnInit {
+export class Acciones implements OnInit {
   private readonly usuariosService = inject(UsuariosService);
   private readonly programsService = inject(ProgramsService);
   private readonly rolesService = inject(RolesService);
@@ -79,30 +79,75 @@ export class AccionesUsuarios implements OnInit {
 
   ngOnInit(): void {
     this.userGuid = this.activatedRoute.snapshot.params['id'] ?? '';
-    if (!this.userGuid) {
-      this.snackBar.open('No se recibió el identificador del usuario', '', { duration: 3000 });
-      this.volver();
-      return;
+    if (this.userGuid) {
+      // this.snackBar.open('No se recibió el identificador del usuario', '', { duration: 3000 });
+      // this.volver();
+      // return;
+      this.getUsuario();
     }
+    this.getProgramas();
+    this.getRoles();
 
-    forkJoin({
-      usuario: this.usuariosService.getUsuarioById(this.userGuid),
-      programas: this.programsService.getPrograms(),
-      roles: this.rolesService.getRoles(),
-    }).subscribe({
-      next: ({ usuario, programas, roles }) => {
+
+  //   forkJoin({
+  //     usuario: this.usuariosService.getUsuarioById(this.userGuid),
+  //     programas: this.programsService.getPrograms(),
+  //     roles: this.rolesService.getRoles(),
+  //   }).subscribe({
+  //     next: ({ usuario, programas, roles }) => {
+  //       this.usuarioData = new Usuarios({
+  //         ...usuario,
+  //         program_ids: usuario.program_ids ?? [],
+  //         role_ids: usuario.role_ids ?? [],
+  //       });
+  //       this.programasCatalogo = programas ?? [];
+  //       this.rolesCatalogo = roles ?? [];
+  //       this.sincronizarAsignarTodosProgramas();
+  //     },
+  //     error: () => {
+  //       this.snackBar.open('Error al cargar la información del usuario', '', { duration: 3000 });
+  //       this.volver();
+  //     },
+  //   });
+  }
+
+  private getProgramas(): void {
+    this.programsService.getPrograms().subscribe({
+      next: (programas) => {
+        this.programasCatalogo = programas ?? [];
+        this.sincronizarAsignarTodosProgramas();
+      },
+      error: () => {
+        this.snackBar.open('Error al cargar los programas', '', { duration: 3000 });
+      }
+    });
+  }
+
+  private getRoles(): void {
+    this.rolesService.getRoles().subscribe({
+      next: (roles) => {
+        this.rolesCatalogo = roles ?? [];
+      },
+      error: () => {
+        this.snackBar.open('Error al cargar los roles', '', { duration: 3000 });
+      }
+    });
+  }
+
+   private getUsuario(): void {
+    this.isLoading = true;
+    this.usuariosService.getUsuarioById(this.userGuid).subscribe({
+      next: (usuario) => {
         this.usuarioData = new Usuarios({
           ...usuario,
           program_ids: usuario.program_ids ?? [],
           role_ids: usuario.role_ids ?? [],
         });
-        this.programasCatalogo = programas ?? [];
-        this.rolesCatalogo = roles ?? [];
-        this.sincronizarAsignarTodosProgramas();
+        this.isLoading = false;
       },
       error: () => {
-        this.snackBar.open('Error al cargar la información del usuario', '', { duration: 3000 });
-        this.volver();
+        this.snackBar.open('Error al cargar el usuario', '', { duration: 3000 });
+        this.isLoading = false;
       },
     });
   }
@@ -171,49 +216,85 @@ export class AccionesUsuarios implements OnInit {
   }
 
   guardarUsuario(): void {
-    if (!this.userGuid) {
+    if (this.usuarioData.email && this.usuarioData.email.trim().toLowerCase().endsWith('@fcds.org.co') && (this.usuarioData.id == 0 || this.usuarioData.id == null)) {
+      // this.toastr.error('No se permiten correos asociados a la fundación', 'Error', {
+      //   timeOut: 3000, positionClass: 'toast-top-center',
+      // });
+      this.snackBar.open('No se permiten correos asociados a patrimonio', '', { duration: 3000 });
       return;
     }
 
-    if (!this.usuarioData.first_name?.trim() || !this.usuarioData.last_name?.trim() || !this.usuarioData.email?.trim()) {
-      this.snackBar.open('Complete los campos obligatorios de información general', '', { duration: 3000 });
-      return;
-    }
+    this.isLoading = true; //  Mostrar spinner o deshabilitar botón
+    this.usuarioData.is_guest = this.usuarioData.id == 0 || this.usuarioData.id == null ? true : this.usuarioData.is_guest;
+    const esNuevo = !this.usuarioData.guid || this.usuarioData.id == 0 || this.usuarioData.id == null;
+    const request$ = esNuevo
+      ? this.usuariosService.crearUsuario(this.usuarioData)
+      : this.usuariosService.actualizarUsuario(this.userGuid, this.usuarioData);
 
-    this.isLoading = true;
-
-    const payload = new Usuarios({
-      first_name: this.usuarioData.first_name?.trim(),
-      other_name: this.usuarioData.other_name?.trim() || undefined,
-      last_name: this.usuarioData.last_name?.trim(),
-      other_last_name: this.usuarioData.other_last_name?.trim() || undefined,
-      identification_type: Number(this.usuarioData.identification_type ?? 0),
-      identification_number: Number(this.usuarioData.identification_number ?? 0),
-      email: this.usuarioData.email?.trim(),
-      position: this.usuarioData.position?.trim() || undefined,
-      is_active: !!this.usuarioData.is_active,
-      program_ids: this.usuarioData.program_ids ?? [],
-      role_ids: this.usuarioData.role_ids ?? [],
-    });
-
-    this.usuariosService.actualizarUsuario(this.userGuid, payload).subscribe({
-      next: response => {
+    request$.subscribe({
+      next: (response) => {
         this.responseRequest = response;
-        this.isLoading = false;
-
-        if (response.solicitud_exitosa) {
-          this.snackBar.open('Usuario actualizado correctamente', '', { duration: 3000 });
-          this.volver();
-          return;
+        this.isLoading = false; //  Ocultar spinner
+        if (this.responseRequest.solicitud_exitosa) {
+          const mensaje = esNuevo ? 'Usuario creado exitosamente' : 'Usuario actualizado correctamente';
+          this.snackBar.open(mensaje, '', { duration: 3000 });
+          this.router.navigate(['/usuarios/listar']);
+        } else {
+          this.snackBar.open("Error al guardar el registro", '', { duration: 3000 });
         }
-
-        this.snackBar.open(response.mensaje || 'No se pudo actualizar el usuario', '', { duration: 3000 });
       },
-      error: () => {
-        this.isLoading = false;
-        this.snackBar.open('Error al actualizar el usuario', '', { duration: 3000 });
-      },
+      error: (error) => {
+        console.error('Error en la solicitud:', error);
+        this.isLoading = false; //  Ocultar spinner si hay error
+        const mensajeError = esNuevo
+          ? error?.error?.mensaje || 'Error al guardar el usuario'
+          : error?.error?.mensaje || 'Error al actualizar el usuario';
+        this.snackBar.open(mensajeError, '', { duration: 3000 });
+      }
     });
+    // if (!this.userGuid) {
+    //   return;
+    // }
+
+    // if (!this.usuarioData.first_name?.trim() || !this.usuarioData.last_name?.trim() || !this.usuarioData.email?.trim()) {
+    //   this.snackBar.open('Complete los campos obligatorios de información general', '', { duration: 3000 });
+    //   return;
+    // }
+
+    // this.isLoading = true;
+
+    // const payload = new Usuarios({
+    //   first_name: this.usuarioData.first_name?.trim(),
+    //   other_name: this.usuarioData.other_name?.trim() || undefined,
+    //   last_name: this.usuarioData.last_name?.trim(),
+    //   other_last_name: this.usuarioData.other_last_name?.trim() || undefined,
+    //   identification_type: Number(this.usuarioData.identification_type ?? 0),
+    //   identification_number: Number(this.usuarioData.identification_number ?? 0),
+    //   email: this.usuarioData.email?.trim(),
+    //   position: this.usuarioData.position?.trim() || undefined,
+    //   is_active: !!this.usuarioData.is_active,
+    //   program_ids: this.usuarioData.program_ids ?? [],
+    //   role_ids: this.usuarioData.role_ids ?? [],
+    // });
+
+    // this.usuariosService.actualizarUsuario(this.userGuid, payload).subscribe({
+    //   next: response => {
+    //     this.responseRequest = response;
+    //     this.isLoading = false;
+
+    //     if (response.solicitud_exitosa) {
+    //       this.snackBar.open('Usuario actualizado correctamente', '', { duration: 3000 });
+    //       this.volver();
+    //       return;
+    //     }
+
+    //     this.snackBar.open(response.mensaje || 'No se pudo actualizar el usuario', '', { duration: 3000 });
+    //   },
+    //   error: () => {
+    //     this.isLoading = false;
+    //     this.snackBar.open('Error al actualizar el usuario', '', { duration: 3000 });
+    //   },
+    // });
   }
 
   volver(): void {

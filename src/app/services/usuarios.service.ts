@@ -34,9 +34,9 @@ export class UsuariosService {
 //   getMenu(): Observable<Menu[]> {
 //     return this.http.get<Menu[]>(`${this.apiUrl}/menu`);
 //   }
-//   // public createUsuario(usuario: Usuarios): Observable<any> {
-//   //   return this.http.post<any>(this.apiUrl, usuario);
-//   // }
+crearUsuario(usuario: Usuarios): Observable<any> {
+  return this.http.post<any>(this.apiUrl, usuario);
+}
 //   // createUserMember(): Observable<Usuarios[]> {
 //   //   return this.http.get<Usuarios[]>(`${this.apiUrl}/invite`);
 //   // }
