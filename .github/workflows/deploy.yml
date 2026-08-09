@@ -7,40 +7,43 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, Linux, X64, siva-ii-frontend]
+    runs-on: [self-hosted, siva-ii-frontend]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify environment
+      - name: Show workspace
         run: |
-          echo "Runner: $RUNNER_NAME"
-          echo "Workspace: $GITHUB_WORKSPACE"
-          docker --version
-          docker compose version
-          rsync --version
+          echo "Workspace:"
+          pwd
+          ls -la
 
-      - name: Sync frontend
+      - name: Sync frontend to server
         run: |
           rsync -av --delete \
-            --exclude='.env' \
-            --exclude='node_modules' \
-            --exclude='dist' \
-            "$GITHUB_WORKSPACE/" \
-            /opt/apps/devsiva2/front/
+            --exclude='.git/' \
+            --exclude='.github/' \
+            ./ /opt/apps/devsiva2/front/
+
+      - name: Verify deployment files
+        run: |
+          cd /opt/apps/devsiva2/front
+          echo "Contenido:"
+          ls -la
+          echo "Dockerfile:"
+          ls -l Dockerfile
 
       - name: Build frontend
         run: |
           cd /opt/apps/devsiva2
           docker compose build --no-cache front
 
-      - name: Restart frontend
+      - name: Deploy frontend
         run: |
           cd /opt/apps/devsiva2
-          docker compose up -d front
+          docker compose up -d --force-recreate front
 
-      - name: Verify deployment
+      - name: Verify container
         run: |
           docker ps --filter "name=devsiva2-front"
-          docker exec devsiva2-front sh -c "ls -lah /usr/share/nginx/html"
