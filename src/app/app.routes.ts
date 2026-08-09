@@ -23,19 +23,19 @@ export const routes: Routes = [
       { path: '500', component: Error500 },
       {
         path: 'usuarios',
-        loadChildren: () => import('./routes/usuarios/routes').then(m => m.routes)
+        loadChildren: () => import('./routes/usuarios/routes').then(m => m.routes),
       },
       {
         path: 'roles',
-        loadChildren: () => import('./routes/roles/routes').then(m => m.routes)
+        loadChildren: () => import('./routes/roles/routes').then(m => m.routes),
       },
       {
         path: 'flujos-aprobacion',
-        loadChildren: () => import('./routes/flujos-aprobacion/routes').then(m => m.routes)
+        loadChildren: () => import('./routes/flujos-aprobacion/routes').then(m => m.routes),
       },
       {
         path: 'programas',
-        loadChildren: () => import('./routes/programs/routes').then(m => m.routes)
+        loadChildren: () => import('./routes/programs/routes').then(m => m.routes),
       },
       {
         path: 'permissions',
@@ -47,7 +47,7 @@ export const routes: Routes = [
       },
       {
         path: 'viajes',
-        loadChildren: () => import('./routes/viajes/routes').then(m => m.routes)
+        loadChildren: () => import('./routes/viajes/routes').then(m => m.routes),
       },
     ],
   },

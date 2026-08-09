@@ -9,7 +9,11 @@
     "flujos-aprobacion": "Flujos de aprobación",
     "flujos-aprobacion.flujos": "Flujos",
     "flujos-aprobacion.roles": "Roles",
-    "viajes": "Viajes"
+    "flujos-aprobacion.aprobacion-documentos": "Aprobación de documentos",
+    "viajes": "Viajes",
+    "Acuerdos": "Acuerdos",
+    "Acuerdos.Evaluación-capacidades": "Evaluación capacidades",
+     "Acuerdos.Estudios-previos": "Estudios previos"
   },
   "paginator": {
     "items_per_page_label": "Items per page:",
