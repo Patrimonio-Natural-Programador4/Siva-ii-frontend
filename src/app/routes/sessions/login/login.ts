@@ -19,7 +19,6 @@ import {
 import { EventType, EventMessage } from '@azure/msal-browser';
 
 import { AuthService } from '@core/authentication';
-import { MatIcon } from '@angular/material/icon';
 import { RedirectRequest } from 'node_modules/@azure/msal-browser/dist/request/RedirectRequest';
 
 @Component({
@@ -35,8 +34,7 @@ import { RedirectRequest } from 'node_modules/@azure/msal-browser/dist/request/R
     MatFormFieldModule,
     MatInputModule,
     MtxButtonModule,
-    TranslateModule,
-    MatIcon
+    TranslateModule
   ],
 })
 export class Login implements OnInit, OnDestroy {

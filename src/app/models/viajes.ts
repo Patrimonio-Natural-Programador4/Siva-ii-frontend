@@ -82,11 +82,13 @@ export class Viajes {
     dias_despues_finalizado?: number;
     legalizacion_fuera_tiempo?: string;
     soporte_informe?: string;
-    id_regional?: number;
+    id_actividad?: number;
     regional?: string;
     relacion_facturas?: boolean;
     id_programa?: number;
     total_registros?: number;
+    actividad?: string;
+    rubro_corto?: string;
     constructor(data?: Partial<Viajes>) {
         Object.assign(this, data);
     }

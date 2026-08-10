@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, catchError, iif, map, merge, of, share, startWith, switchMap, tap } from 'rxjs';
+import { Injectable, inject, OnDestroy } from '@angular/core';
+import { BehaviorSubject, catchError, iif, map, merge, of, share, startWith, Subject, switchMap, tap, takeUntil } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
+import { AccountInfo, BrowserAuthError, EventMessage, EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { filterObject, isEmptyObject } from './helpers';
 import { User } from './interface';
@@ -11,13 +11,14 @@ import { TokenService } from './token.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private readonly loginService = inject(LoginService);
   private readonly tokenService = inject(TokenService);
   private readonly msalService = inject(MsalService);
   private readonly msalBroadcastService = inject(MsalBroadcastService);
 
   private user$ = new BehaviorSubject<User>({});
+  private readonly destroy$ = new Subject<void>();
 
   /** Subject que emite para forzar carga inicial del menú. */
   private initTrigger$ = new BehaviorSubject<void>(undefined);
@@ -43,7 +44,42 @@ export class AuthService {
   );
 
   init() {
+    // Detectar fallos de adquisición de token por inactividad y forzar re-login.
+    this.msalBroadcastService.msalSubject$
+      .pipe(
+        filter(
+          (event: EventMessage) =>
+            event.eventType === EventType.ACQUIRE_TOKEN_FAILURE
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: EventMessage) => {
+        const isInteractionRequired = event.error instanceof InteractionRequiredAuthError;
+        const isInteractionInProgress =
+          event.error instanceof BrowserAuthError &&
+          (event.error as BrowserAuthError).errorCode === 'interaction_in_progress';
+
+        if (isInteractionRequired || isInteractionInProgress) {
+          console.warn('AuthService: Token no renovable, limpiando estado y redirigiendo...', event.error);
+          // Limpiar el lock de interacción que MSAL guarda en sessionStorage para
+          // desbloquear adquisiciones futuras.
+          sessionStorage.removeItem('msal.interaction.status');
+          this.msalService.instance.clearCache();
+          this.tokenService.clear();
+          this.user$.next({});
+          this.msalService.loginRedirect({
+            scopes: [],
+            prompt: 'select_account',
+          });
+        }
+      });
+
     return new Promise<void>(resolve => this.change$.subscribe(() => resolve()));
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /** Dispara el cargue inicial del menú cuando MSAL está listo. */

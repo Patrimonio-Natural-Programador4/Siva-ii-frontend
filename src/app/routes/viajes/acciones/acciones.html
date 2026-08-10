@@ -21,6 +21,61 @@
                                 <div class="col-md-12 mb-12">
                                     <hr>
                                 </div>
+                                <div class="col-md-4">
+                                    <label for="id_rubro" class="form-label">Rubro*</label>
+                                    <div class="position-relative">
+                                        <input id="id_rubro"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Busque y seleccione el rubro"
+                                            autocomplete="off"
+                                            required
+                                            #rubro="ngModel"
+                                            [(ngModel)]="rubroSearch"
+                                            (ngModelChange)="onRubroSearchChange($event)"
+                                            (focus)="onRubroFocus()"
+                                            (blur)="onRubroBlur()"
+                                            name="id_rubro_search" />
+                                        <input type="hidden" name="id_rubro" [(ngModel)]="viajeData.id_rubro" />
+                                        @if (showRubroDropdown && filteredRubros.length > 0 && rubroSearch.trim().length > 0) {
+                                            <ul class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000; max-height: 220px; overflow-y: auto;">
+                                                @for (data of filteredRubros; track data.identity) {
+                                                    <button type="button" class="list-group-item list-group-item-action text-start" (click)="selectRubro(data)">
+                                                        {{ data.valor }}
+                                                    </button>
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                    @if (rubro.invalid && (rubro.dirty ||
+                                    rubro.touched)) {
+                                    <div class="invalid-feedback d-block">
+                                        <span class="text-danger">Este campo es requerido.</span>
+                                    </div>
+                                    }
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="categoria" class="form-label">Categoría de Gasto (Actividad)*</label>
+                                    <input
+                                        readonly
+                                        disabled
+                                        id="actividad"
+                                        type="text"
+                                        class="form-control"
+                                        required
+                                        maxlength="255"
+                                        placeholder="Categoría de Gasto (Actividad)"
+                                        [(ngModel)]="viajeData.actividad"
+                                        name="actividad"
+                                        #actividad="ngModel"
+                                        [class.is-invalid]="actividad.invalid && (actividad.dirty || actividad.touched)"
+                                    />
+                                    @if (actividad.invalid && (actividad.dirty || actividad.touched)) {
+                                        <div class="invalid-feedback d-block">
+                                        <span class="text-danger">Este campo es requerido.</span>
+                                        </div>
+                                    }
+                                </div>
                                 <div class="col-md-12 mb-12">
                                     <label for="objetivo" class="form-label">Objetivo del viaje
                                         *</label>

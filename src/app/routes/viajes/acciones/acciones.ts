@@ -140,12 +140,28 @@ export class AccionesViajes implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly drawer = inject(MtxDrawer);
 
+  get rubroOptions(): ListaGenerica[] {
+    return this.listados[8]?.lista_generica ?? [];
+  }
+
+  get filteredRubros(): ListaGenerica[] {
+    const term = this.rubroSearch?.trim().toLowerCase() ?? '';
+
+    if (!term) {
+      return this.rubroOptions;
+    }
+
+    return this.rubroOptions.filter(option => option.valor?.toLowerCase().includes(term));
+  }
+
   isLoading = false;
   isLinear = true;
   listados: Listados[] = [];
   listaRoles: ListaGenerica[] = [];
   numeroRolesAsignados: number | null = null;
   fecha_solicitud: Date = new Date();
+  rubroSearch = '';
+  showRubroDropdown = false;
 
 
   responseRequest = new ResponseRequest({
@@ -211,6 +227,7 @@ export class AccionesViajes implements OnInit {
       this.viajeData = data;
       this.fechaInicio = this.viajeData.fecha_inicio_viaje;
       this.fechaFin = this.viajeData.fecha_fin_viaje;
+      this.syncRubroSelection();
       
       if (this.viajeData.id_viaje) {
         // this.getHistorialAprobacion(this.viajeData.id_viaje);
@@ -280,6 +297,41 @@ export class AccionesViajes implements OnInit {
     )
   }
 
+  onRubroSearchChange(value: string): void {
+    this.rubroSearch = value ?? '';
+    this.showRubroDropdown = true;
+
+    if (!this.rubroSearch.trim()) {
+      this.viajeData.id_rubro = null!;
+    }
+  }
+
+  onRubroFocus(): void {
+    this.showRubroDropdown = true;
+  }
+
+  onRubroBlur(): void {
+    // Delay avoids blur firing before option click is processed.
+    setTimeout(() => {
+      this.showRubroDropdown = false;
+    }, 120);
+  }
+
+  selectRubro(option: ListaGenerica): void {
+    this.viajeData.id_rubro = option.identity;
+    this.rubroSearch = option.valor ?? '';
+    this.showRubroDropdown = false;
+    const rubro = this.listados[8]?.lista_generica?.find(r => r.identity === option.identity);
+    this.viajeData.actividad = rubro?.valor_referencia ?? '';
+    this.viajeData.id_actividad = rubro?.idrelacion ?? null!;
+    this.viajeData.rubro_corto = rubro?.valor_referencia2 ?? '';
+  }
+
+  private syncRubroSelection(): void {
+    const selected = this.rubroOptions.find(option => option.identity === this.viajeData.id_rubro);
+    this.rubroSearch = selected?.valor ?? '';
+  }
+
   getListados(): void {
     this.service.getListados().subscribe({
       next: data => {
@@ -287,6 +339,7 @@ export class AccionesViajes implements OnInit {
           this.listados = data;
           this.usuarios = this.listados[7]?.lista_generica ?? [];
           this.usuariosFilter = this.usuarios;
+          this.syncRubroSelection();
         });
       },
       error: () => {

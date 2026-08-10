@@ -1,91 +1,51 @@
-<div class="d-flex w-full h-full">
-  <mat-card class="m-auto" style="max-width: 380px">
-    <mat-card-header class="m-b-24">
-      <mat-card-title>Bienvenido al sistema de información SIVA II demo</mat-card-title>
-    </mat-card-header>
+<div class="login-wrapper">
+  <!-- Left Side: Clean Hero Nature Background -->
+  <div class="login-left"></div>
 
-     <mat-card-content>
-      <p>
-        Inicia sesion para acceder a los servicios.
-      </p>
-    </mat-card-content>
+  <!-- Right Side: Main Login Panel -->
+  <div class="login-right">
+    <div class="login-card-content">
+      <div class="main-logo-container">
+        <img src="images/logos/logoSIVA.png" alt="SIVA II" class="logo-main">
+      </div>
 
-    <mat-card-actions>
-      <button mat-flat-button color="primary" (click)="loginRedirect()">
-        <mat-icon>login</mat-icon>
-        Iniciar sesion
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+      <div class="welcome-text">
+        <h1 class="welcome-title">Bienvenido</h1>
+        <p class="welcome-subtitle">A nuestro sistema de información</p>
+      </div>
 
-<!-- <div class="d-flex w-full h-full">
-  <mat-card class="m-auto" style="max-width: 380px">
-    <mat-card-header class="m-b-24">
-      <mat-card-title>👋 {{ 'login_title' | translate }}!</mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <form class="form-field-full" [formGroup]="loginForm">
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'username' | translate }}: ng-matero</mat-label>
-          <input matInput placeholder="ng-matero" formControlName="username" required />
-          @if (username.invalid) {
-            <mat-error>
-              @if (username.errors?.['required']) {
-                <span>
-                  {{ 'please_enter' | translate }}
-                  <strong>ng-matero</strong>
-                </span>
-              }
-              @if (username.errors?.['remote']) {
-                <span>{{ username.errors?.['remote'] }}</span>
-              }
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'password' | translate }}: ng-matero</mat-label>
-          <input
-            matInput
-            placeholder="ng-matero"
-            type="password"
-            formControlName="password"
-            required
-          />
-          @if (password.invalid) {
-            <mat-error>
-              @if (password.errors?.['required']) {
-                <span>
-                  {{ 'please_enter' | translate }}
-                  <strong>ng-matero</strong>
-                </span>
-              }
-              @if (password.errors?.['remote']) {
-                <span>{{ password.errors?.['remote'] }}</span>
-              }
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-checkbox formControlName="rememberMe">{{ 'remember_me' | translate }}</mat-checkbox>
-
-        <button
-          class="w-full m-y-16"
-          matButton="filled"
-          [disabled]="!!loginForm.invalid"
-          [loading]="isSubmitting"
-          (click)="login()"
-        >
-          {{ 'login' | translate }}
+      <div class="action-container">
+        <button class="btn-login-sso" (click)="loginRedirect()">
+          <div class="microsoft-logo-icon">
+            <span class="square red"></span>
+            <span class="square green"></span>
+            <span class="square blue"></span>
+            <span class="square yellow"></span>
+          </div>
+          <span>INICIA SESIÓN CON SU CORREO</span>
         </button>
+      </div>
 
-        <div>
-          <span>{{ 'have_no_account' | translate }}?</span>
-          <a routerLink="/auth/register">{{ 'create_one_account' | translate }}</a>
+      <!-- Institutional and Supporting Logos -->
+      <div class="logos-container">
+        <div class="institutional-logos">
+          <img src="images/logos/logo_patrimonio.png" alt="Patrimonio Natural" class="logo-inst">
+          <img src="images/logos/minambiente.png" alt="Minambiente" class="logo-inst">
+          <img src="images/logos/sivarem.png" alt="SIVA REM" class="logo-inst">
         </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div> -->
+
+        <div class="support-logos-section">
+          <p class="support-label">Con el apoyo de</p>
+          <div class="support-logos-row">
+            <img src="images/logos/Noruega.png" alt="Noruega" class="logo-support">
+            <img src="images/logos/UK_Government_Overseas_Logo.svg.png" alt="UK Government"
+              class="logo-support">
+            <img src="images/logos/kfw-rgb.png" alt="KfW" class="logo-support">
+            <img src="images/logos/logo_coop_alemana.png" alt="Cooperación Alemana"
+              class="logo-support">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
