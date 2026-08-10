@@ -15,7 +15,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { Listados } from 'src/app/models/listados';
 import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
@@ -43,7 +42,6 @@ import {
     CommonModule,
     FormsModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatMenuModule
 ],
 })
