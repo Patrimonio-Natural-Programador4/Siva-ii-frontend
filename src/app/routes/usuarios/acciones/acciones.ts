@@ -226,7 +226,7 @@ export class Acciones implements OnInit {
 
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     this.usuarioData.is_guest = this.usuarioData.id == 0 || this.usuarioData.id == null ? true : this.usuarioData.is_guest;
-    const esNuevo = !this.usuarioData.guid || this.usuarioData.id == 0 || this.usuarioData.id == null;
+    const esNuevo = !this.usuarioData.guid;
     const request$ = esNuevo
       ? this.usuariosService.crearUsuario(this.usuarioData)
       : this.usuariosService.actualizarUsuario(this.userGuid, this.usuarioData);

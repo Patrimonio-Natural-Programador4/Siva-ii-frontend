@@ -157,27 +157,26 @@
                     <mat-icon title="Continuar flujo de aprobación"
                       alt="Continuar flujo de aprobación">clear_all</mat-icon>
                   </a>
+
+                  <button matButton [matMenuTriggerFor]="menu"
+                    style="background-color: transparent; border: none; color: #5856d6;"><mat-icon>visibility</mat-icon></button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="verPDF(element.guid)">Información general</button>
+                  </mat-menu>
+
                   <!-- <a href="javascript:void(0)" style="text-decoration: none;" title="Continuar flujo de aprobación"
                     alt="Continuar flujo de aprobación" (click)="continuarFlujo(element.guid)">
                     <mat-icon title="Continuar flujo de aprobación"
                       alt="Continuar flujo de aprobación">compare_arrows</mat-icon>
                   </a>
                   <a href="javascript:void(0)" *ngIf="habilitarLegalizacion(element.guid)"
-                    style="text-decoration: none;" style="text-decoration: none;" title="Legalización de viaje"
+                    style="text-decoration: none;" title="Legalización de viaje"
                     alt="Legalización de viaje" (click)="legalizacion(element.guid)">
                     <mat-icon title="Legalización de viaje" alt="Legalización de viaje">attach_money</mat-icon>
                   </a>
-                  <button matButton [matMenuTriggerFor]="menu"
-                    style="background-color: transparent; border: none; color: #5856d6;"><mat-icon>visibility</mat-icon></button>
-                  <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="verPDF(element.guid)">Información general</button>
-                    <button mat-menu-item (click)="verPDFConsolidado(element.guid, element.codigo)">Información
-                      consolidada</button>
-                  </mat-menu>
-
                   <a href="javascript:void(0)"
                     *ngIf="(((element.id_estado == 1) || (element.id_estado == 3 && element.guid_msft_ajuste == guidUsr) || (element.orden_actual_solicitud != null && element.orden_actual_solicitud <= 2 && element.id_estado == 2)) && element.aprobo_supervisor == false && element.guid_usr == guidUsr) || habilitarAnular"
-                    style="text-decoration: none;" style="text-decoration: none; color: #ff0000;" title="Anular viaje"
+                    style="text-decoration: none; color: #ff0000;" title="Anular viaje"
                     alt="Anular viaje" (click)="anular(element.guid)">
                     <mat-icon title="Anular viaje" alt="Anular viaje">cancel</mat-icon>
                   </a> -->

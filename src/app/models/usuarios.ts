@@ -17,6 +17,7 @@ export class Usuarios {
     program_ids?: number[];
     role_ids?: number[];
     is_guest?: boolean;
+    reenviar_invitacion?: boolean;
     // roles?: Roles[];
     constructor(
         data?: Partial<Usuarios>

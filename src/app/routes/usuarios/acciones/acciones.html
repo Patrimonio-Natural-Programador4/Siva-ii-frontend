@@ -13,7 +13,7 @@
               <ng-template matStepLabel>Información general</ng-template>
 
               <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="first_name" class="form-label">Primer nombre*</label>
                   <input
                     id="first_name"
@@ -34,7 +34,7 @@
                   }
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="other_name" class="form-label">Segundo nombre</label>
                   <input
                     id="other_name"
@@ -47,7 +47,7 @@
                   />
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="last_name" class="form-label">Primer apellido*</label>
                   <input
                     id="last_name"
@@ -68,7 +68,7 @@
                   }
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="other_last_name" class="form-label">Segundo apellido</label>
                   <input
                     id="other_last_name"
@@ -81,7 +81,7 @@
                   />
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="identification_type" class="form-label">Tipo identificación*</label>
                   <input
                     id="identification_type"
@@ -101,7 +101,7 @@
                   }
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="identification_number" class="form-label">Número identificación*</label>
                   <input
                     id="identification_number"
@@ -121,7 +121,7 @@
                   }
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="email" class="form-label">Correo*</label>
                   <input
                     id="email"
@@ -142,7 +142,7 @@
                   }
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                   <label for="position" class="form-label">Cargo</label>
                   <input
                     id="position"
@@ -155,8 +155,22 @@
                   />
                 </div>
 
-                <div class="col-12 mb-3">
+                <div class="col-4 mb-3">
                   <mat-checkbox [(ngModel)]="usuarioData.is_active" name="is_active" color="primary">Usuario activo</mat-checkbox>
+                </div>
+                <div class="col-4 mb-3">
+                   <label for="reenviar_invitacion" class="form-label">Reenviar invitación*</label>
+                    <div>
+                        <input type="radio" [value]="true"
+                            id="reenviar_invitacion_s" name="reenviar_invitacion"
+                            [(ngModel)]="usuarioData.reenviar_invitacion">
+                        <label class="" for="reenviar_invitacion_s">&nbsp;Si</label>
+                        &nbsp;
+                        <input type="radio" [value]="false"
+                            id="reenviar_invitacion_n" name="reenviar_invitacion"
+                            [(ngModel)]="usuarioData.reenviar_invitacion">
+                        <label class="" for="reenviar_invitacion_n">&nbsp;No</label>
+                    </div>
                 </div>
               </div>
 

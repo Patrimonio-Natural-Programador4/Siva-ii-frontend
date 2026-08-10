@@ -18,6 +18,7 @@ import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacio
 import { Viajes } from 'src/app/models/viajes';
 import { UsuarioAjusteForm } from 'src/app/routes/flujos-aprobacion/usuario-ajuste-form';
 import { ViajesService } from 'src/app/services/viajes.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-detalle',
@@ -323,4 +324,8 @@ export class Detalle implements OnInit {
     });
   }
 
+  verPDF(guid: string): void {
+    const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
+    window.open(url, '_blank');
+  }
 }

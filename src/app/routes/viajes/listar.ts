@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Listados } from 'src/app/models/listados';
+import { environment } from '@env/environment';
+import { MatMenuModule } from '@angular/material/menu';
 import {
   MsalService
 } from '@azure/msal-angular';
@@ -41,7 +43,8 @@ import {
     CommonModule,
     FormsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatMenuModule
 ],
 })
 export class ListarViajes  implements OnInit, AfterViewInit {
@@ -167,5 +170,10 @@ export class ListarViajes  implements OnInit, AfterViewInit {
       habilitarEdicion = true;
     }
     return habilitarEdicion;
+  }
+
+  verPDF(guid: string): void {
+    const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
+    window.open(url, '_blank');
   }
 }
