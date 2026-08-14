@@ -3,54 +3,73 @@
   <div class="col-sm-12">
     <mat-card class="app-data-card">
       <mat-card-header class="app-data-card__header">
-        <mat-card-title>{{ accion }} Aprobación documentos</mat-card-title>
+        <mat-card-title>{{ accion }} Aprobación codigos</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
-        <form novalidate #formAprobacionDoc="ngForm" class="aprobaciondoc-form">
 
-          <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-              <label for="documento" class="form-label">Nombre del documento*</label>
-              <input id="documento" type="text" class="form-control"
-                placeholder="Nombre del documento" required
-                [(ngModel)]="documentapprovalData.documento" name="documento" maxlength="255"
-                #documento="ngModel"
-                [class.is-invalid]="documento.invalid && (documento.dirty || documento.touched)" />
-              @if (documento.invalid && (documento.dirty || documento.touched)) {
-              <div class="invalid-feedback d-block">
-                <span class="text-danger">Este campo es requerido.</span>
+      <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+        <mat-step>
+          <form novalidate #formAprobacionDoc="ngForm" class="aprobaciondoc-form">
+            <ng-template matStepLabel>Información general</ng-template>
+            <div class="row">
+              <div class="col-12 col-lg-4 mb-3">
+                <label for="documento" class="form-label">Nombre del documento*</label>
+                <input id="documento" type="text" class="form-control"
+                  placeholder="Nombre del documento" required
+                  [(ngModel)]="documentapprovalData.documento" name="documento" maxlength="255"
+                  #documento="ngModel"
+                  [class.is-invalid]="documento.invalid && (documento.dirty || documento.touched)" />
+                @if (documento.invalid && (documento.dirty || documento.touched)) {
+                <div class="invalid-feedback d-block">
+                  <span class="text-danger">Este campo es requerido.</span>
+                </div>
+                }
               </div>
-              }
+
+              <div class="col-12 col-lg-4 mb-3">
+                <label for="id_categoria" class="form-label">Categoría de aprobación*</label>
+                <select id="id_categoria" class="form-select" placeholder="Categoría de aprobación"
+                  required [(ngModel)]="documentapprovalData.approval_category_id"
+                  name="id_categoria">
+                  <option [ngValue]="null" disabled>Seleccione la categoría</option>
+                  @for (categoria of listados[1]?.lista_generica ?? []; track categoria.identity) {
+                  <option [ngValue]="categoria.identity">{{ categoria.valor }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-12 col-lg-4 mb-3">
+                <label for="id_programa" class="form-label">Programa*</label>
+                <select id="id_programa" class="form-select" required
+                  [(ngModel)]="documentapprovalData.program_id" name="id_programa">
+                  <option [ngValue]="null" disabled>Seleccione el programa</option>
+                  @for (programa of listados[2]?.lista_generica ?? []; track programa.identity) {
+                  <option [ngValue]="programa.identity">{{ programa.valor }}</option>
+                  }
+                </select>
+              </div>
             </div>
 
-            <div class="col-12 col-lg-4 mb-3">
-              <label for="id_categoria" class="form-label">Categoría de aprobación*</label>
-              <select id="id_categoria" class="form-select" required
-                [(ngModel)]="documentapprovalData.approval_category_id" name="id_categoria">
-                <option [ngValue]="null" disabled>Seleccione la categoría</option>
-                @for (categoria of listados[1]?.lista_generica ?? []; track categoria.identity) {
-                <option [ngValue]="categoria.identity">{{ categoria.valor }}</option>
-                }
-              </select>
+            <div class="roles-step-actions d-flex justify-content-end">
+              <button mat-flat-button color="primary" type="button" matStepperNext
+                [disabled]="!formAprobacionDoc.valid">
+                Continuar
+              </button>
             </div>
+          </form>
+        </mat-step>
 
-            <div class="col-12 col-lg-4 mb-3">
-              <label for="id_programa" class="form-label">Programa*</label>
-              <select id="id_programa" class="form-select" required
-                [(ngModel)]="documentapprovalData.program_id" name="id_programa">
-                <option [ngValue]="null" disabled>Seleccione el programa</option>
-                @for (programa of listados[2]?.lista_generica ?? []; track programa.identity) {
-                <option [ngValue]="programa.identity">{{ programa.valor }}</option>
-                }
-              </select>
-            </div>
-
-
-
+        <mat-step>
+          <ng-template matStepLabel>Documentos</ng-template>
+          <div class="d-flex justify-content-end my-3">
+            <button mat-raised-button color="primary" (click)="openDialog()">
+              Crear documento
+            </button>
           </div>
-        </form>
-      </mat-card-content>
+          <app-tipos-documento-acuerdo-tabla />
+        </mat-step>
 
+
+      </mat-vertical-stepper>
       <mat-card-actions align="end">
         <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
         <button mat-flat-button color="primary" type="button" (click)="guardarDocumento()"
