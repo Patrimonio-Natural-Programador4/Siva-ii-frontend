@@ -79,7 +79,7 @@
   "icon": "assignment",
   "children": [
     {
-      "route": "",
+      "route": "evaluacion-capacidades",
       "name": "Evaluación-capacidades",
       "type": "link"
     },

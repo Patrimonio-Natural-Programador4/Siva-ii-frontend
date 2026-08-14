@@ -1,0 +1,117 @@
+<div class="drawer-container">
+
+
+  <div class="drawer-header">
+    <h2 class="d-flex align-items-center justify-content-between m-t-0 f-w-400 m-b-0">
+      <span class="d-flex align-items-center gap-2">
+        Registrar Tipo de Documento
+      </span>
+      <button mat-icon-button type="button" aria-label="Cerrar" (click)="cerrar()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+  </div>
+
+
+  <div class="drawer-content">
+    <form novalidate #f="ngForm" class="roles-step-form">
+      <div class="row">
+
+        <div class="col-12 mb-3">
+          <label for="template" class="form-label">Nombre del documento*</label>
+          <input id="template" type="text" class="form-control"
+            placeholder="Ingresa el nombre del documento" required
+            [(ngModel)]="typedocagreData.template" name="template" maxlength="255"
+            #template="ngModel"
+            [class.is-invalid]="template.invalid && (template.dirty || template.touched)" />
+          @if (template.invalid && (template.dirty || template.touched)) {
+          <div class="invalid-feedback d-block">
+            <span class="text-danger">Este campo es requerido.</span>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 mb-3">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <textarea id="descripcion" class="form-control" rows="3"
+            placeholder="Ingresa la descripción" [(ngModel)]="typedocagreData.description"
+            name="descripcion" maxlength="255"></textarea>
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <label for="code" class="form-label">Código*</label>
+          <input id="code" type="text" class="form-control" placeholder="Ingresa el código..."
+            required [(ngModel)]="typedocagreData.code" name="code" maxlength="255" #code="ngModel"
+            [class.is-invalid]="code.invalid && (code.dirty || code.touched)" />
+          @if (code.invalid && (code.dirty || code.touched)) {
+          <div class="invalid-feedback d-block">
+            <span class="text-danger">Este campo es requerido.</span>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <label for="number" class="form-label">Número*</label>
+          <input id="number" type="text" class="form-control" placeholder="Ingresa el número..."
+            required [(ngModel)]="typedocagreData.number" name="number" maxlength="255"
+            #number="ngModel"
+            [class.is-invalid]="number.invalid && (number.dirty || number.touched)" />
+          @if (number.invalid && (number.dirty || number.touched)) {
+          <div class="invalid-feedback d-block">
+            <span class="text-danger">Este campo es requerido.</span>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 mb-3">
+          <label for="template_path" class="form-label">Ruta documento*</label>
+          <input id="template_path" type="text" class="form-control"
+            placeholder="Ingresa la ruta del documento..." required
+            [(ngModel)]="typedocagreData.template_path" name="template_path" maxlength="255"
+            #template_path="ngModel"
+            [class.is-invalid]="template_path.invalid && (template_path.dirty || template_path.touched)" />
+          @if (template_path.invalid && (template_path.dirty || template_path.touched)) {
+          <div class="invalid-feedback d-block">
+            <span class="text-danger">Este campo es requerido.</span>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 mb-3">
+          <label for="documents_approval_id" class="form-label">Documento de aprobación*</label>
+          <select id="documents_approval_id" class="form-select" required
+            [(ngModel)]="typedocagreData.documents_approval_id" name="documents_approval_id"
+            #documents_approval_id="ngModel"
+            [class.is-invalid]="documents_approval_id.invalid && (documents_approval_id.dirty || documents_approval_id.touched)">
+            <option [ngValue]="0" disabled selected>Selecciona una opción...</option>
+            @for (item of documents; track item.id) {
+            <option [ngValue]="item.id">{{ item.documento }}</option>
+            }
+          </select>
+          @if (documents_approval_id.invalid && (documents_approval_id.dirty ||
+          documents_approval_id.touched)) {
+          <div class="invalid-feedback d-block">
+            <span class="text-danger">Este campo es requerido.</span>
+          </div>
+          }
+        </div>
+
+        <div class="col-12 mb-3">
+          <mat-checkbox color="primary" name="is_active" [(ngModel)]="typedocagreData.is_active">
+            Requerido
+          </mat-checkbox>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="drawer-footer">
+    <button mat-button type="button" (click)="cerrar()">Cancelar </button>
+    <button mat-flat-button color="primary" type="button" [disabled]="!f.valid"
+      (click)="guardarDocumento()">
+      Guardar documento
+    </button>
+  </div>
+
+</div>

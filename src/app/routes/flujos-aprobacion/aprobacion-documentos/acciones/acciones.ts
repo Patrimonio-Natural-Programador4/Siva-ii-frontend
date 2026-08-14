@@ -6,23 +6,33 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageHeader } from '@shared';
-import { of } from 'rxjs';
+import { identity, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+import { PageHeader } from '@shared';
 import { AprobacionDocumentos } from 'src/app/models/aprobacion-documentos';
+import { TipoDocumentoAcuerdoModel } from 'src/app/models/tipos-documento-acuerdos';
 import { ResponseRequest } from 'src/app/models/response-request';
 import { AprobacionDocumentosService } from 'src/app/services/aprobacion-documentos/aprobacion-documentos.service';
 import { Listados } from 'src/app/models/listados';
 import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
+import { TiposDocumentoAcuerdoFormulario } from '../tipos-documento-acuerdo/tipos-documento-acuerdo-formulario/tipos-documento-acuerdo-formulario';
+import { TiposDocumentoAcuerdoTabla } from '../tipos-documento-acuerdo/tipos-documento-acuerdo-tabla/tipos-documento-acuerdo-tabla';
 
 @Component({
-  selector: 'app-programs-acciones',
+  selector: 'app-aprobacion-documentos-acciones',
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
   imports: [
@@ -33,23 +43,32 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatCheckboxModule,
+    MatStepperModule,
+    MatTableModule,
+    TiposDocumentoAcuerdoTabla,
+    MatDialogModule,
+    MatInputModule,
   ],
 })
 export class AccionesAprobacionDocumentos implements OnInit {
   private readonly AprobacionDocumentosService = inject(AprobacionDocumentosService);
+
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly service = inject(FlujosAprobacionService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly dialog = inject(MatDialog);
 
   accion = 'Nuevo';
   id: number | null | undefined = null;
   isLoading = false;
+  isLinear = true;
   listados: Listados[] = [];
-
   categoriasList: any[] = [];
   programasList: any[] = [];
+  documents: AprobacionDocumentos[] = [];
 
   documentapprovalData: AprobacionDocumentos = new AprobacionDocumentos({
     approval_category_id: 0,
@@ -63,6 +82,11 @@ export class AccionesAprobacionDocumentos implements OnInit {
     solicitud_exitosa: false,
   });
 
+  typedocagreData: TipoDocumentoAcuerdoModel | null = null;
+  onTipoDocAcuerdoChange(data: TipoDocumentoAcuerdoModel): void {
+    this.typedocagreData = data;
+  }
+
   ngOnInit(): void {
     const idParam = this.activatedRoute.snapshot.params['id'];
     this.id = idParam ? Number(idParam) : null;
@@ -71,14 +95,25 @@ export class AccionesAprobacionDocumentos implements OnInit {
     this.getListados();
   }
 
+  //constructor(private dialog: MatDialog) {}
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(TiposDocumentoAcuerdoFormulario, {
+      position: { right: '0px', top: '25vh' },
+      width: '25vw',
+      height: '50vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-height-dialog',
+    });
+  }
+
   getListados(): void {
     this.service
       .getListadosFlujos()
       .pipe(
         switchMap(data => {
           this.listados = data ?? [];
-
-          // Asignamos las listas de forma segura
           this.categoriasList = this.listados[1]?.lista_generica ?? [];
           this.programasList = this.listados[2]?.lista_generica ?? [];
 
@@ -96,10 +131,8 @@ export class AccionesAprobacionDocumentos implements OnInit {
             if (data.documento) {
               this.documentapprovalData.documento = data.documento;
             }
-
             console.log('Datos cargados correctamente:', this.documentapprovalData);
           }
-
           setTimeout(() => {
             this.cdr.markForCheck();
           }, 0);
@@ -114,9 +147,7 @@ export class AccionesAprobacionDocumentos implements OnInit {
     if (this.isLoading) {
       return;
     }
-
     this.isLoading = true;
-
     const request$ = this.id
       ? this.AprobacionDocumentosService.updateDoc(this.documentapprovalData)
       : this.AprobacionDocumentosService.saveDocument(this.documentapprovalData);
@@ -126,7 +157,10 @@ export class AccionesAprobacionDocumentos implements OnInit {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
-          this.router.navigate(['/flujos-aprobacion/aprobacion-documentos']);
+          const prueba = {
+            ...this.typedocagreData,
+            documents_approval_id: response.identity,
+          };
         } else {
           this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });
         }

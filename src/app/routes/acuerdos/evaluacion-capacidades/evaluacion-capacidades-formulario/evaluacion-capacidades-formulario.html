@@ -1,0 +1,211 @@
+<page-header />
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>{{ accion }} Evaluación de capacidades</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="pt-3">
+        <form novalidate #fPrograma="ngForm" class="programs-form">
+
+          <!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
+          <div class="row mb-2">
+            <div class="col-12">
+              <h6 class="text-primary font-weight-bold border-bottom pb-2">Información General</h6>
+            </div>
+
+            <!-- Nombre -->
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label font-weight-bold">Nombre*</label>
+              <input id="name" type="text" class="form-control" placeholder="Ingrese el nombre"
+                required [(ngModel)]="evaCapacidadesData.name" name="name" maxlength="255"
+                #name="ngModel" [class.is-invalid]="name.invalid && (name.dirty || name.touched)" />
+              @if (name.invalid && (name.dirty || name.touched)) {
+              <div class="invalid-feedback d-block">
+                <span class="text-danger">Este campo es requerido.</span>
+              </div>
+              }
+            </div>
+
+            <!-- Código -->
+            <div class="col-md-6 mb-3">
+              <label for="code" class="form-label font-weight-bold">Código*</label>
+              <input id="code" type="text" class="form-control" placeholder="Ingrese el código"
+                required [(ngModel)]="evaCapacidadesData.code" name="code" maxlength="255"
+                #code="ngModel" [class.is-invalid]="code.invalid && (code.dirty || code.touched)" />
+              @if (code.invalid && (code.dirty || code.touched)) {
+              <div class="invalid-feedback d-block">
+                <span class="text-danger">Este campo es requerido.</span>
+              </div>
+              }
+            </div>
+
+            <!-- Estado de Evaluación -->
+            <div class="col-md-6 mb-3">
+              <label for="capacity_assessments_state" class="form-label font-weight-bold">Estado de
+                Evaluación</label>
+              <select id="capacity_assessments_state" name="capacity_assessments_state"
+                class="form-select text-capitalize"
+                [(ngModel)]="evaCapacidadesData.capacity_assessments_state">
+                <option value="" disabled selected>Seleccione un estado</option>
+                @for (item of states; track item.id || $index) {
+                <option [value]="item.id" class="text-capitalize">
+                  {{ (item.state || '') | titlecase }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- Modalidad -->
+            <div class="col-md-6 mb-3">
+              <label for="modalities" class="form-label font-weight-bold">Modalidad</label>
+              <select id="modalities" name="modalities" class="form-select text-capitalize"
+                [(ngModel)]="evaCapacidadesData.modalitie">
+                <option value="" disabled selected>Seleccione una modalidad</option>
+                @for (item of modalities; track item.id || $index) {
+                <option [value]="item.id" class="text-capitalize">
+                  {{ (item.name || '') | titlecase }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- Observación -->
+            <div class="col-12 mb-3">
+              <label for="observation" class="form-label font-weight-bold">Observaciones</label>
+              <textarea id="observation" class="form-control" rows="3"
+                placeholder="Observación evaluación de capacidades"
+                [(ngModel)]="evaCapacidadesData.observation" name="observation"
+                maxlength="255"></textarea>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 2: ASIGNACIÓN Y ASOCIACIONES -->
+          <div class="row mb-2">
+            <div class="col-12 mt-2">
+              <h6 class="text-primary font-weight-bold border-bottom pb-2">Clasificación y Entidades
+              </h6>
+            </div>
+
+            <!-- Programa -->
+            <div class="col-md-6 mb-3">
+              <label for="programa" class="form-label font-weight-bold">Programa</label>
+              <select id="programa" name="programa" class="form-select"
+                [(ngModel)]="evaCapacidadesData.programa">
+                <option value="" disabled selected>Seleccione un programa</option>
+                @for (prog of programs; track prog.id_programa || $index) {
+                <option [value]="prog.id_programa">
+                  {{ prog.name }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- PID -->
+            <div class="col-md-6 mb-3">
+              <label for="pid" class="form-label font-weight-bold">PID</label>
+              <select id="pid" name="pid" class="form-select" [(ngModel)]="evaCapacidadesData.pid">
+                <option value="" disabled selected>Seleccione un PID</option>
+                @for (pid of pids; track pid.id || $index) {
+                <option [value]="pid.id">
+                  {{ pid.name }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- Implementadora -->
+            <div class="col-md-6 mb-3">
+              <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
+              <select id="implementer" name="implementer" class="form-select"
+                [(ngModel)]="evaCapacidadesData.implementer">
+                <option value="" disabled selected>Seleccione una implementadora</option>
+                @for (implementer of implementers; track implementer.id || $index) {
+                <option [value]="implementer.id">
+                  {{ implementer.name || implementer.acronym }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- Persona -->
+            <div class="col-md-6 mb-3">
+              <label for="person" class="form-label font-weight-bold">Persona Responsable</label>
+              <select id="person" name="person" class="form-select text-capitalize"
+                [(ngModel)]="evaCapacidadesData.person">
+                <option value="" disabled selected>Seleccione una persona</option>
+                @for (person of persons; track person.id || $index) {
+                <option [value]="person.id" class="text-capitalize">
+                  {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : '' }}{{
+                  person.last_name || '' }} {{ person.other_last_name || '' }}
+                </option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 3: FECHAS Y VALORES -->
+          <div class="row">
+            <div class="col-12 mt-2">
+              <h6 class="text-primary font-weight-bold border-bottom pb-2">Fechas y Presupuesto</h6>
+            </div>
+
+            <!-- Valor aproximado -->
+            <div class="col-md-12 mb-3">
+              <label for="approximate_value" class="form-label font-weight-bold">Valor
+                Aproximado</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input id="approximate_value" type="number" class="form-control" placeholder="0.00"
+                  [(ngModel)]="evaCapacidadesData.approximate_value" name="approximate_value" />
+              </div>
+            </div>
+
+            <!-- Fechas -->
+            <div class="col-md-6 mb-3">
+              <label for="policy_approval_date" class="form-label font-weight-bold">Fecha aprobación
+                de política</label>
+              <input id="policy_approval_date" type="date" class="form-control"
+                [(ngModel)]="evaCapacidadesData.policy_approval_date" name="policy_approval_date" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="document_signature_date" class="form-label font-weight-bold">Fecha firma
+                de documento</label>
+              <input id="document_signature_date" type="date" class="form-control"
+                [(ngModel)]="evaCapacidadesData.document_signature_date"
+                name="document_signature_date" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="start_date" class="form-label font-weight-bold">Fecha inicio</label>
+              <input id="start_date" type="date" class="form-control"
+                [(ngModel)]="evaCapacidadesData.start_date" name="start_date" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="end_date" class="form-label font-weight-bold">Fecha terminación</label>
+              <input id="end_date" type="date" class="form-control"
+                [(ngModel)]="evaCapacidadesData.end_date" name="end_date" />
+            </div>
+          </div>
+
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions align="end" class="p-3">
+        <button mat-stroked-button type="button" class="me-2" (click)="volver()">Cancelar</button>
+        <button mat-flat-button color="primary" type="button"
+          (click)="guardarEvaluacionCapacidades()" [disabled]="isLoading || !fPrograma.valid">
+          @if (isLoading) {
+          <mat-spinner diameter="18" />
+          } @else {
+          Guardar
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
