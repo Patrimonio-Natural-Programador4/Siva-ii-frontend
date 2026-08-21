@@ -12,11 +12,15 @@ import { AuthService, SettingsService } from '@core';
 @Component({
   selector: 'app-user',
   template: `
-    <button matIconButton [matMenuTriggerFor]="menu">
+      <button matIconButton (click)="logout()" title="Cerrar sesión" alt="Cerrar sesión" matTooltip="Cerrar sesión">
+        <!-- <span>{{ 'Cerrar sesión' | translate }}</span> -->
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+    <!-- <button matIconButton [matMenuTriggerFor]="menu">
       <img class="avatar" [src]="user()?.avatar" width="24" alt="avatar" />
-    </button>
+    </button> -->
 
-    <mat-menu #menu="matMenu">
+    <!-- <mat-menu #menu="matMenu">
       <button routerLink="/profile/overview" mat-menu-item>
         <mat-icon>account_circle</mat-icon>
         <span>{{ 'profile' | translate }}</span>
@@ -33,7 +37,7 @@ import { AuthService, SettingsService } from '@core';
         <mat-icon>exit_to_app</mat-icon>
         <span>{{ 'logout' | translate }}</span>
       </button>
-    </mat-menu>
+    </mat-menu> -->
   `,
   styles: `
     .avatar {

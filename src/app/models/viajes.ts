@@ -89,6 +89,9 @@ export class Viajes {
     total_registros?: number;
     actividad?: string;
     rubro_corto?: string;
+    contacto_emergencia?: string;
+    telefono_emergencia?: string;
+    parentesco_emergencia?: string;
     constructor(data?: Partial<Viajes>) {
         Object.assign(this, data);
     }
