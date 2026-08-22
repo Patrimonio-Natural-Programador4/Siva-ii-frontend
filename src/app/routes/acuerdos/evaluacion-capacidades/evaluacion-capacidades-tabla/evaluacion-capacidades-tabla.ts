@@ -78,6 +78,8 @@ export class EvaluacionCapacidadesTabla implements OnInit, AfterViewInit {
 
   getEvaCapacidades(): void {
     this.EvaluacionCapacidadesService.getEvaCapacidades().subscribe(data => {
+      console.log('evaluacion capacidades', data);
+
       this.evCapacidadesTable.data = data;
     });
   }

@@ -29,93 +29,114 @@
           <small>Total de registros [{{ evCapacidadesTable.filteredData.length }}]</small>
         </div>
 
-        <div class="app-data-table-wrapper">
+        <div class="app-data-table-wrapper" style="max-height:500px; overflow:auto">
+
           <table mat-table [dataSource]="evCapacidadesTable"
             class="app-data-table mat-elevation-z1">
             <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">ID</th>
               <td mat-cell *matCellDef="let row">{{ row.id }}</td>
             </ng-container>
 
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Nombre</th>
               <td mat-cell *matCellDef="let row">{{ row.name | uppercase }}</td>
             </ng-container>
 
             <ng-container matColumnDef="observation">
-              <th mat-header-cell *matHeaderCellDef>Observación</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Observación</th>
               <td mat-cell *matCellDef="let row">{{ row.observation | uppercase }}</td>
             </ng-container>
 
             <ng-container matColumnDef="approximate_value">
-              <th mat-header-cell *matHeaderCellDef>Valor aproximado</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Valor aproximado</th>
               <td mat-cell *matCellDef="let row">{{ row.approximate_value | number }}</td>
             </ng-container>
 
             <ng-container matColumnDef="create_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha de creación</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Fecha de creación</th>
               <td mat-cell *matCellDef="let row">{{ row.create_date | date: 'dd/MM/yyyy' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="policy_approval_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha aprobación política</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Fecha aprobación
+                política</th>
               <td mat-cell *matCellDef="let row">{{ row.policy_approval_date | date: 'dd/MM/yyyy' }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="document_signature_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha firma documento</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Fecha firma documento
+              </th>
               <td mat-cell *matCellDef="let row">{{ row.document_signature_date | date: 'dd/MM/yyyy'
                 }}</td>
             </ng-container>
 
             <ng-container matColumnDef="start_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha inicio</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Fecha inicio</th>
               <td mat-cell *matCellDef="let row">{{ row.start_date | date: 'dd/MM/yyyy' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="end_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha fin</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Fecha fin</th>
               <td mat-cell *matCellDef="let row">{{ row.end_date | date: 'dd/MM/yyyy' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="code">
-              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Código</th>
               <td mat-cell *matCellDef="let row">{{ row.code }}</td>
             </ng-container>
 
             <ng-container matColumnDef="programa">
-              <th mat-header-cell *matHeaderCellDef>Programa</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Programa</th>
               <td mat-cell *matCellDef="let row">{{ row.programa }}</td>
             </ng-container>
 
             <ng-container matColumnDef="pid">
-              <th mat-header-cell *matHeaderCellDef>PID</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">PID</th>
               <td mat-cell *matCellDef="let row">{{ row.pid }}</td>
             </ng-container>
 
             <ng-container matColumnDef="implementer">
-              <th mat-header-cell *matHeaderCellDef>Implementador</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Implementador</th>
               <td mat-cell *matCellDef="let row">{{ row.implementer }}</td>
             </ng-container>
 
             <ng-container matColumnDef="aproval_request">
-              <th mat-header-cell *matHeaderCellDef>Solicitud de aprobación</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Solicitud de aprobación
+              </th>
               <td mat-cell *matCellDef="let row">{{ row.aproval_request }}</td>
             </ng-container>
 
             <ng-container matColumnDef="person">
-              <th mat-header-cell *matHeaderCellDef>Persona</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Persona</th>
               <td mat-cell *matCellDef="let row">{{ row.person }}</td>
             </ng-container>
 
             <ng-container matColumnDef="capacity_assessments_state">
-              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Estado</th>
               <td mat-cell *matCellDef="let row">{{ row.capacity_assessments_state }}</td>
             </ng-container>
 
             <ng-container matColumnDef="modalitie">
-              <th mat-header-cell *matHeaderCellDef>Modalidad</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Modalidad</th>
               <td mat-cell *matCellDef="let row">{{ row.modalitie }}</td>
             </ng-container>
 

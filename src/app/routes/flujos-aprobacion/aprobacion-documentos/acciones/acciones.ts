@@ -99,12 +99,9 @@ export class AccionesAprobacionDocumentos implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(TiposDocumentoAcuerdoFormulario, {
-      position: { right: '0px', top: '25vh' },
-      width: '25vw',
-      height: '50vh',
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      panelClass: 'full-height-dialog',
+      width: '520px',
+      position: { right: '0px' },
+      disableClose: true,
     });
   }
 
@@ -157,10 +154,12 @@ export class AccionesAprobacionDocumentos implements OnInit {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
+
           const prueba = {
             ...this.typedocagreData,
             documents_approval_id: response.identity,
           };
+          this.router.navigate(['/flujos-aprobacion/aprobacion-documentos']);
         } else {
           this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });
         }

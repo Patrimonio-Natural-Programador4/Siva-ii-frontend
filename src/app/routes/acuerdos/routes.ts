@@ -54,6 +54,17 @@ export const routes: Routes = [
           title: 'Creación estudios previos',
         },
       },
+
+      {
+        path: 'estudios-previos/detalle',
+        loadComponent: () =>
+          import('./estudios-previos/estudios-previos-flujo/estudios-previos-flujo').then(
+            m => m.EstudiosPreviosFlujo
+          ),
+        data: {
+          title: 'Detalle estudios previos',
+        },
+      },
     ],
   },
 ];

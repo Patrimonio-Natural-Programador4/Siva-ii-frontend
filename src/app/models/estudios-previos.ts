@@ -25,6 +25,10 @@ export class PreviousStudiesModel {
   persons_id?: number;
   capacity_assessment_id?: number;
   approval_request_id?: number;
+  program_id?: number;
+  programs?: string;
+  guid?: string;
+  total_registros?: number;
 
   constructor(data?: Partial<PreviousStudiesModel>) {
     Object.assign(this, data);

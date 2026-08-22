@@ -5,10 +5,10 @@ export class EvaluacionCapacidadesModel {
   observation?: string;
   approximate_value?: number;
   //create_date?: string;
-  policy_approval_date?: string;
-  document_signature_date?: string;
-  start_date?: string;
-  end_date?: string;
+  policy_approval_date?: Date | string;
+  document_signature_date?: Date | string;
+  start_date?: Date | string;
+  end_date?: Date | string;
   code?: string;
   programa?: string;
   program_id?: number;

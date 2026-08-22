@@ -1,0 +1,212 @@
+<page-header></page-header>
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+
+      <mat-card-header
+        class="app-data-card__header d-flex justify-content-between align-items-center">
+        <mat-card-title>Estudios previos - Detalle</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <div class="loading-box" *ngIf="isLoading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Cargando información de estudios previos...</span>
+        </div>
+
+
+        <mat-vertical-stepper *ngIf="!isLoading" orientation="vertical" [linear]="isLinear">
+
+          <!-- información General -->
+          <mat-step>
+            <ng-template matStepLabel>Información general</ng-template>
+
+            <div class="table_a mt-3">
+              <div class="row_a header_a">
+                <div class="cell_a" style="flex: 1">Campo</div>
+                <div class="cell_a" style="flex: 3">Detalle</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Antecedentes</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.precedents || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Justificación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.justification || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Alcance</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.scope || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Objetivo general</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.overall_objective || '--'
+                  }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Plazo</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.term || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Plazo estimado</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.estimated_term || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Obligaciones</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.obligations || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Supervisor</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.supervisor || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor total</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value | number) ||
+                  '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Aportes EI</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.contributions_ei |
+                  number) || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Aportes FPN</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.contributions_fpn |
+                  number) || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor total que ejecuta FPN</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value_executes_fpn
+                  | number) || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor total que ejecuta EI</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value_executes_ei
+                  | number) || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Implementadora</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.implementers ||
+                  estudioData?.implementer_id || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Solicitud de aprobación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.app_request ||
+                  estudioData?.approval_request_id || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Líder del pilar</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.persons ||
+                  estudioData?.persons_id || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Programa</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.programs ||
+                  estudioData?.program_id || '--' }}</div>
+              </div>
+            </div>
+
+            <div class="step-actions mt-3">
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
+          <!-- flujo de Aprobación -->
+          <mat-step>
+            <ng-template matStepLabel>Flujo de aprobación</ng-template>
+
+            <div class="table-wrap mt-3"
+              *ngIf="!isLoadingAprobacion && hasHistorialAprobacion; else flujoAprobacionEstado">
+              <table mat-table [dataSource]="historialAprobacion"
+                class="mat-elevation-z2 full-width-table">
+
+                <ng-container matColumnDef="rol">
+                  <th mat-header-cell *matHeaderCellDef>Rol</th>
+                  <td mat-cell *matCellDef="let item">{{ item.rol || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="usuario">
+                  <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                  <td mat-cell *matCellDef="let item">{{ item.usuario || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_requerimiento">
+                  <th mat-header-cell *matHeaderCellDef>Fecha requerimiento</th>
+                  <td mat-cell *matCellDef="let item">{{ item.fecha_crea | date: 'yyyy-MM-dd HH:mm'
+                    }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_aprobacion">
+                  <th mat-header-cell *matHeaderCellDef>Fecha aprobación</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.fecha_aprobacion ? (item.fecha_aprobacion | date: 'yyyy-MM-dd HH:mm') :
+                    '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef>Estado</th>
+                  <td mat-cell *matCellDef="let item">{{ item.estado_aprobacion_ruta || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAprobacion"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAprobacion"></tr>
+              </table>
+            </div>
+
+            <ng-template #flujoAprobacionEstado>
+              <div class="empty-step" *ngIf="isLoadingAprobacion">Cargando flujo de aprobación...
+              </div>
+              <div class="empty-step" *ngIf="!isLoadingAprobacion">No hay historial de aprobación
+                registrado.</div>
+            </ng-template>
+
+            <div class="approval-actions mt-3">
+              <div class="approval-actions__buttons" *ngIf="habilitarAcciones">
+                <button mat-raised-button color="primary" type="button" (click)="abrirModalAccion()"
+                  [disabled]="isSavingAprobacion">
+                  Aprobar
+                </button>
+                <button mat-stroked-button type="button" (click)="abrirModalAccion()"
+                  [disabled]="isSavingAprobacion || !accionesAprobacion?.habilitar_solicitar_ajustes">
+                  Solicitar ajustes
+                </button>
+              </div>
+            </div>
+          </mat-step>
+
+        </mat-vertical-stepper>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>

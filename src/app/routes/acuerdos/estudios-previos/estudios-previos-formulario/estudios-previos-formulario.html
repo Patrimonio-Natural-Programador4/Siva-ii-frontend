@@ -255,6 +255,21 @@
                 }
               </select>
             </div>
+            <!-- Programa -->
+            <div class="col-md-6">
+              <label for="p" class="form-label fw-bold">Programa</label>
+              <select id="program_id" name="program_id" class="form-select "
+                [(ngModel)]="estuPreviosData.program_id">
+                <option [ngValue]="0" disabled selected>Seleccione el programa
+                </option>
+                @for (item of programs; track item.id_programa) {
+                <option [value]="item.id_programa">
+                  {{ (item.description) | titlecase }}
+                </option>
+                }
+              </select>
+            </div>
+
           </div>
 
         </form>

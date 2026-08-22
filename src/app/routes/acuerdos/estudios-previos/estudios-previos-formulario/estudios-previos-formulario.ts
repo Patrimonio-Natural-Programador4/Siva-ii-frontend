@@ -1,3 +1,4 @@
+import { ProgramsService } from 'src/app/services/programs.service';
 import { EvaluacionCapacidadesModel } from 'src/app/models/evaluacion-capacidades';
 import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capacidades/evaluacion-capacidades.service';
 import { EstudiosPreviosService } from './../../../../services/estudios-previos/estudios-previos.service';
@@ -12,6 +13,7 @@ import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-c
 import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { ImplementerModel } from 'src/app/models/implementers';
 import { PersonModel } from 'src/app/models/personas';
+import { Programs } from 'src/app/models/programs';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -43,6 +45,7 @@ export class EstudiosPreviosFormulario implements OnInit {
   private readonly PersonsService = inject(PersonsService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
   private readonly EvaluacionCapacidadesService = inject(EvaluacionCapacidadesService);
+  private readonly ProgramsService = inject(ProgramsService);
 
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
@@ -55,6 +58,7 @@ export class EstudiosPreviosFormulario implements OnInit {
   persons: PersonModel[] = [];
   states: CapacityAssessmentStateModel[] = [];
   capacity: EvaluacionCapacidadesModel[] = [];
+  programs: Programs[] = [];
 
   estuPreviosData: PreviousStudiesModel = new PreviousStudiesModel({
     precedents: '',
@@ -76,6 +80,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     capacity_assessment_id: 0,
     contributions_fpn: 0,
     estimated_term: '',
+    program_id: 0,
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -92,6 +97,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.listarPersons();
     this.listarStates();
     this.listarCapacity();
+    this.listarPrograms();
 
     if (this.idEstPrevios) {
       this.EstudiosPreviosService.getEstPreviosById(this.idEstPrevios).subscribe({
@@ -147,6 +153,18 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.EvaluacionCapacidadesService.getEvaCapacidades().subscribe({
       next: r => {
         this.capacity = r;
+        console.log(r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarPrograms() {
+    this.ProgramsService.getPrograms().subscribe({
+      next: r => {
+        this.programs = r;
         console.log(r);
       },
       error: e => {
