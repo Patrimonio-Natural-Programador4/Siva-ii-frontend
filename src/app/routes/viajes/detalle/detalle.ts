@@ -326,4 +326,10 @@ export class Detalle implements OnInit {
     const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
     window.open(url, '_blank');
   }
+
+  verArchivoDosOMasPersonas(guid: string | undefined): void {
+    if (!guid) return;
+    const url = `${environment.apiUrl2}/viajes/${guid}/archivo/dos_o_mas_personas`;
+    window.open(url, '_blank');
+  }
 }

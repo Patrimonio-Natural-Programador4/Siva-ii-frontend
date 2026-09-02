@@ -98,6 +98,17 @@
 								</div>
 							</div>
 							<div class="row_a">
+								<div class="cell_a info_b" style="flex: 1">El viaje es para dos o más personas</div>
+								<div class="cell_a info_a" style="flex: 3">{{ mostrarSiNo(viajeData.dos_o_mas_personas) }}</div>
+							</div>
+							<div class="row_a" *ngIf="viajeData.dos_o_mas_personas">
+								<div class="cell_a info_b" style="flex: 1">Archivo excel adjunto</div>
+								<div class="cell_a info_a" style="flex: 3">
+									<a *ngIf="viajeData.nombre_archivo_dos_o_mas_personas" href="javascript:void(0)" (click)="verArchivoDosOMasPersonas(viajeData.guid)">{{ viajeData.nombre_archivo_dos_o_mas_personas || 'Descargar archivo' }}</a>
+									<span *ngIf="!viajeData.nombre_archivo_dos_o_mas_personas">--</span>
+								</div>
+							</div>
+							<div class="row_a">
 								<div class="cell_a info_b" style="flex: 1">Fecha de nacimiento</div>
 								<div class="cell_a info_a" style="flex: 3">{{ viajeData.fecha_nacimiento_viajero | date: 'yyyy-MM-dd' }}</div>
 							</div>

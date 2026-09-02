@@ -95,6 +95,7 @@ export class Viajes {
   contacto_emergencia?: string;
   telefono_emergencia?: string;
   parentesco_emergencia?: string;
+  valor_anticipo_letras?: string;
   constructor(data?: Partial<Viajes>) {
     Object.assign(this, data);
   }

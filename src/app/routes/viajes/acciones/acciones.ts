@@ -1,8 +1,10 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { TextFieldModule } from '@angular/cdk/text-field';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnInit,
   ViewChild,
   inject,
@@ -43,6 +45,7 @@ import {
 } from 'src/app/shared/utilmentions';
 import { HotelForm } from '../hotel/hotel-form';
 import { ItinerarioForm } from '../itinerario/itinerario-form';
+import { numeroALetrasEspanol } from 'src/app/shared/utils';
 // import { ToastrService } from 'ngx-toastr';
 
 export const MY_FORMATS = {
@@ -80,6 +83,7 @@ export const MY_FORMATS = {
     MatDatepickerModule,
     MtxDrawerModule,
     NgxMentionsModule,
+    TextFieldModule,
   ],
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
@@ -87,6 +91,7 @@ export const MY_FORMATS = {
 })
 export class AccionesViajes implements OnInit {
   @ViewChild('fRutas') fRutasForm!: NgForm;
+  @ViewChild('abcTextarea') abcTextarea?: ElementRef<HTMLTextAreaElement>;
   itinerarioChanged$ = new Subject<ViajesItinerario>();
   regresoChanged$ = new Subject<ViajesItinerario>();
   hotelChanged$ = new Subject<ViajesHotel>();
@@ -100,7 +105,7 @@ export class AccionesViajes implements OnInit {
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
-  accion = 'Nuevo';
+  accion: string = 'Nuevo';
   usuariosFilter: ListaGenerica[] = [];
   usuarios: ListaGenerica[] = [];
   choices: ListaGenerica[] = [];
@@ -117,6 +122,7 @@ export class AccionesViajes implements OnInit {
   ];
   selectedChoices: ChoiceWithIndices[] = [];
   loading = false;
+  valorAnticipoLetras = '';
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
@@ -331,6 +337,11 @@ export class AccionesViajes implements OnInit {
             this.viajeData.nombre_archivo_dos_o_mas_personas || 'archivo.xlsx';
         }
 
+        // Precargar valor anticipo en letras si existe
+        if (this.viajeData.valor_anticipo && this.viajeData.requiere_anticipo) {
+          this.onValorAnticipoChange(this.viajeData.valor_anticipo);
+        }
+
         if (this.viajeData.id_viaje) {
           // this.getHistorialAprobacion(this.viajeData.id_viaje);
         }
@@ -525,13 +536,13 @@ export class AccionesViajes implements OnInit {
   }
 
   getDisplayLabel = (item: ListaGenerica): string => {
-    if (item && 'valor' in item) {
+    if (item.hasOwnProperty('valor')) {
       return (item as ListaGenerica).valor!;
     }
     return '';
   };
   getChoiceId = (item: ListaGenerica): string => {
-    if (item && 'id' in item) {
+    if (item.hasOwnProperty('id')) {
       return (item as ListaGenerica).identity!.toString();
     }
     return '';
@@ -698,8 +709,32 @@ export class AccionesViajes implements OnInit {
   }
   editarAnticipo(index: number) {}
 
+  onValorAnticipoChange(valor: number): void {
+    if (!valor || valor <= 0) {
+      this.valorAnticipoLetras = '';
+      this.adjustTextareaHeight();
+      return;
+    }
+    try {
+      this.valorAnticipoLetras = numeroALetrasEspanol(valor);
+    } catch {
+      this.valorAnticipoLetras = '';
+    }
+    this.adjustTextareaHeight();
+  }
+
+  adjustTextareaHeight(): void {
+    setTimeout(() => {
+      if (this.abcTextarea?.nativeElement) {
+        const el = this.abcTextarea.nativeElement;
+        el.style.height = 'auto';
+        el.style.height = `${Math.max(el.scrollHeight, 38)}px`;
+      }
+    }, 0);
+  }
+
   accionSolicitud(tipo_accion: string) {}
-  guardarViaje(anviar_aprobacion = false) {
+  guardarViaje(anviar_aprobacion: boolean = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
     // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;

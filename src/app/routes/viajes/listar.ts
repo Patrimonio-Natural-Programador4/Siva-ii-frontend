@@ -21,6 +21,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import {
   MsalService
 } from '@azure/msal-angular';
+import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
+import { LegalizacionForm } from './legalizacion/legalizacion-form';
 
 @Component({
   selector: 'app-listar',
@@ -42,7 +44,8 @@ import {
     CommonModule,
     FormsModule,
     MatDatepickerModule,
-    MatMenuModule
+    MatMenuModule,
+    MtxDrawerModule
 ],
 })
 export class ListarViajes  implements OnInit, AfterViewInit {
@@ -51,6 +54,7 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   private readonly service = inject(ViajesService);
   private readonly authService = inject(MsalService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly drawer = inject(MtxDrawer);
   columnasViaje = ['posicion', 'nombre', 'fecha_solicitud', 'fecha_inicio', 'fecha_fin', 'requiere_anticipo', 'valor_anticipo', 'dias_despues_finalizado', 'estado', 'acciones'];
   readonly pageSizeOptions = [20];
   id_estado: number[] = [];
@@ -176,6 +180,19 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   }
   editViaje(id: string) {
     this.router.navigate(['/viajes/editar', id]);
+  }
+
+  legalizarViaje(id_viaje: number) {
+    const drawerRef = this.drawer.open(LegalizacionForm, {
+      position: 'right',
+      width: '40%',
+    });
+    drawerRef.instance.travelRequestId = id_viaje;
+    drawerRef.afterDismissed().subscribe((res) => {
+      if (res) {
+        this.filtrarDatos(false);
+      }
+    });
   }
 
   habilitarEdicion(id: string): boolean {

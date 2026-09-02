@@ -171,6 +171,12 @@
                     <button mat-menu-item (click)="verPDF(element.guid)">Información general</button>
                   </mat-menu>
 
+                  <a href="javascript:void(0)" *ngIf="element.estado === 'Pendiente de legalización' || element.estado === 'PENDIENTE DE LEGALIZACIÓN'"
+                    style="text-decoration: none;" title="Legalización de viaje"
+                    alt="Legalización de viaje" (click)="legalizarViaje(element.id_viaje)">
+                    <span class="material-symbols-outlined" style="font-size: 24px; vertical-align: middle; color: #5856d6;" title="Legalización de viaje">money_bag</span>
+                  </a>
+
                   <!-- <a href="javascript:void(0)" style="text-decoration: none;" title="Continuar flujo de aprobación"
                     alt="Continuar flujo de aprobación" (click)="continuarFlujo(element.guid)">
                     <mat-icon title="Continuar flujo de aprobación"
