@@ -91,6 +91,7 @@ export class AccionesViajes implements OnInit {
   dataSourceAnticipo = new MatTableDataSource<AnticiposDetalle>([]);
   fechaInicio?: any = null;
   fechaFin?: any = null;
+  fechaNacimiento?: any = null;
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
@@ -180,8 +181,7 @@ export class AccionesViajes implements OnInit {
       this.getValidacionAccionesAprobacion();
       this.getViaje();
     }
-    this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
-    this.dataSourceHotel.data = this.viajeData.hotel ?? [];
+    
     this.dataSourceAnticipo.data = this.viajeData.anticipo?.detalle ?? [];
   }
 
@@ -225,8 +225,11 @@ export class AccionesViajes implements OnInit {
     this.isLoading = true;
     this.service.getViajeById(this.id_viaje).subscribe(data => {
       this.viajeData = data;
+      this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
+      this.dataSourceHotel.data = this.viajeData.hotel ?? [];
       this.fechaInicio = this.viajeData.fecha_inicio_viaje;
       this.fechaFin = this.viajeData.fecha_fin_viaje;
+      this.fechaNacimiento = this.viajeData.fecha_nacimiento_viajero;
       this.syncRubroSelection();
       
       if (this.viajeData.id_viaje) {
@@ -427,13 +430,13 @@ export class AccionesViajes implements OnInit {
   }
 
   getDisplayLabel = (item: ListaGenerica): string => {
-    if (item.hasOwnProperty('valor')) {
+    if (Object.prototype.hasOwnProperty.call(item, 'valor')) {
       return (item as ListaGenerica).valor!;
     }
     return '';
   };
   getChoiceId = (item: ListaGenerica): string => {
-    if (item.hasOwnProperty('id')) {
+    if (Object.prototype.hasOwnProperty.call(item, 'identity')) {
       return (item as ListaGenerica).identity!.toString();
     }
     return '';
@@ -597,13 +600,14 @@ export class AccionesViajes implements OnInit {
   }
   guardarViaje(anviar_aprobacion: boolean = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
-    this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
-    this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;
+    // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
+    // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;
     const esNuevo = !this.viajeData.id_viaje || this.viajeData.id_viaje == 0;
     this.viajeData.id_rol_aprobacion_supervisor = this.listados[5]?.lista_generica?.find(item => item.idrelacion == this.viajeData.id_supervisor_aprueba)?.identity || undefined;
 
     this.viajeData.fecha_inicio_viaje = this.fechaInicio;
     this.viajeData.fecha_fin_viaje = this.fechaFin;
+    this.viajeData.fecha_nacimiento_viajero = this.fechaNacimiento;
     this.viajeData.hora_inicio = this.horaInicio ? this.horaInicio.format('HH:mm') : this.viajeData.hora_inicio;
     this.viajeData.hora_fin = this.horaFin ? this.horaFin.format('HH:mm') : this.viajeData.hora_fin;
 
@@ -622,6 +626,7 @@ export class AccionesViajes implements OnInit {
     // this.viajeData.fecha_inicio_viaje = new Date(this.viajeData.fecha_inicio_viaje!.toISOString().split('T')[0]);
     // this.viajeData.fecha_fin_viaje = new Date(this.viajeData.fecha_fin_viaje!.toISOString().split('T')[0]);
     this.viajeData.enviar_aprobacion = anviar_aprobacion; // Asignar el valor del botón
+    console.log('Datos del viaje a guardar:', esNuevo);
     const request$ = esNuevo
       ? this.service.saveViaje(this.viajeData)
       : this.service.updateViaje(this.viajeData);

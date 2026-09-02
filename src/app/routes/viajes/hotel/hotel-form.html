@@ -62,7 +62,7 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <label for="fecha_salida" class="form-label">Fecha de salida*</label>
                 <mat-form-field class="small" appearance="outline">
-                    <input matInput [matDatepicker]="pickerSalida" [min]="minDate" [max]="maxDate" (click)="pickerSalida.open()" [(ngModel)]="hotel.fecha_salida"
+                    <input matInput [matDatepicker]="pickerSalida" [min]="hotel.fecha_llegada" [max]="maxDate" (click)="pickerSalida.open()" [(ngModel)]="hotel.fecha_salida"
                         name="fecha_salida" id="fecha_salida" required>
                     <mat-datepicker-toggle matSuffix [for]="pickerSalida"></mat-datepicker-toggle>
                     <mat-datepicker #pickerSalida></mat-datepicker>
@@ -74,7 +74,7 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <label for="observaciones" class="form-label">Observaciones adicionales</label>
                 <br>
-                <textarea id="observaciones" class="form-control" rows="2" required
+                <textarea id="observaciones" class="form-control" rows="2"
                                         #observaciones="ngModel" placeholder="Observaciones adicionales"
                                         [(ngModel)]="hotel.observaciones" name="observaciones"
                                         [class.is-invalid]="observaciones.invalid && (observaciones.dirty || observaciones.touched)"
@@ -87,9 +87,9 @@
     </form>
   </div>
   <div class="drawer-footer">
-    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-button type="button" (click)="cancelar()">Cerrar</button>
     <button mat-flat-button color="primary" type="button" (click)="guardar()" [disabled]="!f.valid">
-        Guardar hospedaje
+        Agregar hospedaje
     </button>
   </div>
 </div>

@@ -150,7 +150,7 @@
                 <div class="col-12 col-md-6 col-lg-6">
                     <label for="fecha_regreso" class="form-label">Fecha de regreso*</label>
                     <mat-form-field class="small" appearance="outline">
-                        <input matInput [matDatepicker]="pickerRegreso" [min]="minDate" [max]="maxDate" (click)="pickerRegreso.open()" [(ngModel)]="itinerario.fecha_regreso"
+                        <input matInput [matDatepicker]="pickerRegreso" [min]="itinerario.fecha" [max]="maxDate" (click)="pickerRegreso.open()" [(ngModel)]="itinerario.fecha_regreso"
                             name="fecha_regreso" id="fecha_regreso" required>
                         <mat-datepicker-toggle matSuffix [for]="pickerRegreso"></mat-datepicker-toggle>
                         <mat-datepicker #pickerRegreso></mat-datepicker>
@@ -200,7 +200,7 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <label for="observaciones" class="form-label">Observaciones adicionales</label>
                 <br>
-                <textarea id="observaciones" class="form-control" rows="2" required
+                <textarea id="observaciones" class="form-control" rows="2"
                                         #observaciones="ngModel" placeholder="Observaciones adicionales"
                                         [(ngModel)]="itinerario.observaciones" name="observaciones"
                                         [class.is-invalid]="observaciones.invalid && (observaciones.dirty || observaciones.touched)"
@@ -213,9 +213,9 @@
     </form>
   </div>
   <div class="drawer-footer">
-    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-button type="button" (click)="cancelar()">Cerrar</button>
     <button mat-flat-button color="primary" type="button" (click)="guardar()" [disabled]="!f.valid">
-        Guardar itinerario
+        Agregar itinerario
     </button>
   </div>
 </div>

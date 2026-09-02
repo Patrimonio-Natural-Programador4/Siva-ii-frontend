@@ -203,7 +203,7 @@
                                 @if (viajeData.es_invitado) {
                                 <div class="col-md-4">
                                     <label for="documento_persona_invitada"
-                                        class="form-label">Documento de la persona invitada*</label>
+                                        class="form-label">Número de documento de la persona invitada*</label>
                                     <input type="text" cFormControl sizing="sm" required
                                         class="form-control" id="documento_persona_invitada"
                                         name="documento_persona_invitada"
@@ -254,7 +254,57 @@
                                     </div>
                                     }
                                 </div>
+                                
                                 }
+                                <div class="col-md-4">
+                                     <label for="fechaNacimiento" class="form-label">Fecha de nacimiento*</label>
+                                        <mat-form-field class="small" appearance="outline">
+                                            <input matInput [matDatepicker]="picker4"  (click)="picker4.open()" 
+                                                [(ngModel)]="fechaNacimiento" name="fechaNacimiento"
+                                                id="fechaNacimiento" required>
+                                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker4></mat-datepicker>
+                                             <div class="invalid-feedback">
+                                                Este campo es requerido.
+                                            </div>
+                                        </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                     <label for="telefono_persona_invitada" class="form-label">Celular*</label>
+                                        <input type="text" id="telefono_persona_invitada" class="form-control" name="telefono_persona_invitada"
+                                            [(ngModel)]="viajeData.telefono_persona_invitada" required #telefono_persona_invitada="ngModel"
+                                            [class.is-invalid]="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
+                                        <div class="invalid-feedback d-block" *ngIf="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
+                                            <span class="text-danger">Este campo es requerido.</span>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                     <label for="contacto_emergencia" class="form-label">Contacto de emergencia*</label>
+                                        <input type="text" id="contacto_emergencia" class="form-control" name="contacto_emergencia"
+                                            [(ngModel)]="viajeData.contacto_emergencia" required #contacto_emergencia="ngModel"
+                                            [class.is-invalid]="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
+                                        <div class="invalid-feedback d-block" *ngIf="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
+                                            <span class="text-danger">Este campo es requerido.</span>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                     <label for="telefono_emergencia" class="form-label">Celular del contacto de emergencia*</label>
+                                        <input type="text" id="telefono_emergencia" class="form-control" name="telefono_emergencia"
+                                            [(ngModel)]="viajeData.telefono_emergencia" required #telefono_emergencia="ngModel"
+                                            [class.is-invalid]="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
+                                        <div class="invalid-feedback d-block" *ngIf="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
+                                            <span class="text-danger">Este campo es requerido.</span>
+                                        </div>
+                                </div>
+                                <div class="col-md-4">
+                                     <label for="parentesco_emergencia" class="form-label">Parentesco*</label>
+                                        <input type="text" id="parentesco_emergencia" class="form-control" name="parentesco_emergencia"
+                                            [(ngModel)]="viajeData.parentesco_emergencia" required #parentesco_emergencia="ngModel"
+                                            [class.is-invalid]="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
+                                        <div class="invalid-feedback d-block" *ngIf="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
+                                            <span class="text-danger">Este campo es requerido.</span>
+                                        </div>
+                                </div>
                                 <div class="col-md-4">
                                     <label for="fecha_inicio_viaje" class="form-label">Fecha de
                                         inicio del viaje*</label>
@@ -631,7 +681,7 @@
                                     [disabled]="!fGeneral.valid">
                                     Continuar
                                 </button> -->
-                <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+                <button mat-stroked-button type="button" (click)="volver()">Regresar</button>
                 <button type="button" mat-flat-button color="primary" [disabled]="!fGeneral.valid || isLoading"  (click)="guardarViaje(false)">
                     <span *ngIf="!isLoading">Guardar</span>
                     <span *ngIf="isLoading">

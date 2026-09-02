@@ -22,8 +22,9 @@ import { UserButton } from '../widgets/user-button';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    Branding
-  ],
+    Branding,
+    UserButton
+],
 })
 export class Header {
   readonly showToggle = input(true);

@@ -119,6 +119,7 @@ export class ItinerarioForm implements OnInit {
         const hours = String(this.horaRegreso.getHours()).padStart(2, '0');
         const minutes = String(this.horaRegreso.getMinutes()).padStart(2, '0');
         this.regreso.hora_regreso = `${hours}:${minutes}`;
+        this.regreso.hora = `${hours}:${minutes}`;
         this.regreso.fecha = this.itinerario.fecha_regreso;
         this.regreso.id_municipio_origen = this.itinerario.id_municipio_destino;
         this.regreso.id_municipio_destino = this.itinerario.id_municipio_origen;

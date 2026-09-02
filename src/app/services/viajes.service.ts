@@ -32,6 +32,10 @@ export class ViajesService {
         ? format(viaje.fecha_fin_viaje, 'yyyy-MM-dd')
         : null,
 
+      fecha_nacimiento_viajero: viaje.fecha_nacimiento_viajero
+        ? format(viaje.fecha_nacimiento_viajero, 'yyyy-MM-dd')
+        : null,
+
       itinerario: viaje.itinerario?.map(i => ({
         ...i,
         fecha: i.fecha ? format(new Date(i.fecha), 'yyyy-MM-dd') : null,

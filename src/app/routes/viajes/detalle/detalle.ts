@@ -73,8 +73,6 @@ export class Detalle implements OnInit {
     'ciudad',
     'fecha_llegada',
     'fecha_salida',
-    'tipo_alojamiento',
-    'gestiona',
     'observaciones'
   ];
   displayedColumnsAnticipo: string[] = [

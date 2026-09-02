@@ -147,6 +147,23 @@ export class ListarViajes implements OnInit, AfterViewInit {
     this.router.navigate(['/viajes/crear']);
   }
 
+  limpiarFiltros(): void {
+    this.id_estado = [];
+    this.id_programa = -1;
+    this.fechaInicio = null;
+    this.fechaFin = null;
+    this.filtrobusqueda = '';
+    this.page = 1;
+    this.currentPage = 0;
+
+    const paginator = this.paginator();
+    if (paginator) {
+      paginator.firstPage();
+    }
+
+    this.filtrarDatos(true);
+  }
+
   pageChange(event: any) {
     this.page = event;
     this.currentPage = event.pageIndex;

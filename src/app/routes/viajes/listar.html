@@ -12,6 +12,7 @@
             <mat-icon>add</mat-icon>
             Crear solicitud de viaje
           </button>
+          
         </div>
 
         <div style="width:100%;">
@@ -66,11 +67,17 @@
                       uppercase}}</option>
                   </select>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <label for="ruc">Filtrar por nombre del viajero o código del viaje</label>
                   <input type="text" (ngModelChange)="filtroText($event);" class="form-control" id="filtrobusqueda"
                     name="filtrobusqueda" placeholder="Nombre de viajero o código de viaje"
                     [(ngModel)]="filtrobusqueda">
+                </div>
+                <div class="col-md-2 mt-4">
+                  <button mat-stroked-button type="button" (click)="limpiarFiltros()" aria-label="Limpiar filtros">
+                    <mat-icon>clear_all</mat-icon>
+                    Limpiar filtros
+                  </button>
                 </div>
               </div>
 
@@ -91,7 +98,7 @@
                 <td mat-cell *matCellDef="let element">{{element.codigo}}</td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> Responsable </th>
+                <th mat-header-cell *matHeaderCellDef> Viajero </th>
                 <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
               </ng-container>
               <ng-container matColumnDef="fecha_solicitud">
@@ -187,6 +194,11 @@
 
               <tr mat-header-row *matHeaderRowDef="columnasViaje"></tr>
               <tr mat-row *matRowDef="let row; columns: columnasViaje;" [ngClass]="getRowClass(row)"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="columnasViaje.length">
+                  No se encontraron registros
+                </td>
+              </tr>
             </table>
         </div>
 
