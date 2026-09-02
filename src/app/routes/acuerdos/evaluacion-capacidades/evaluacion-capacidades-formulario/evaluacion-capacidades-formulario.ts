@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,13 @@ import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-c
 import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
 import { ModalidadModel } from 'src/app/models/modalidades';
 import { ModalitiesService } from 'src/app/services/modalidades.service';
+import { LogLevel } from '@azure/msal-browser';
+import { HttpErrorResponse } from '@angular/common/http';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '@core';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { Usuarios } from 'src/app/models/usuarios';
+
 @Component({
   selector: 'evaluacion-capacidades-formulario',
   imports: [
@@ -47,12 +54,17 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   private readonly PersonsService = inject(PersonsService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
   private readonly ModalitiesService = inject(ModalitiesService);
+  private readonly UsuariosService = inject(UsuariosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  private readonly auth = inject(AuthService);
+  user = toSignal(this.auth.user());
 
   accion = 'Nuevo';
-  idEvaCapacidades: number | null = null;
+  guidEvaCapacidades: string | null = null;
   isLoading = false;
   programs: Programs[] = [];
   pids: PidModel[] = [];
@@ -60,17 +72,18 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   persons: PersonModel[] = [];
   states: CapacityAssessmentStateModel[] = [];
   modalities: ModalidadModel[] = [];
+  userFound: Usuarios = {};
+  programsByMtf: Programs[] = [];
 
   evaCapacidadesData: EvaluacionCapacidadesModel = new EvaluacionCapacidadesModel({
     name: '',
     observation: '',
     approximate_value: 0,
-    //create_date: '',
     policy_approval_date: '',
     document_signature_date: '',
     start_date: '',
     end_date: '',
-    code: '',
+    codigo: '',
     programa: '',
     program_id: 0,
     pid: '',
@@ -81,7 +94,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     person: '',
     persons_id: 0,
     capacity_assessments_state: '',
-    capacity_assessments_states_id: 0,
+    capacity_assessments_states_id: 1,
     modalitie: '',
     modality_id: 0,
   });
@@ -93,29 +106,32 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   });
 
   ngOnInit(): void {
-    const idParam = this.activatedRoute.snapshot.params['id'];
-    this.idEvaCapacidades = idParam ? Number(idParam) : null;
-    this.accion = this.idEvaCapacidades ? 'Editar' : 'Nuevo';
-    this.listarProgramas();
+    const x = this.getUserByEmail();
+
+    this.guidEvaCapacidades = this.activatedRoute.snapshot.params['guid'] ?? null;
+    this.accion = this.guidEvaCapacidades ? 'Editar' : 'Nuevo';
+    //this.listarProgramas();
     this.listarPids();
     this.listarImplementers();
     this.listarPersons();
     this.listarStates();
     this.listarModalities();
 
-    if (this.idEvaCapacidades) {
-      this.EvaluacionCapacidadesService.getEvaCapacidadesById(this.idEvaCapacidades).subscribe({
+    if (this.guidEvaCapacidades) {
+      this.EvaluacionCapacidadesService.getPorGuid(this.guidEvaCapacidades).subscribe({
         next: data => {
           this.evaCapacidadesData = new EvaluacionCapacidadesModel(data);
+          this.cdr.detectChanges();
         },
         error: () => {
-          this.snackBar.open('Error al cargar el evaluación de capacidades', '', {
+          this.snackBar.open('Error al cargar la evaluación de capacidades', '', {
             duration: 3000,
           });
         },
       });
     }
   }
+
   guardarEvaluacionCapacidades(): void {
     if (this.isLoading) {
       return;
@@ -123,9 +139,15 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
 
     this.isLoading = true;
 
-    const request$ = this.idEvaCapacidades
-      ? this.EvaluacionCapacidadesService.updateEvaCapacidades(this.evaCapacidadesData)
-      : this.EvaluacionCapacidadesService.saveEvaCapacidades(this.evaCapacidadesData);
+    const payload = {
+      ...this.evaCapacidadesData,
+      code: this.evaCapacidadesData.codigo,
+    };
+    delete (payload as any).codigo;
+
+    const request$ = this.guidEvaCapacidades
+      ? this.EvaluacionCapacidadesService.updateEvaCapacidades(this.guidEvaCapacidades, payload)
+      : this.EvaluacionCapacidadesService.saveEvaCapacidades(payload);
 
     request$.subscribe({
       next: response => {
@@ -134,41 +156,37 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
           this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
           this.router.navigate(['/acuerdos/evaluacion-capacidades']);
         } else {
-          this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });
+          this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 6000 });
         }
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.snackBar.open('Error al guardar el evaluación de capacidades', '', { duration: 4000 });
+        const mensaje = err.error?.mensaje ?? 'Error al guardar la evaluación de capacidades';
+        this.snackBar.open(mensaje, '', { duration: 10000 });
       },
     });
-    console.log(this.evaCapacidadesData);
   }
 
   volver(): void {
     this.router.navigate(['/acuerdos/evaluacion-capacidades']);
   }
-  listarProgramas() {
-    this.ProgramsService.getPrograms().subscribe({
+
+  /*  listarProgramas() {
+    this.ProgramsService.getProgramsByUser().subscribe({
       next: r => {
         this.programs = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
-      },
+      error: e => console.error(e),
     });
-  }
-
+  }*/
   listarPids() {
     this.PidsService.getPids().subscribe({
       next: r => {
         this.pids = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
-      },
+      error: e => console.error(e),
     });
   }
 
@@ -176,11 +194,9 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
         this.implementers = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
-      },
+      error: e => console.error(e),
     });
   }
 
@@ -188,11 +204,9 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.PersonsService.getPersons().subscribe({
       next: r => {
         this.persons = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
-      },
+      error: e => console.error(e),
     });
   }
 
@@ -200,11 +214,9 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.CapacityAssessmentStateService.getCapStates().subscribe({
       next: r => {
         this.states = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
-      },
+      error: e => console.error(e),
     });
   }
 
@@ -212,11 +224,38 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.ModalitiesService.getModalities().subscribe({
       next: r => {
         this.modalities = r;
-        console.log(r);
+        this.cdr.detectChanges();
       },
-      error: e => {
-        console.error(e);
+      error: e => console.error(e),
+    });
+  }
+
+  getUserByEmail() {
+    const email = this.user()?.email;
+    if (!email) {
+      return;
+    }
+
+    this.UsuariosService.getUserByEmail(email).subscribe({
+      next: user => {
+        this.userFound = user;
+        this.cdr.detectChanges();
+        const guid = this.userFound.guid;
+        if (guid) {
+          this.getProgramsByMtf(guid);
+        }
       },
+      error: e => console.error(e),
+    });
+  }
+
+  getProgramsByMtf(msf: string) {
+    this.UsuariosService.getProgramsByMsf(msf).subscribe({
+      next: program => {
+        this.programsByMtf = program;
+        this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
     });
   }
 }

@@ -1,619 +1,587 @@
 <page-header />
 <div class="row">
-    <div class="col-sm-12">
-        <mat-card class="app-data-card">
-            <mat-card-header class="app-data-card__header">
-                <mat-card-title>Viajes - {{ accion }}</mat-card-title>
-            </mat-card-header>
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Viajes - {{ accion }}</mat-card-title>
+      </mat-card-header>
 
-            <mat-card-content>
-                <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
-                    <mat-step [stepControl]="fGeneral.control">
-                        <form novalidate #fGeneral="ngForm" class="roles-step-form">
-                            <ng-template matStepLabel>Información general</ng-template>
+      <mat-card-content>
+        <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+          <mat-step [stepControl]="fGeneral.control">
+            <form novalidate #fGeneral="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Información general</ng-template>
 
-                            <div class="row">
-                                <div class="col-md-12 mb-12">
-                                    <label for="fecha_solicitud" class="form-label">Fecha de
-                                        solicitud:</label>
-                                    {{fecha_solicitud | date: 'yyyy-MM-dd'}}
-                                </div>
-                                <div class="col-md-12 mb-12">
-                                    <hr>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="id_rubro" class="form-label">Rubro*</label>
-                                    <div class="position-relative">
-                                        <input id="id_rubro"
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="Busque y seleccione el rubro"
-                                            autocomplete="off"
-                                            required
-                                            #rubro="ngModel"
-                                            [(ngModel)]="rubroSearch"
-                                            (ngModelChange)="onRubroSearchChange($event)"
-                                            (focus)="onRubroFocus()"
-                                            (blur)="onRubroBlur()"
-                                            name="id_rubro_search" />
-                                        <input type="hidden" name="id_rubro" [(ngModel)]="viajeData.id_rubro" />
-                                        @if (showRubroDropdown && filteredRubros.length > 0 && rubroSearch.trim().length > 0) {
-                                            <ul class="list-group position-absolute w-100 mt-1 shadow-sm" style="z-index: 1000; max-height: 220px; overflow-y: auto;">
-                                                @for (data of filteredRubros; track data.identity) {
-                                                    <button type="button" class="list-group-item list-group-item-action text-start" (click)="selectRubro(data)">
-                                                        {{ data.valor }}
-                                                    </button>
-                                                }
-                                            </ul>
-                                        }
-                                    </div>
-                                    @if (rubro.invalid && (rubro.dirty ||
-                                    rubro.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="categoria" class="form-label">Categoría de Gasto (Actividad)*</label>
-                                    <input
-                                        readonly
-                                        disabled
-                                        id="actividad"
-                                        type="text"
-                                        class="form-control"
-                                        required
-                                        maxlength="255"
-                                        placeholder="Categoría de Gasto (Actividad)"
-                                        [(ngModel)]="viajeData.actividad"
-                                        name="actividad"
-                                        #actividad="ngModel"
-                                        [class.is-invalid]="actividad.invalid && (actividad.dirty || actividad.touched)"
-                                    />
-                                    @if (actividad.invalid && (actividad.dirty || actividad.touched)) {
-                                        <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="col-md-12 mb-12">
-                                    <label for="objetivo" class="form-label">Objetivo del viaje
-                                        *</label>
-                                    <textarea id="objetivo" class="form-control" rows="3" required
-                                        #objetivo="ngModel" placeholder="Objetivo del viaje"
-                                        [(ngModel)]="viajeData.objetivo" name="objetivo"
-                                        [class.is-invalid]="objetivo.invalid && (objetivo.dirty || objetivo.touched)"
-                                        maxlength="255"></textarea>
-                                    @if (objetivo.invalid && (objetivo.dirty || objetivo.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
+              <div class="row">
+                <div class="col-md-12 mb-12">
+                  <label for="fecha_solicitud" class="form-label">Fecha de
+                    solicitud:</label>
+                  {{fecha_solicitud | date: 'yyyy-MM-dd'}}
+                </div>
+                <div class="col-md-12 mb-12">
+                  <hr>
+                </div>
+                <div class="col-md-4">
+                  <label for="id_rubro" class="form-label">Rubro*</label>
+                  <div class="position-relative">
+                    <input id="id_rubro" type="text" class="form-control"
+                      placeholder="Busque y seleccione el rubro" autocomplete="off" required
+                      #rubro="ngModel" [(ngModel)]="rubroSearch"
+                      (ngModelChange)="onRubroSearchChange($event)" (focus)="onRubroFocus()"
+                      (blur)="onRubroBlur()" name="id_rubro_search" />
+                    <input type="hidden" name="id_rubro" [(ngModel)]="viajeData.id_rubro" />
+                    @if (showRubroDropdown && filteredRubros.length > 0 && rubroSearch.trim().length
+                    > 0) {
+                    <ul class="list-group position-absolute w-100 mt-1 shadow-sm"
+                      style="z-index: 1000; max-height: 220px; overflow-y: auto;">
+                      @for (data of filteredRubros; track data.identity) {
+                      <button type="button"
+                        class="list-group-item list-group-item-action text-start"
+                        (click)="selectRubro(data)">
+                        {{ data.valor }}
+                      </button>
+                      }
+                    </ul>
+                    }
+                  </div>
+                  @if (rubro.invalid && (rubro.dirty ||
+                  rubro.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <label for="categoria" class="form-label">Categoría de Gasto (Actividad)*</label>
+                  <input readonly disabled id="actividad" type="text" class="form-control" required
+                    maxlength="255" placeholder="Categoría de Gasto (Actividad)"
+                    [(ngModel)]="viajeData.actividad" name="actividad" #actividad="ngModel"
+                    [class.is-invalid]="actividad.invalid && (actividad.dirty || actividad.touched)" />
+                  @if (actividad.invalid && (actividad.dirty || actividad.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-12 mb-12">
+                  <label for="objetivo" class="form-label">Objetivo del viaje
+                    *</label>
+                  <textarea id="objetivo" class="form-control" rows="3" required #objetivo="ngModel"
+                    placeholder="Objetivo del viaje" [(ngModel)]="viajeData.objetivo"
+                    name="objetivo"
+                    [class.is-invalid]="objetivo.invalid && (objetivo.dirty || objetivo.touched)"
+                    maxlength="255"></textarea>
+                  @if (objetivo.invalid && (objetivo.dirty || objetivo.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
 
-                                </div>
-                                <div class="col-md-12 mb-12">
-                                    <label for="objetivo" class="form-label">Observaciones adicionales*</label>
-                                    <textarea class="form-control" id="observaciones_adicionales" name="observaciones_adicionales"
-                                            id="observaciones_adicionales"
-                                            placeholder="Ingrese las observaciones adicionales que crea relevantes (Si requiere nombrar a una o mas personas lo puede realizar con '@')"
-                                            style="background-color: #fff !important;"
-                                            (ngModelChange)="onObservacionesChange($event)"
-                                            [(ngModel)]="viajeData.observaciones_adicionales" #personal rows="2"></textarea>
+                </div>
+                <div class="col-md-12 mb-12">
+                  <label for="objetivo" class="form-label">Observaciones adicionales*</label>
+                  <textarea class="form-control" id="observaciones_adicionales"
+                    name="observaciones_adicionales" id="observaciones_adicionales"
+                    placeholder="Ingrese las observaciones adicionales que crea relevantes (Si requiere nombrar a una o mas personas lo puede realizar con '@')"
+                    style="background-color: #fff !important;"
+                    (ngModelChange)="onObservacionesChange($event)"
+                    [(ngModel)]="viajeData.observaciones_adicionales" #personal rows="2"></textarea>
 
-                                        <ngx-mentions [textInputElement]="personal" [menuTemplate]="menuTemplate"
-                                            [selectedChoices]="selectedChoices" [mentionsConfig]="mentionsConfig"
-                                            [searchRegexp]="searchRegexp" [mentions]="mentions"
-                                            [removeWholeTagOnBackspace]="true" (search)="loadChoices($event)"
-                                            (selectedChoicesChange)="onSelectedChoicesChange($event)"
-                                            (menuHide)="onMenuHide()"></ngx-mentions>
+                  <ngx-mentions [textInputElement]="personal" [menuTemplate]="menuTemplate"
+                    [selectedChoices]="selectedChoices" [mentionsConfig]="mentionsConfig"
+                    [searchRegexp]="searchRegexp" [mentions]="mentions"
+                    [removeWholeTagOnBackspace]="true" (search)="loadChoices($event)"
+                    (selectedChoicesChange)="onSelectedChoicesChange($event)"
+                    (menuHide)="onMenuHide()"></ngx-mentions>
 
-                                        <ng-template #menuTemplate let-selectChoice="selectChoice">
-                                            <ngx-text-input-autocomplete-menu [choices]="choices"
-                                                [getDisplayLabel]="getDisplayLabel"
-                                                (selectChoice)="selectChoice($event)">
-                                            </ngx-text-input-autocomplete-menu>
-                                        </ng-template>
+                  <ng-template #menuTemplate let-selectChoice="selectChoice">
+                    <ngx-text-input-autocomplete-menu [choices]="choices"
+                      [getDisplayLabel]="getDisplayLabel" (selectChoice)="selectChoice($event)">
+                    </ngx-text-input-autocomplete-menu>
+                  </ng-template>
 
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="id_supervisor_aprueba"
-                                        class="form-label">Supervisor*</label>
-                                    <select id="id_supervisor_aprueba" class="form-select"
-                                        #supervisor="ngModel" required
-                                        [(ngModel)]="viajeData.id_supervisor_aprueba"
-                                        name="id_supervisor_aprueba">
-                                        <option [ngValue]="null" [disabled]="true">Seleccione el
-                                            supervisor</option>
-                                        @for (data of listados[5]?.lista_generica ?? []; track
-                                        data.identity) {
-                                        <option [ngValue]="data.idrelacion">{{ data.valor }}
-                                        </option>
-                                        }
-                                    </select>
-                                    @if (supervisor.invalid && (supervisor.dirty ||
-                                    supervisor.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <!-- @if ((listados[6]?.lista_generica?.length ?? 0) > 0) { -->
-                                <div class="col-md-4">
-                                    <label for="id_programa" class="form-label">Programa*</label>
-                                    <select id="id_programa" class="form-select" #programa="ngModel"
-                                        required [(ngModel)]="viajeData.id_programa"
-                                        name="id_programa">
-                                        <option [ngValue]="null" [disabled]="true">Seleccione el
-                                            programa</option>
-                                        @for (data of listados[6]?.lista_generica ?? []; track
-                                        data.identity) {
-                                        <option [ngValue]="data.identity">{{ data.valor }}</option>
-                                        }
-                                    </select>
-                                    @if (programa.invalid && (programa.dirty ||
-                                    programa.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <!-- } -->
+                </div>
+                <div class="col-md-4">
+                  <label for="id_supervisor_aprueba" class="form-label">Supervisor*</label>
+                  <select id="id_supervisor_aprueba" class="form-select" #supervisor="ngModel"
+                    required [(ngModel)]="viajeData.id_supervisor_aprueba"
+                    name="id_supervisor_aprueba">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el
+                      supervisor</option>
+                    @for (data of listados[5]?.lista_generica ?? []; track
+                    data.identity) {
+                    <option [ngValue]="data.idrelacion">{{ data.valor }}
+                    </option>
+                    }
+                  </select>
+                  @if (supervisor.invalid && (supervisor.dirty ||
+                  supervisor.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <label for="id_programa" class="form-label">Programa*</label>
+                  <select id="id_programa" class="form-select" #programa="ngModel" required
+                    [(ngModel)]="viajeData.id_programa" name="id_programa">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el
+                      programa</option>
+                    @for (data of listados[6]?.lista_generica ?? []; track
+                    data.identity) {
+                    <option [ngValue]="data.identity">{{ data.valor }}</option>
+                    }
+                  </select>
+                  @if (programa.invalid && (programa.dirty ||
+                  programa.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <!-- } -->
 
-                                <div class="col-md-4">
-                                    <label for="viaje_internacional" class="form-label">Es un viaje
-                                        internacional?*</label>
-                                    <div>
-                                        <input type="radio" [value]="true"
-                                            id="viaje_internacional_s" name="viaje_internacional"
-                                            [(ngModel)]="viajeData.viaje_internacional">
-                                        <label class="" for="viaje_internacional_s">&nbsp;Si</label>
-                                        &nbsp;
-                                        <input type="radio" [value]="false"
-                                            id="viaje_internacional_n" name="viaje_internacional"
-                                            [(ngModel)]="viajeData.viaje_internacional">
-                                        <label class="" for="viaje_internacional_n">&nbsp;No</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4" *ngIf="viajeData.viaje_internacional">
-                                    <label for="pais" class="form-label">Escriba el pais y la ciudad
-                                        a donde se dirige*</label>
-                                    <input type="text" cFormControl sizing="sm" required
-                                        class="form-control" id="pais" name="pais"
-                                        placeholder="Escriba el pais y la ciudad a donde se dirige"
-                                        [(ngModel)]="viajeData.pais" #pais="ngModel"
-                                        [class.is-invalid]="pais.invalid && (pais.dirty || pais.touched)">
-                                    @if (pais.invalid && (pais.dirty || pais.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="es_invitado" class="form-label">El viaje es para un
-                                        invitado?*</label>
-                                    <div>
-                                        <input type="radio" [value]="true" id="es_invitado_s"
-                                            name="es_invitado" [(ngModel)]="viajeData.es_invitado">
-                                        <label class="" for="es_invitado_s">&nbsp;Si</label> &nbsp;
-                                        <input type="radio" [value]="false" id="es_invitado_n"
-                                            name="es_invitado" [(ngModel)]="viajeData.es_invitado">
-                                        <label class="" for="es_invitado_n">&nbsp;No</label>
-                                    </div>
-                                </div>
-                                @if (viajeData.es_invitado) {
-                                <div class="col-md-4">
-                                    <label for="documento_persona_invitada"
-                                        class="form-label">Número de documento de la persona invitada*</label>
-                                    <input type="text" cFormControl sizing="sm" required
-                                        class="form-control" id="documento_persona_invitada"
-                                        name="documento_persona_invitada"
-                                        placeholder="Número de documento"
-                                        [(ngModel)]="viajeData.documento_persona_invitada"
-                                        #documento_persona_invitada="ngModel"
-                                        [class.is-invalid]="documento_persona_invitada.invalid && (documento_persona_invitada.dirty || documento_persona_invitada.touched)">
-                                    @if (documento_persona_invitada.invalid &&
-                                    (documento_persona_invitada.dirty ||
-                                    documento_persona_invitada.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="persona_invitada" class="form-label">Nombre de la
-                                        persona invitada*</label>
-                                    <input type="text" cFormControl sizing="sm" required
-                                        class="form-control" id="persona_invitada"
-                                        name="persona_invitada"
-                                        placeholder="Nombre de la persona invitada"
-                                        [(ngModel)]="viajeData.persona_invitada"
-                                        #persona_invitada="ngModel"
-                                        [class.is-invalid]="persona_invitada.invalid && (persona_invitada.dirty || persona_invitada.touched)">
-                                    @if (persona_invitada.invalid && (persona_invitada.dirty ||
-                                    persona_invitada.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="correo_persona_invitada" class="form-label">Correo
-                                        de la persona invitada*</label>
-                                    <input type="email" cFormControl sizing="sm" required
-                                        class="form-control" id="correo_persona_invitada"
-                                        name="correo_persona_invitada"
-                                        placeholder="Correo de la persona invitada"
-                                        [(ngModel)]="viajeData.correo_persona_invitada"
-                                        #correo_persona_invitada="ngModel"
-                                        [class.is-invalid]="correo_persona_invitada.invalid && (correo_persona_invitada.dirty || correo_persona_invitada.touched)">
-                                    @if (correo_persona_invitada.invalid &&
-                                    (correo_persona_invitada.dirty ||
-                                    correo_persona_invitada.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                </div>
-                                
-                                }
-                                <div class="col-md-4">
-                                     <label for="fechaNacimiento" class="form-label">Fecha de nacimiento*</label>
-                                        <mat-form-field class="small" appearance="outline">
-                                            <input matInput [matDatepicker]="picker4"  (click)="picker4.open()" 
-                                                [(ngModel)]="fechaNacimiento" name="fechaNacimiento"
-                                                id="fechaNacimiento" required>
-                                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker4></mat-datepicker>
-                                             <div class="invalid-feedback">
-                                                Este campo es requerido.
-                                            </div>
-                                        </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                     <label for="telefono_persona_invitada" class="form-label">Celular*</label>
-                                        <input type="text" id="telefono_persona_invitada" class="form-control" name="telefono_persona_invitada"
-                                            [(ngModel)]="viajeData.telefono_persona_invitada" required #telefono_persona_invitada="ngModel"
-                                            [class.is-invalid]="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
-                                        <div class="invalid-feedback d-block" *ngIf="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
-                                            <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                     <label for="contacto_emergencia" class="form-label">Contacto de emergencia*</label>
-                                        <input type="text" id="contacto_emergencia" class="form-control" name="contacto_emergencia"
-                                            [(ngModel)]="viajeData.contacto_emergencia" required #contacto_emergencia="ngModel"
-                                            [class.is-invalid]="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
-                                        <div class="invalid-feedback d-block" *ngIf="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
-                                            <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                     <label for="telefono_emergencia" class="form-label">Celular del contacto de emergencia*</label>
-                                        <input type="text" id="telefono_emergencia" class="form-control" name="telefono_emergencia"
-                                            [(ngModel)]="viajeData.telefono_emergencia" required #telefono_emergencia="ngModel"
-                                            [class.is-invalid]="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
-                                        <div class="invalid-feedback d-block" *ngIf="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
-                                            <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                     <label for="parentesco_emergencia" class="form-label">Parentesco*</label>
-                                        <input type="text" id="parentesco_emergencia" class="form-control" name="parentesco_emergencia"
-                                            [(ngModel)]="viajeData.parentesco_emergencia" required #parentesco_emergencia="ngModel"
-                                            [class.is-invalid]="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
-                                        <div class="invalid-feedback d-block" *ngIf="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
-                                            <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="fecha_inicio_viaje" class="form-label">Fecha de
-                                        inicio del viaje*</label>
-                                    <mat-form-field class="small" appearance="outline">
-                                        <input matInput [matDatepicker]="picker1"
-                                            (dateChange)="validarFecha()" (click)="picker1.open()"
-                                            [(ngModel)]="fechaInicio" name="fecha_inicio_viaje"
-                                            id="fecha_inicio_viaje" required>
-                                        <mat-datepicker-toggle matSuffix
-                                            [for]="picker1"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker1></mat-datepicker>
-                                        <div class="invalid-feedback">
-                                            Este campo es requerido.
-                                        </div>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="fecha_fin_viaje" class="form-label">Fecha de
-                                        finalización del viaje*</label>
-                                    <mat-form-field class="small" appearance="outline">
-                                        <input matInput [matDatepicker]="picker2"
-                                            [min]="fechaInicio" (dateChange)="validarFecha()"
-                                            (click)="picker2.open()" [(ngModel)]="fechaFin"
-                                            name="fecha_fin_viaje" id="fecha_fin_viaje" required>
-                                        <mat-datepicker-toggle matSuffix
-                                            [for]="picker2"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker2></mat-datepicker>
-                                        <div class="invalid-feedback">
-                                            Este campo es requerido.
-                                        </div>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="requiere_anticipo" class="form-label">Requiere
-                                        anticipo?*</label>
-                                    <div>
-                                        <input type="radio" [value]="true" id="requiere_anticipo_s"
-                                            name="requiere_anticipo"
-                                            [(ngModel)]="viajeData.requiere_anticipo">
-                                        <label class="" for="requiere_anticipo_s">&nbsp;Si</label>
-                                        &nbsp;
-                                        <input type="radio" [value]="false" id="requiere_anticipo_n"
-                                            name="requiere_anticipo"
-                                            [(ngModel)]="viajeData.requiere_anticipo">
-                                        <label class="" for="requiere_anticipo_n">&nbsp;No</label>
-                                    </div>
-                                </div>
+                <div class="col-md-4">
+                  <label for="viaje_internacional" class="form-label">Es un viaje
+                    internacional?*</label>
+                  <div>
+                    <input type="radio" [value]="true" id="viaje_internacional_s"
+                      name="viaje_internacional" [(ngModel)]="viajeData.viaje_internacional">
+                    <label class="" for="viaje_internacional_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="viaje_internacional_n"
+                      name="viaje_internacional" [(ngModel)]="viajeData.viaje_internacional">
+                    <label class="" for="viaje_internacional_n">&nbsp;No</label>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="viajeData.viaje_internacional">
+                  <label for="pais" class="form-label">Escriba el pais y la ciudad
+                    a donde se dirige*</label>
+                  <input type="text" cFormControl sizing="sm" required class="form-control"
+                    id="pais" name="pais"
+                    placeholder="Escriba el pais y la ciudad a donde se dirige"
+                    [(ngModel)]="viajeData.pais" #pais="ngModel"
+                    [class.is-invalid]="pais.invalid && (pais.dirty || pais.touched)">
+                  @if (pais.invalid && (pais.dirty || pais.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <label for="es_invitado" class="form-label">El viaje es para un
+                    invitado?*</label>
+                  <div>
+                    <input type="radio" [value]="true" id="es_invitado_s" name="es_invitado"
+                      [(ngModel)]="viajeData.es_invitado">
+                    <label class="" for="es_invitado_s">&nbsp;Si</label> &nbsp;
+                    <input type="radio" [value]="false" id="es_invitado_n" name="es_invitado"
+                      [(ngModel)]="viajeData.es_invitado">
+                    <label class="" for="es_invitado_n">&nbsp;No</label>
+                  </div>
+                </div>
+                @if (viajeData.es_invitado) {
+                <div class="col-md-4">
+                  <label for="documento_persona_invitada" class="form-label">Número de documento de
+                    la persona invitada*</label>
+                  <input type="text" cFormControl sizing="sm" required class="form-control"
+                    id="documento_persona_invitada" name="documento_persona_invitada"
+                    placeholder="Número de documento"
+                    [(ngModel)]="viajeData.documento_persona_invitada"
+                    #documento_persona_invitada="ngModel"
+                    [class.is-invalid]="documento_persona_invitada.invalid && (documento_persona_invitada.dirty || documento_persona_invitada.touched)">
+                  @if (documento_persona_invitada.invalid &&
+                  (documento_persona_invitada.dirty ||
+                  documento_persona_invitada.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <label for="persona_invitada" class="form-label">Nombre de la
+                    persona invitada*</label>
+                  <input type="text" cFormControl sizing="sm" required class="form-control"
+                    id="persona_invitada" name="persona_invitada"
+                    placeholder="Nombre de la persona invitada"
+                    [(ngModel)]="viajeData.persona_invitada" #persona_invitada="ngModel"
+                    [class.is-invalid]="persona_invitada.invalid && (persona_invitada.dirty || persona_invitada.touched)">
+                  @if (persona_invitada.invalid && (persona_invitada.dirty ||
+                  persona_invitada.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <label for="correo_persona_invitada" class="form-label">Correo
+                    de la persona invitada*</label>
+                  <input type="email" cFormControl sizing="sm" required class="form-control"
+                    id="correo_persona_invitada" name="correo_persona_invitada"
+                    placeholder="Correo de la persona invitada"
+                    [(ngModel)]="viajeData.correo_persona_invitada"
+                    #correo_persona_invitada="ngModel"
+                    [class.is-invalid]="correo_persona_invitada.invalid && (correo_persona_invitada.dirty || correo_persona_invitada.touched)">
+                  @if (correo_persona_invitada.invalid &&
+                  (correo_persona_invitada.dirty ||
+                  correo_persona_invitada.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
 
-                                @if (viajeData.requiere_anticipo) {
-                                    <div class="col-md-4">
-                                        <label for="tipo_cuenta" class="form-label">Valor del anticipo*</label>
-                                        <div>
-                                            <input type="number" cFormControl sizing="sm" required
-                                                class="form-control" id="valor_anticipo"
-                                                name="valor_anticipo"
-                                                placeholder="Valor del anticipo"
-                                                [(ngModel)]="viajeData.valor_anticipo"
-                                                #valor_anticipo="ngModel"
-                                                [class.is-invalid]="valor_anticipo.invalid && (valor_anticipo.dirty || valor_anticipo.touched)">
-                                        @if (valor_anticipo.invalid && (valor_anticipo.dirty ||
-                                        valor_anticipo.touched)) {
-                                        <div class="invalid-feedback d-block">
-                                            <span class="text-danger">Este campo es requerido.</span>
-                                        </div>
-                                        }
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                    <label for="tipo_cuenta" class="form-label">Tipo de
-                                        cuenta*</label>
-                                    <div>
-                                        <select aria-label="Small select example" sizing="sm"
-                                            name="id_tipo_cuenta" class="form-select"
-                                            id="id_tipo_cuenta" required #tipo_cuenta="ngModel"
-                                            [(ngModel)]="viajeData.id_tipo_cuenta">
-                                            <option [ngValue]="null" [disabled]="true">Seleccione el
-                                                tipo de cuenta
-                                            </option>
-                                             @for (data of listados[2]?.lista_generica ?? []; track data.identity) {
-                                        <option [ngValue]="data.identity">{{ data.valor }}
-                                        </option>
-                                        }
-                                    </select>
-                                    @if (tipo_cuenta.invalid && (tipo_cuenta.dirty ||
-                                    tipo_cuenta.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="entidad_bancaria" class="form-label">Entidad
-                                        bancaria*</label>
-                                    <div>
-                                        <select aria-label="Small select example" sizing="sm"
-                                            name="id_entidad_bancaria" class="form-select"
-                                            id="id_entidad_bancaria" required #entidad_bancaria="ngModel"
-                                            [(ngModel)]="viajeData.id_entidad_bancaria">
-                                            <option [ngValue]="null" [disabled]="true">Seleccione la
-                                                entidad bancaria
-                                            </option>
-                                             @for (data of listados[3]?.lista_generica ?? []; track data.identity) {
-                                        <option [ngValue]="data.identity">{{ data.valor }}
-                                        </option>
-                                        }
-                                    </select>
-                                    @if (entidad_bancaria.invalid && (entidad_bancaria.dirty ||
-                                    entidad_bancaria.touched)) {
-                                    <div class="invalid-feedback d-block">
-                                        <span class="text-danger">Este campo es requerido.</span>
-                                    </div>
-                                    }
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="numero_cuenta" class="form-label">Número de
-                                        cuenta*</label>
-                                    <div>
-                                        <input type="text" class="form-control" sizing="sm"
-                                            id="numero_cuenta" name="numero_cuenta"
-                                            placeholder="Número de cuenta"
-                                            [(ngModel)]="viajeData.numero_cuenta"
-                                            #numero_cuenta="ngModel"
-                                            [class.is-invalid]="numero_cuenta.invalid && (numero_cuenta.dirty || numero_cuenta.touched)">
-                                    </div>
-                                </div>
-                                }
+                }
+                <div class="col-md-4">
+                  <label for="fechaNacimiento" class="form-label">Fecha de nacimiento*</label>
+                  <mat-form-field class="small" appearance="outline">
+                    <input matInput [matDatepicker]="picker4" (click)="picker4.open()"
+                      [(ngModel)]="fechaNacimiento" name="fechaNacimiento" id="fechaNacimiento"
+                      required>
+                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+                    <div class="invalid-feedback">
+                      Este campo es requerido.
+                    </div>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <label for="telefono_persona_invitada" class="form-label">Celular*</label>
+                  <input type="text" id="telefono_persona_invitada" class="form-control"
+                    name="telefono_persona_invitada"
+                    [(ngModel)]="viajeData.telefono_persona_invitada" required
+                    #telefono_persona_invitada="ngModel"
+                    [class.is-invalid]="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
+                  <div class="invalid-feedback d-block"
+                    *ngIf="telefono_persona_invitada.invalid && (telefono_persona_invitada.dirty || telefono_persona_invitada.touched)">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="contacto_emergencia" class="form-label">Contacto de
+                    emergencia*</label>
+                  <input type="text" id="contacto_emergencia" class="form-control"
+                    name="contacto_emergencia" [(ngModel)]="viajeData.contacto_emergencia" required
+                    #contacto_emergencia="ngModel"
+                    [class.is-invalid]="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
+                  <div class="invalid-feedback d-block"
+                    *ngIf="contacto_emergencia.invalid && (contacto_emergencia.dirty || contacto_emergencia.touched)">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="telefono_emergencia" class="form-label">Celular del contacto de
+                    emergencia*</label>
+                  <input type="text" id="telefono_emergencia" class="form-control"
+                    name="telefono_emergencia" [(ngModel)]="viajeData.telefono_emergencia" required
+                    #telefono_emergencia="ngModel"
+                    [class.is-invalid]="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
+                  <div class="invalid-feedback d-block"
+                    *ngIf="telefono_emergencia.invalid && (telefono_emergencia.dirty || telefono_emergencia.touched)">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="parentesco_emergencia" class="form-label">Parentesco*</label>
+                  <input type="text" id="parentesco_emergencia" class="form-control"
+                    name="parentesco_emergencia" [(ngModel)]="viajeData.parentesco_emergencia"
+                    required #parentesco_emergencia="ngModel"
+                    [class.is-invalid]="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
+                  <div class="invalid-feedback d-block"
+                    *ngIf="parentesco_emergencia.invalid && (parentesco_emergencia.dirty || parentesco_emergencia.touched)">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="fecha_inicio_viaje" class="form-label">Fecha de
+                    inicio del viaje*</label>
+                  <mat-form-field class="small" appearance="outline">
+                    <input matInput [matDatepicker]="picker1" (dateChange)="validarFecha()"
+                      (click)="picker1.open()" [(ngModel)]="fechaInicio" name="fecha_inicio_viaje"
+                      id="fecha_inicio_viaje" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <div class="invalid-feedback">
+                      Este campo es requerido.
+                    </div>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <label for="fecha_fin_viaje" class="form-label">Fecha de
+                    finalización del viaje*</label>
+                  <mat-form-field class="small" appearance="outline">
+                    <input matInput [matDatepicker]="picker2" [min]="fechaInicio"
+                      (dateChange)="validarFecha()" (click)="picker2.open()" [(ngModel)]="fechaFin"
+                      name="fecha_fin_viaje" id="fecha_fin_viaje" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <div class="invalid-feedback">
+                      Este campo es requerido.
+                    </div>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <label for="requiere_anticipo" class="form-label">Requiere
+                    anticipo?*</label>
+                  <div>
+                    <input type="radio" [value]="true" id="requiere_anticipo_s"
+                      name="requiere_anticipo" [(ngModel)]="viajeData.requiere_anticipo">
+                    <label class="" for="requiere_anticipo_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="requiere_anticipo_n"
+                      name="requiere_anticipo" [(ngModel)]="viajeData.requiere_anticipo">
+                    <label class="" for="requiere_anticipo_n">&nbsp;No</label>
+                  </div>
+                </div>
+
+                @if (viajeData.requiere_anticipo) {
+                <div class="col-md-4">
+                  <label for="tipo_cuenta" class="form-label">Valor del anticipo*</label>
+                  <div>
+                    <input type="number" cFormControl sizing="sm" required class="form-control"
+                      id="valor_anticipo" name="valor_anticipo" placeholder="Valor del anticipo"
+                      [(ngModel)]="viajeData.valor_anticipo" #valor_anticipo="ngModel"
+                      [class.is-invalid]="valor_anticipo.invalid && (valor_anticipo.dirty || valor_anticipo.touched)">
+                    @if (valor_anticipo.invalid && (valor_anticipo.dirty ||
+                    valor_anticipo.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="tipo_cuenta" class="form-label">Tipo de
+                    cuenta*</label>
+                  <div>
+                    <select aria-label="Small select example" sizing="sm" name="id_tipo_cuenta"
+                      class="form-select" id="id_tipo_cuenta" required #tipo_cuenta="ngModel"
+                      [(ngModel)]="viajeData.id_tipo_cuenta">
+                      <option [ngValue]="null" [disabled]="true">Seleccione el
+                        tipo de cuenta
+                      </option>
+                      @for (data of listados[2]?.lista_generica ?? []; track data.identity) {
+                      <option [ngValue]="data.identity">{{ data.valor }}
+                      </option>
+                      }
+                    </select>
+                    @if (tipo_cuenta.invalid && (tipo_cuenta.dirty ||
+                    tipo_cuenta.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="entidad_bancaria" class="form-label">Entidad
+                    bancaria*</label>
+                  <div>
+                    <select aria-label="Small select example" sizing="sm" name="id_entidad_bancaria"
+                      class="form-select" id="id_entidad_bancaria" required
+                      #entidad_bancaria="ngModel" [(ngModel)]="viajeData.id_entidad_bancaria">
+                      <option [ngValue]="null" [disabled]="true">Seleccione la
+                        entidad bancaria
+                      </option>
+                      @for (data of listados[3]?.lista_generica ?? []; track data.identity) {
+                      <option [ngValue]="data.identity">{{ data.valor }}
+                      </option>
+                      }
+                    </select>
+                    @if (entidad_bancaria.invalid && (entidad_bancaria.dirty ||
+                    entidad_bancaria.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Este campo es requerido.</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="numero_cuenta" class="form-label">Número de
+                    cuenta*</label>
+                  <div>
+                    <input type="text" class="form-control" sizing="sm" id="numero_cuenta"
+                      name="numero_cuenta" placeholder="Número de cuenta"
+                      [(ngModel)]="viajeData.numero_cuenta" #numero_cuenta="ngModel"
+                      [class.is-invalid]="numero_cuenta.invalid && (numero_cuenta.dirty || numero_cuenta.touched)">
+                  </div>
+                </div>
+                }
 
 
 
-                            </div>
+              </div>
 
-                            <div class="step-actions">
-                                <button mat-flat-button color="primary" type="button" matStepperNext
-                                    [disabled]="!fGeneral.valid">
-                                    Continuar
-                                </button>
-                            </div>
-                        </form>
-                    </mat-step>
+              <div class="step-actions">
+                <button mat-flat-button color="primary" type="button" matStepperNext
+                  [disabled]="!fGeneral.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
 
-                    <mat-step [stepControl]="fItinerario.control">
-                        <form novalidate #fItinerario="ngForm" class="roles-step-form">
-                            <ng-template matStepLabel>Requerimiento de transporte y tiquetes
-                                aéreos</ng-template>
+          <mat-step [stepControl]="fItinerario.control">
+            <form novalidate #fItinerario="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Requerimiento de transporte y tiquetes
+                aéreos</ng-template>
 
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                                <button mat-flat-button color="primary" class="mt-4" type="button"
-                                    (click)="agregarItinerario()">
-                                    <mat-icon>add</mat-icon>
-                                    Agregar itinerario
-                                </button>
-                            </div>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                <button mat-flat-button color="primary" class="mt-4" type="button"
+                  (click)="agregarItinerario()">
+                  <mat-icon>add</mat-icon>
+                  Agregar itinerario
+                </button>
+              </div>
 
-                            <div class="app-data-table-wrapper">
-                                <table mat-table [dataSource]="dataSourceItinerario"
-                                    class="mat-elevation-z8">
-
-
-                                    <ng-container matColumnDef="origen">
-                                        <th mat-header-cell *matHeaderCellDef> Origen </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.departamento_origen}}
-                                            - {{element.municipio_origen}} </td>
-                                    </ng-container>
-
-                                    <ng-container matColumnDef="fecha">
-                                        <th mat-header-cell *matHeaderCellDef> Fecha - Hora </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.fecha |
-                                            date:
-                                            'yyyy-MM-dd'}} : {{element.hora}} </td>
-                                    </ng-container>
-
-                                    <ng-container matColumnDef="destino">
-                                        <th mat-header-cell *matHeaderCellDef> Destino </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.departamento_destino}}
-                                            - {{element.municipio_destino}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="requiere_tiquetes">
-                                        <th mat-header-cell *matHeaderCellDef> Requiere tiquetes
-                                            aéreos</th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.requiere_tiquetes_aereos ? 'Sí' : 'No'}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="zona_rural">
-                                        <th mat-header-cell *matHeaderCellDef> Destino zona rural
-                                        </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.es_zona_rural ? 'Sí' : 'No'}}</td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="observaciones_zona_rural">
-                                        <th mat-header-cell *matHeaderCellDef> Observaciones zona
-                                            rural</th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.observaciones_zona_rural}} </td>
-                                    </ng-container>
-
-                                    <ng-container matColumnDef="observaciones">
-                                        <th mat-header-cell *matHeaderCellDef> Observaciones
-                                            adicionales</th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.observaciones}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="acciones">
-                                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                        <td mat-cell *matCellDef="let element; let i = index">
-                                            <a href="javascript:void(0)"
-                                                (click)="eliminarItinerario(i)">
-                                                <mat-icon class="mat-icon-danger">delete</mat-icon>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                (click)="editarItinerario(i)">
-                                                <mat-icon>edit</mat-icon>
-                                            </a>
-                                        </td>
-                                    </ng-container>
-
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="step-actions">
-                                <button mat-stroked-button type="button"
-                                    matStepperPrevious>Volver</button>
-                                <button mat-flat-button color="primary" type="button" matStepperNext
-                                    [disabled]="!fItinerario.valid">
-                                    Continuar
-                                </button>
-                            </div>
-                        </form>
-                    </mat-step>
-
-                    <mat-step [stepControl]="fHotel.control">
-
-                        <form novalidate #fHotel="ngForm" class="roles-step-form">
-                            <ng-template matStepLabel>Requerimiento de hospedaje</ng-template>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                                <button mat-flat-button color="primary" class="mt-4" type="button"
-                                    (click)="agregarHotel()">
-                                    <mat-icon>add</mat-icon>
-                                    Agregar hospedaje
-                                </button>
-                            </div>
-
-                            <div class="app-data-table-wrapper">
-                                <table mat-table [dataSource]="dataSourceHotel"
-                                    class="mat-elevation-z8">
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="dataSourceItinerario" class="mat-elevation-z8">
 
 
-                                    <ng-container matColumnDef="ciudad">
-                                        <th mat-header-cell *matHeaderCellDef> Ciudad </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.departamento}} - {{element.municipio}} </td>
-                                    </ng-container>
+                  <ng-container matColumnDef="origen">
+                    <th mat-header-cell *matHeaderCellDef> Origen </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.departamento_origen}}
+                      - {{element.municipio_origen}} </td>
+                  </ng-container>
 
-                                    <ng-container matColumnDef="fecha_llegada">
-                                        <th mat-header-cell *matHeaderCellDef> Fecha de llegada
-                                        </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.fecha_llegada | date:
-                                            'yyyy-MM-dd'}} </td>
-                                    </ng-container>
+                  <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha - Hora </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fecha |
+                      date:
+                      'yyyy-MM-dd'}} : {{element.hora}} </td>
+                  </ng-container>
 
-                                    <ng-container matColumnDef="fecha_salida">
-                                        <th mat-header-cell *matHeaderCellDef> Fecha de salida </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.fecha_salida | date:
-                                            'yyyy-MM-dd'}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="observaciones">
-                                        <th mat-header-cell *matHeaderCellDef> Observaciones</th>
-                                        <td mat-cell *matCellDef="let element">
-                                            {{element.observaciones}} </td>
-                                    </ng-container>
+                  <ng-container matColumnDef="destino">
+                    <th mat-header-cell *matHeaderCellDef> Destino </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.departamento_destino}}
+                      - {{element.municipio_destino}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="requiere_tiquetes">
+                    <th mat-header-cell *matHeaderCellDef> Requiere tiquetes
+                      aéreos</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.requiere_tiquetes_aereos ? 'Sí' : 'No'}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="zona_rural">
+                    <th mat-header-cell *matHeaderCellDef> Destino zona rural
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.es_zona_rural ? 'Sí' : 'No'}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="observaciones_zona_rural">
+                    <th mat-header-cell *matHeaderCellDef> Observaciones zona
+                      rural</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.observaciones_zona_rural}} </td>
+                  </ng-container>
 
-                                    <ng-container matColumnDef="acciones">
-                                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                        <td mat-cell *matCellDef="let element; let i = index">
-                                            <a href="javascript:void(0)" (click)="eliminarHotel(i)">
-                                                <mat-icon class="mat-icon-danger">delete</mat-icon>
-                                            </a>
-                                            <a href="javascript:void(0)" (click)="editarHotel(i)">
-                                                <mat-icon>edit</mat-icon>
-                                            </a>
-                                        </td>
-                                    </ng-container>
+                  <ng-container matColumnDef="observaciones">
+                    <th mat-header-cell *matHeaderCellDef> Observaciones
+                      adicionales</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.observaciones}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      <a href="javascript:void(0)" (click)="eliminarItinerario(i)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </a>
+                      <a href="javascript:void(0)" (click)="editarItinerario(i)">
+                        <mat-icon>edit</mat-icon>
+                      </a>
+                    </td>
+                  </ng-container>
 
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsHotel">
-                                    </tr>
-                                    <tr mat-row
-                                        *matRowDef="let row; columns: displayedColumnsHotel;"></tr>
-                                </table>
-                            </div>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                  </tr>
+                </table>
+              </div>
+              <div class="step-actions">
+                <button mat-stroked-button type="button" matStepperPrevious>Volver</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext
+                  [disabled]="!fItinerario.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
 
-                            <div class="step-actions">
-                                <button mat-stroked-button type="button" class="mr-1"
-                                    matStepperPrevious>Volver</button>
-                                <button mat-flat-button color="primary" type="button" matStepperNext *ngIf="viajeData.requiere_anticipo"
-                                    [disabled]="!fHotel.valid">
-                                    Continuar
-                                </button>
-                            </div>
-                        </form>
-                    </mat-step>
-                    <!-- <mat-step [stepControl]="fAnticipo.control" *ngIf="viajeData.requiere_anticipo">
+          <mat-step [stepControl]="fHotel.control">
+
+            <form novalidate #fHotel="ngForm" class="roles-step-form">
+              <ng-template matStepLabel>Requerimiento de hospedaje</ng-template>
+
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                <button mat-flat-button color="primary" class="mt-4" type="button"
+                  (click)="agregarHotel()">
+                  <mat-icon>add</mat-icon>
+                  Agregar hospedaje
+                </button>
+              </div>
+
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="dataSourceHotel" class="mat-elevation-z8">
+
+
+                  <ng-container matColumnDef="ciudad">
+                    <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.departamento}} - {{element.municipio}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fecha_llegada">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de llegada
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.fecha_llegada | date:
+                      'yyyy-MM-dd'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fecha_salida">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de salida </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.fecha_salida | date:
+                      'yyyy-MM-dd'}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="observaciones">
+                    <th mat-header-cell *matHeaderCellDef> Observaciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.observaciones}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      <a href="javascript:void(0)" (click)="eliminarHotel(i)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </a>
+                      <a href="javascript:void(0)" (click)="editarHotel(i)">
+                        <mat-icon>edit</mat-icon>
+                      </a>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsHotel">
+                  </tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsHotel;"></tr>
+                </table>
+              </div>
+
+              <div class="step-actions">
+                <button mat-stroked-button type="button" class="mr-1"
+                  matStepperPrevious>Volver</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext
+                  *ngIf="viajeData.requiere_anticipo" [disabled]="!fHotel.valid">
+                  Continuar
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <!-- <mat-step [stepControl]="fAnticipo.control" *ngIf="viajeData.requiere_anticipo">
                         <form novalidate #fAnticipo="ngForm" class="roles-step-form">
                             <ng-template matStepLabel>Requerimiento de anticipo</ng-template>
 
@@ -673,29 +641,31 @@
                             </div>
                         </form>
                     </mat-step> -->
-                </mat-vertical-stepper>
-            </mat-card-content>
+        </mat-vertical-stepper>
+      </mat-card-content>
 
-            <mat-card-actions align="end">
-                 <!-- <button mat-flat-button color="primary" type="button" matStepperNext
+      <mat-card-actions align="end">
+        <!-- <button mat-flat-button color="primary" type="button" matStepperNext
                                     [disabled]="!fGeneral.valid">
                                     Continuar
                                 </button> -->
-                <button mat-stroked-button type="button" (click)="volver()">Regresar</button>
-                <button type="button" mat-flat-button color="primary" [disabled]="!fGeneral.valid || isLoading"  (click)="guardarViaje(false)">
-                    <span *ngIf="!isLoading">Guardar</span>
-                    <span *ngIf="isLoading">
-                        <i class="fas fa-spinner fa-spin"></i> Guardando...
-                    </span>
-                </button>
-                <button type="button" mat-flat-button color="primary" [disabled]="!fGeneral.valid || isLoading"  (click)="guardarViaje(true)">
-                    <span *ngIf="!isLoading">Envíar por aprobación</span>
-                    <span *ngIf="isLoading">
-                        <i class="fas fa-spinner fa-spin"></i> Guardando...
-                    </span>
-                </button>
-            </mat-card-actions>
-            <!-- <mat-card-actions align="end">
+        <button mat-stroked-button type="button" (click)="volver()">Regresar</button>
+        <button type="button" mat-flat-button color="primary"
+          [disabled]="!fGeneral.valid || isLoading" (click)="guardarViaje(false)">
+          <span *ngIf="!isLoading">Guardar</span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i> Guardando...
+          </span>
+        </button>
+        <button type="button" mat-flat-button color="primary"
+          [disabled]="!fGeneral.valid || isLoading" (click)="guardarViaje(true)">
+          <span *ngIf="!isLoading">Envíar por aprobación</span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i> Guardando...
+          </span>
+        </button>
+      </mat-card-actions>
+      <!-- <mat-card-actions align="end">
                 <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
                 <button type="button" mat-raised-button [disabled]="!fGeneral.valid || isLoading" class="btn btn-primary" (click)="accionSolicitud('SOLICITUD_AJUSTADA')">
                             <span *ngIf="!isLoading">Envíar por aprobación</span>
@@ -704,6 +674,6 @@
                             </span>
                         </button>
             </mat-card-actions> -->
-        </mat-card>
-    </div>
+    </mat-card>
+  </div>
 </div>

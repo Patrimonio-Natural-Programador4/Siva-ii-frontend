@@ -1,3 +1,8 @@
+import {
+  EvaluacionCapacidadesModel,
+  AccionSolicitudAprobacionCapacidad,
+} from './evaluacion-capacidades';
+
 import { Viajes } from './viajes';
 
 export interface UsuarioDisponibleAjuste {
@@ -11,6 +16,7 @@ export interface AccionesSolicitudAprobacion {
   comentarios?: string;
   tipo_accion?: string;
   viaje?: Viajes;
+  evaluacion_capacidades?: EvaluacionCapacidadesModel;
   tipo_solicitud?: string;
   asigna_presupuesto_viajes?: boolean;
   ajusta_itinerario_viajes?: boolean;

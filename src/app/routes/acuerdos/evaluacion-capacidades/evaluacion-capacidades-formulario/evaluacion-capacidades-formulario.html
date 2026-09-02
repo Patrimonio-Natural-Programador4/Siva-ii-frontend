@@ -33,7 +33,7 @@
             <div class="col-md-6 mb-3">
               <label for="code" class="form-label font-weight-bold">Código*</label>
               <input id="code" type="text" class="form-control" placeholder="Ingrese el código"
-                required [(ngModel)]="evaCapacidadesData.code" name="code" maxlength="255"
+                required [(ngModel)]="evaCapacidadesData.codigo" name="code" maxlength="255"
                 #code="ngModel" [class.is-invalid]="code.invalid && (code.dirty || code.touched)" />
               @if (code.invalid && (code.dirty || code.touched)) {
               <div class="invalid-feedback d-block">
@@ -43,20 +43,7 @@
             </div>
 
             <!-- Estado de Evaluación -->
-            <div class="col-md-6 mb-3">
-              <label for="capacity_assessments_state" class="form-label font-weight-bold">Estado de
-                Evaluación</label>
-              <select id="capacity_assessments_state" name="capacity_assessments_states_id"
-                class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.capacity_assessments_states_id">
-                <option value="" disabled selected>Seleccione un estado</option>
-                @for (item of states; track item.id || $index) {
-                <option [value]="item.id" class="text-capitalize">
-                  {{ (item.state || '') | titlecase }}
-                </option>
-                }
-              </select>
-            </div>
+
 
             <!-- Modalidad -->
             <div class="col-md-6 mb-3">
@@ -89,13 +76,16 @@
               </h6>
             </div>
 
+
             <!-- Programa -->
+
+
             <div class="col-md-6 mb-3">
               <label for="programa" class="form-label font-weight-bold">Programa</label>
               <select id="programa" name="program_id" class="form-select"
                 [(ngModel)]="evaCapacidadesData.program_id">
                 <option value="" disabled selected>Seleccione un programa</option>
-                @for (prog of programs; track prog.id_programa || $index) {
+                @for (prog of programsByMtf; track prog.id_programa || $index) {
                 <option [value]="prog.id_programa">
                   {{ prog.name }}
                 </option>
