@@ -536,13 +536,13 @@ export class AccionesViajes implements OnInit {
   }
 
   getDisplayLabel = (item: ListaGenerica): string => {
-    if (item.hasOwnProperty('valor')) {
+    if (Object.prototype.hasOwnProperty.call(item, 'valor')) {
       return (item as ListaGenerica).valor!;
     }
     return '';
   };
   getChoiceId = (item: ListaGenerica): string => {
-    if (item.hasOwnProperty('id')) {
+    if (Object.prototype.hasOwnProperty.call(item, 'identity')) {
       return (item as ListaGenerica).identity!.toString();
     }
     return '';
