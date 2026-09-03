@@ -6,3 +6,7 @@
 @use 'styles/helpers';
 @use 'styles/plugins';
 @use 'styles/custom';
+
+@import 'fullcalendar/skeleton.css';
+@import 'fullcalendar/themes/classic/theme.css';
+@import 'fullcalendar/themes/classic/palette.css';

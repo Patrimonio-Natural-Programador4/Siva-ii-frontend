@@ -100,3 +100,10 @@ export class Viajes {
     Object.assign(this, data);
   }
 }
+
+export interface ViajesCalendar {
+  id?: string;
+  title?: string;
+  start?: string;
+  end?: string;
+}

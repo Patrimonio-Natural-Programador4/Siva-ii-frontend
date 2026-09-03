@@ -3,6 +3,11 @@
 	overflow: auto hidden;
 }
 
+.app-data-card__toolbar {
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
 .viajes-table {
 	min-width: 1280px;
 

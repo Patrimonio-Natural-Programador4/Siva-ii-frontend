@@ -23,10 +23,10 @@ import { TravelLegalization } from 'src/app/models/travel-legalization';
 import { Viajes } from 'src/app/models/viajes';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { environment } from '@env/environment';
-import { LegalizacionForm } from '../legalizacion-form';
+import { LegalizacionForm } from './legalizacion-form';
 
 @Component({
-  selector: 'app-detalle-legalizacion',
+  selector: 'app-legalizacion',
   standalone: true,
   imports: [
     PageHeader,
@@ -40,10 +40,10 @@ import { LegalizacionForm } from '../legalizacion-form';
     MatProgressSpinnerModule,
     MatSnackBarModule,
   ],
-  templateUrl: './detalle.html',
-  styleUrl: './detalle.scss',
+  templateUrl: './legalizacion.html',
+  styleUrl: './legalizacion.scss',
 })
-export class DetalleLegalizacion implements OnInit {
+export class Legalizacion implements OnInit {
   private readonly tipoSolicitudAprobacion = 'SOL_VIA_ANT';
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -137,6 +137,22 @@ export class DetalleLegalizacion implements OnInit {
     return this.dataSourceLegalizaciones.data.length > 0;
   }
 
+  get totalSubtotalLegalizaciones(): number {
+    return this.sumarLegalizaciones('subtotal');
+  }
+
+  get totalIvaLegalizaciones(): number {
+    return this.sumarLegalizaciones('iva');
+  }
+
+  get totalRetencionLegalizaciones(): number {
+    return this.sumarLegalizaciones('retention');
+  }
+
+  get totalValorCanceladoLegalizaciones(): number {
+    return this.sumarLegalizaciones('amount_paid');
+  }
+
   volver(): void {
     this.router.navigate(['/viajes/listar']);
   }
@@ -156,6 +172,13 @@ export class DetalleLegalizacion implements OnInit {
   }
 
   // --- GESTIÓN DE LEGALIZACIÓN Y FACTURAS (STEP 4) ---
+
+  private sumarLegalizaciones(campo: keyof TravelLegalization): number {
+    return this.dataSourceLegalizaciones.data.reduce((total, item) => {
+      const valor = Number(item[campo] ?? 0);
+      return total + (Number.isFinite(valor) ? valor : 0);
+    }, 0);
+  }
 
   cargarLegalizaciones(): void {
     if (!this.viajeData.id_viaje) return;

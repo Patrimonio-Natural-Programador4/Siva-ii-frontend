@@ -53,11 +53,39 @@
 
 .table-wrap {
 	overflow-x: auto;
+	border: 1px solid #e1e3ea;
+	border-radius: 6px;
 }
 
 .full-width-table {
 	width: 100%;
 	min-width: 960px;
+	border-collapse: collapse;
+	box-shadow: none;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-header-cell,
+:host ::ng-deep .table-wrap .mat-mdc-cell {
+	padding: 0.75rem 1rem;
+	border-right: 1px solid #e1e3ea;
+	border-bottom: 1px solid #e1e3ea;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-header-cell:last-child,
+:host ::ng-deep .table-wrap .mat-mdc-cell:last-child {
+	border-right: 0;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-row:last-child .mat-mdc-cell {
+	border-bottom: 0;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-header-row {
+	background-color: #5a627c;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-header-cell {
+	color: #fff;
 }
 
 .empty-step {

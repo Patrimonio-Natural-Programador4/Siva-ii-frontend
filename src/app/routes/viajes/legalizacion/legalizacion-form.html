@@ -1,7 +1,7 @@
 <div class="drawer-container">
   <div class="drawer-header">
     <h2 class="d-flex align-items-center justify-content-between m-t-0 f-w-400 m-b-0">
-      <span>{{ isEdit ? 'Modificar legalización de viaje' : 'Legalizar viaje' }}</span>
+      <span>{{ isEdit ? 'Modificar factura' : 'Registrar factura' }}</span>
       <button mat-icon-button (click)="cancelar()" type="button">
         <mat-icon>close</mat-icon>
       </button>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-12 col-md-6 mb-3">
-          <label for="check_number" class="form-label">Número de documento o soporte</label>
+          <label for="check_number" class="form-label">Número de factura o Documento Soporte</label>
           <input
             type="text"
             class="form-control"

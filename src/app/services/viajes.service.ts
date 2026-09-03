@@ -4,7 +4,7 @@ import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AccionesSolicitudAprobacion } from '../models/acciones-solicitud-aprobacion';
-import { Viajes } from '../models/viajes';
+import { Viajes, ViajesCalendar } from '../models/viajes';
 import { format } from 'date-fns/format';
 import { ResponseRequest } from '../models/response-request';
 import { SolicitudAprobacionHistorial } from '../models/solicitud-aprobacion-historial';
@@ -76,6 +76,14 @@ export class ViajesService {
   }
   getViajeById(id: string): Observable<Viajes> {
     return this.http.get<Viajes>(`${this.apiUrl}/${id}/detalle`);
+  }
+
+  getViajesCalendario(fechaDesde: Date, fechaHasta: Date): Observable<ViajesCalendar[]> {
+    const params = new HttpParams()
+      .set('fechaDesde', format(fechaDesde, 'yyyy-MM-dd'))
+      .set('fechaHasta', format(fechaHasta, 'yyyy-MM-dd'));
+
+    return this.http.get<ViajesCalendar[]>(`${this.apiUrl}/calendario`, { params });
   }
 
   getHistorialAprobacion(

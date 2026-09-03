@@ -174,7 +174,50 @@
                     <label class="" for="es_invitado_n">&nbsp;No</label>
                   </div>
                 </div>
+                <div class="col-md-4" *ngIf="viajeData.es_invitado">
+                  <label for="dos_o_mas_personas" class="form-label">Son mas de dos invitados?*</label>
+                  <div>
+                    <input type="radio" [value]="true" id="dos_o_mas_personas_s"
+                      name="dos_o_mas_personas" [(ngModel)]="viajeData.dos_o_mas_personas"
+                      (ngModelChange)="onDosOMasPersonasChange($event)" />
+                    <label class="" for="dos_o_mas_personas_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="dos_o_mas_personas_n"
+                      name="dos_o_mas_personas" [(ngModel)]="viajeData.dos_o_mas_personas"
+                      (ngModelChange)="onDosOMasPersonasChange($event)" />
+                    <label class="" for="dos_o_mas_personas_n">&nbsp;No</label>
+                  </div>
+                </div>
+
+                @if (viajeData.dos_o_mas_personas) {
                 <div class="col-md-4">
+                  <label for="archivo_dos_o_mas" class="form-label">
+                    Adjunte el formato de las personas invitadas.
+                  </label>
+                  <input type="file" class="form-control" id="archivo_dos_o_mas"
+                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    (change)="onArchivoDosOMasChange($event)" [class.is-invalid]="
+                        errorArchivoExcel || (archivoExcelTouched && !archivoExcelBase64)
+                      " />
+                  <input type="hidden" name="archivo_excel_requerido"
+                    [(ngModel)]="archivoExcelBase64" required #archivoExcelControl="ngModel" />
+                  @if (errorArchivoExcel) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">{{ errorArchivoExcel }}</span>
+                  </div>
+                  } @else if (archivoExcelTouched && !archivoExcelBase64) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Adjunte el archivo</span>
+                  </div>
+                  }
+                  @if (archivoExcelNombre && !errorArchivoExcel) {
+                  <div class="form-text text-success">
+                    <small>Archivo adjuntado: {{ archivoExcelNombre }}</small>
+                  </div>
+                  }
+                </div>
+                }
+                <div class="col-md-4" *ngIf="viajeData.es_invitado && !viajeData.dos_o_mas_personas">
                   <label for="persona_invitada" class="form-label">
                     Nombre de la persona invitada*
                   </label>
@@ -194,7 +237,7 @@
                   </div>
                   }
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" *ngIf="viajeData.es_invitado && !viajeData.dos_o_mas_personas">
                   <label for="correo_persona_invitada" class="form-label">
                     Correo de la persona invitada*
                   </label>
@@ -330,51 +373,6 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <label for="dos_o_mas_personas" class="form-label">Viajan más de dos
-                    personas?*</label>
-                  <div>
-                    <input type="radio" [value]="true" id="dos_o_mas_personas_s"
-                      name="dos_o_mas_personas" [(ngModel)]="viajeData.dos_o_mas_personas"
-                      (ngModelChange)="onDosOMasPersonasChange($event)" />
-                    <label class="" for="dos_o_mas_personas_s">&nbsp;Si</label>
-                    &nbsp;
-                    <input type="radio" [value]="false" id="dos_o_mas_personas_n"
-                      name="dos_o_mas_personas" [(ngModel)]="viajeData.dos_o_mas_personas"
-                      (ngModelChange)="onDosOMasPersonasChange($event)" />
-                    <label class="" for="dos_o_mas_personas_n">&nbsp;No</label>
-                  </div>
-                </div>
-
-                @if (viajeData.dos_o_mas_personas) {
-                <div class="col-md-4">
-                  <label for="archivo_dos_o_mas" class="form-label">
-                    Adjunte el formato de requerimiento de tiquetes.
-                  </label>
-                  <input type="file" class="form-control" id="archivo_dos_o_mas"
-                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    (change)="onArchivoDosOMasChange($event)" [class.is-invalid]="
-                        errorArchivoExcel || (archivoExcelTouched && !archivoExcelBase64)
-                      " />
-                  <input type="hidden" name="archivo_excel_requerido"
-                    [(ngModel)]="archivoExcelBase64" required #archivoExcelControl="ngModel" />
-                  @if (errorArchivoExcel) {
-                  <div class="invalid-feedback d-block">
-                    <span class="text-danger">{{ errorArchivoExcel }}</span>
-                  </div>
-                  } @else if (archivoExcelTouched && !archivoExcelBase64) {
-                  <div class="invalid-feedback d-block">
-                    <span class="text-danger">Adjunte el archivo</span>
-                  </div>
-                  }
-                  @if (archivoExcelNombre && !errorArchivoExcel) {
-                  <div class="form-text text-success">
-                    <small>Archivo adjuntado: {{ archivoExcelNombre }}</small>
-                  </div>
-                  }
-                </div>
-                }
-
                 @if (viajeData.requiere_anticipo) {
                 <div class="col-md-4">
                   <label for="tipo_cuenta" class="form-label">Valor del anticipo*</label>
@@ -468,7 +466,7 @@
             </form>
           </mat-step>
 
-          <mat-step [stepControl]="fItinerario.control">
+          <mat-step [stepControl]="fItinerario.control" *ngIf="!viajeData.dos_o_mas_personas">
             <form novalidate #fItinerario="ngForm" class="roles-step-form">
               <ng-template matStepLabel>Requerimiento de transporte y tiquetes aéreos</ng-template>
 
@@ -555,7 +553,7 @@
             </form>
           </mat-step>
 
-          <mat-step [stepControl]="fHotel.control">
+          <mat-step [stepControl]="fHotel.control" *ngIf="!viajeData.dos_o_mas_personas">
             <form novalidate #fHotel="ngForm" class="roles-step-form">
               <ng-template matStepLabel>Requerimiento de hospedaje</ng-template>
 
@@ -617,10 +615,10 @@
                 <button mat-stroked-button type="button" class="mr-1" matStepperPrevious>
                   Volver
                 </button>
-                <button mat-flat-button color="primary" type="button" matStepperNext
+                <!-- <button mat-flat-button color="primary" type="button" matStepperNext
                   *ngIf="viajeData.requiere_anticipo" [disabled]="!fHotel.valid">
                   Continuar
-                </button>
+                </button> -->
               </div>
             </form>
           </mat-step>

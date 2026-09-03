@@ -8,7 +8,7 @@
         style="flex-direction: row"
       >
         <mat-card-title>Legalización de Viaje - Detalle</mat-card-title>
-        <button
+        <!-- <button
           mat-raised-button
           color="accent"
           *ngIf="viajeData.guid"
@@ -17,7 +17,7 @@
         >
           <mat-icon>picture_as_pdf</mat-icon>
           Descargar PDF
-        </button>
+        </button> -->
       </mat-card-header>
 
       <mat-card-content>
@@ -278,7 +278,7 @@
             <ng-template matStepLabel>Legalización y Facturas</ng-template>
 
             <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-              <h4 class="mb-0 fw-bold">Facturas y soportes de legalización</h4>
+              <h4 class="mb-0 fw-bold"></h4>
               <button
                 mat-flat-button
                 color="primary"
@@ -286,7 +286,7 @@
                 (click)="agregarLegalizacion()"
               >
                 <mat-icon>add</mat-icon>
-                Agregar Legalización
+                Agregar factura
               </button>
             </div>
 
@@ -301,6 +301,7 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.check_date | date: 'yyyy-MM-dd' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef>Total</td>
                 </ng-container>
 
                 <ng-container matColumnDef="check_number">
@@ -308,6 +309,7 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.check_number || '--' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="beneficiary">
@@ -315,6 +317,7 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.beneficiary || '--' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="nit_beneficiary">
@@ -322,6 +325,7 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.nit_beneficiary || '--' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="regimen_name">
@@ -329,12 +333,16 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.regimen_name || '--' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="subtotal">
                   <th mat-header-cell *matHeaderCellDef>Subtotal</th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.subtotal | currency: 'COP':'symbol':'1.0-0' }}
+                  </td>
+                  <td mat-footer-cell *matFooterCellDef>
+                    {{ totalSubtotalLegalizaciones | currency: 'COP':'symbol':'1.0-0' }}
                   </td>
                 </ng-container>
 
@@ -343,6 +351,9 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.iva | currency: 'COP':'symbol':'1.0-0' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef>
+                    {{ totalIvaLegalizaciones | currency: 'COP':'symbol':'1.0-0' }}
+                  </td>
                 </ng-container>
 
                 <ng-container matColumnDef="retention_porcentage">
@@ -350,12 +361,16 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.retention_porcentage || 0 }}%
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="retention">
                   <th mat-header-cell *matHeaderCellDef>Retención</th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.retention | currency: 'COP':'symbol':'1.0-0' }}
+                  </td>
+                  <td mat-footer-cell *matFooterCellDef>
+                    {{ totalRetencionLegalizaciones | currency: 'COP':'symbol':'1.0-0' }}
                   </td>
                 </ng-container>
 
@@ -364,6 +379,9 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.amount_paid | currency: 'COP':'symbol':'1.0-0' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef>
+                    {{ totalValorCanceladoLegalizaciones | currency: 'COP':'symbol':'1.0-0' }}
+                  </td>
                 </ng-container>
 
                 <ng-container matColumnDef="observations">
@@ -371,6 +389,7 @@
                   <td mat-cell *matCellDef="let element">
                     {{ element.observations || '--' }}
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <ng-container matColumnDef="acciones">
@@ -385,16 +404,18 @@
                       <mat-icon>edit</mat-icon>
                     </a>
                   </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsLegalizacion"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsLegalizacion"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumnsLegalizacion"></tr>
               </table>
             </div>
 
             <ng-template #noLegalizaciones>
               <div class="empty-step" *ngIf="!isLoadingLegalizaciones">
-                No hay legalizaciones ni facturas registradas para este viaje. Haga clic en "Agregar Legalización" para registrar una nueva.
+                No hay registros asociados. Haga clic en "Agregar factura" para registrar una nueva.
               </div>
               <div class="empty-step" *ngIf="isLoadingLegalizaciones">
                 Cargando registros de legalización...

@@ -8,6 +8,10 @@
 
       <mat-card-content class="app-data-card__content">
         <div class="app-data-card__toolbar">
+          <button mat-flat-button color="primary" type="button" (click)="abrirCalendario()">
+            <mat-icon>calendar_today</mat-icon>
+            Calendario
+          </button>
           <button mat-flat-button color="primary" type="button" (click)="crearViaje()">
             <mat-icon>add</mat-icon>
             Crear solicitud de viaje
@@ -242,19 +246,29 @@
                     <mat-icon>visibility</mat-icon>
                   </button>
                   <mat-menu #menuDetalle="matMenu">
-                    <button
+                    <!-- <button
                       mat-menu-item
                       (click)="verDetallesLegalizacion(element.guid)"
                       *ngIf="aplicaLegalizacion(element)"
                     >
                       <mat-icon>receipt_long</mat-icon>
                       <span>Ver detalles de legalización</span>
-                    </button>
+                    </button> -->
                     <button mat-menu-item (click)="verPDF(element.guid)">
                       <mat-icon>picture_as_pdf</mat-icon>
                       <span>Información general (PDF)</span>
                     </button>
+                    <button mat-menu-item (click)="verPDFLeg(element.guid)">
+                      <mat-icon>picture_as_pdf</mat-icon>
+                      <span>Formato Legalización (PDF)</span>
+                    </button>
                   </mat-menu>
+                   <a href="javascript:void(0)" *ngIf="aplicaLegalizacion(element)"
+                    class="btn-accion" title="Legalización de viaje"
+                    alt="Legalización de viaje" (click)="verDetallesLegalizacion(element.guid)">
+                    <mat-icon title="Legalización de viaje" alt="Legalización de viaje">attach_money</mat-icon>
+                  </a>
+
                 </div>
               </td>
             </ng-container>

@@ -20,6 +20,13 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'calendario',
+        loadComponent: () => import('./calendario/calendario').then(m => m.CalendarioViajes),
+        data: {
+          title: 'Calendario de viajes',
+        },
+      },
+      {
         path: 'crear',
         loadComponent: () => import('./acciones/acciones').then(m => m.AccionesViajes),
         data: {
@@ -41,9 +48,9 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'legalizacion/detalle/:id',
+        path: 'legalizacion/:id',
         loadComponent: () =>
-          import('./legalizacion/detalle/detalle').then(m => m.DetalleLegalizacion),
+          import('./legalizacion/legalizacion').then(m => m.Legalizacion),
         data: {
           title: 'Detalle de legalización',
         },

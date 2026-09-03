@@ -150,6 +150,10 @@ export class ListarViajes implements OnInit, AfterViewInit {
     this.router.navigate(['/viajes/crear']);
   }
 
+  abrirCalendario(): void {
+    this.router.navigate(['/viajes/calendario']);
+  }
+
   limpiarFiltros(): void {
     this.id_estado = [];
     this.id_programa = -1;
@@ -229,12 +233,17 @@ export class ListarViajes implements OnInit, AfterViewInit {
     window.open(url, '_blank');
   }
 
+  verPDFLeg(guid: string): void {
+    const url = `${environment.apiUrl2}/viajes/${guid}/pdf_legalizacion/documento`;
+    window.open(url, '_blank');
+  }
+
   verDetallesViaje(guid: string): void {
     this.router.navigate(['/viajes/detalle', guid]);
   }
 
   verDetallesLegalizacion(guid: string): void {
-    this.router.navigate(['/viajes/legalizacion/detalle', guid]);
+    this.router.navigate(['/viajes/legalizacion', guid]);
   }
 
   aplicaLegalizacion(element: any): boolean {

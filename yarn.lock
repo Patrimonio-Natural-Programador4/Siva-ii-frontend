@@ -303,7 +303,7 @@
     yargs "18.0.0"
     zod "4.1.13"
 
-"@angular/common@^20.0.0 || ^21.0.0 || ^22.0.0", "@angular/common@^21.0.0", "@angular/common@^21.0.0 || ^22.0.0", "@angular/common@>= 21.0.0", "@angular/common@>=16", "@angular/common@>=16.0.0", "@angular/common@>=17.0.0", "@angular/common@>=17.3.0", "@angular/common@>=21.0.0", "@angular/common@21.0.3":
+"@angular/common@^20.0.0 || ^21.0.0 || ^22.0.0", "@angular/common@^21.0.0", "@angular/common@^21.0.0 || ^22.0.0", "@angular/common@>= 21.0.0", "@angular/common@>=16", "@angular/common@>=16.0.0", "@angular/common@>=17.0.0", "@angular/common@>=17.3.0", "@angular/common@>=21.0.0", "@angular/common@16 - 22", "@angular/common@21.0.3":
   version "21.0.3"
   resolved "https://registry.npmjs.org/@angular/common/-/common-21.0.3.tgz"
   integrity sha512-y8U5jlaK5x3fhI7WOsuiwwNYghC5TBDfmqJdQ2YT4RFG0vB4b22RW5RY5GDbQ5La4AAcpcjoqb4zca8auLCe+g==
@@ -331,7 +331,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^20.0.0 || ^21.0.0 || ^22.0.0", "@angular/core@^21.0.0", "@angular/core@^21.0.0 || ^22.0.0", "@angular/core@>= 21.0.0", "@angular/core@>=13 || >25", "@angular/core@>=16", "@angular/core@>=16.0.0", "@angular/core@>=17.0.0", "@angular/core@>=17.3.0", "@angular/core@>=20", "@angular/core@>=21.0.0", "@angular/core@21.0.3":
+"@angular/core@^20.0.0 || ^21.0.0 || ^22.0.0", "@angular/core@^21.0.0", "@angular/core@^21.0.0 || ^22.0.0", "@angular/core@>= 21.0.0", "@angular/core@>=13 || >25", "@angular/core@>=16", "@angular/core@>=16.0.0", "@angular/core@>=17.0.0", "@angular/core@>=17.3.0", "@angular/core@>=20", "@angular/core@>=21.0.0", "@angular/core@16 - 22", "@angular/core@21.0.3":
   version "21.0.3"
   resolved "https://registry.npmjs.org/@angular/core/-/core-21.0.3.tgz"
   integrity sha512-/7a2FyZp5cyjNiwuNLr889KA8DVKSTcTtZJpz57Z9DpmZhPscDOWQqLn9f8jeEwbWllvgrXJi8pKSa78r8JAwA==
@@ -840,6 +840,23 @@
   dependencies:
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
+
+"@full-ui/headless-calendar@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/@full-ui/headless-calendar/-/headless-calendar-7.0.2.tgz"
+  integrity sha512-i6UlTNjBVuiBca5Sq6OoLxFqK6eaQ/v1XOLObjRkzXLuSuNn+qs9/dUvlzrbeesn7QbRH7+u7lyvlQyq8WvmGA==
+
+"@fullcalendar/angular@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/@fullcalendar/angular/-/angular-7.0.2.tgz"
+  integrity sha512-OUjUbJCtdJbwSvDOzK+YD+n+nFMh9RPfg5ggcAMyiMkc0wywS+E5rBeEG5OiqFTi7GGyj7W0SnkhNyl4E5SbGw==
+  dependencies:
+    tslib "^2.3.0"
+
+"@fullcalendar/core@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/@fullcalendar/core/-/core-7.0.2.tgz"
+  integrity sha512-EkhE1wkPttp5kKNmUNLsMwl8nUuQmLdj30SPKagOEWMJUE4AHETAu/F/SbYoRq+nksm2GWPe9cQs1kbQP2H9pA==
 
 "@gulpjs/messages@^1.1.0":
   version "1.1.0"
@@ -1662,6 +1679,13 @@
   dependencies:
     "@typescript-eslint/types" "8.53.0"
     eslint-visitor-keys "^4.2.1"
+
+"@vigilio/numeros-a-letras@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.npmjs.org/@vigilio/numeros-a-letras/-/numeros-a-letras-0.0.7.tgz"
+  integrity sha512-J1dnq+2mhO1nyq2RzBZlUG5/G2whI70a69OtuNd6bvHQW9m687cSkuZuHVuU36icX482G+ooMIzMJxK4vXwt3w==
+  dependencies:
+    tslib "^2.6.2"
 
 "@vitejs/plugin-basic-ssl@2.1.0":
   version "2.1.0"
@@ -3583,6 +3607,15 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
+
+fullcalendar@7.0.2:
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/fullcalendar/-/fullcalendar-7.0.2.tgz"
+  integrity sha512-xqt/4CrnabOUVfu5PExyc6plbwH8QA1jAusRw6JOUfS+BmpA19W74lNLDty6EO0H+2cm/qVMza4TgQiJLHPAqQ==
+  dependencies:
+    "@full-ui/headless-calendar" "7.0.2"
+    "@fullcalendar/core" "7.0.2"
+    preact "^10.29.0"
 
 function-bind@^1.1.2:
   version "1.1.2"
@@ -5836,6 +5869,11 @@ postcss@^8.3.3, postcss@^8.4.0, postcss@^8.4.20, postcss@^8.4.29, postcss@^8.4.3
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
+preact@^10.29.0:
+  version "10.29.8"
+  resolved "https://registry.npmjs.org/preact/-/preact-10.29.8.tgz"
+  integrity sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
@@ -7003,6 +7041,24 @@ teex@^1.0.1:
   dependencies:
     streamx "^2.12.5"
 
+temporal-polyfill@^1.0.1:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/temporal-polyfill/-/temporal-polyfill-1.0.4.tgz"
+  integrity sha512-MLEU0qOD2uXlz24oINNtdLZQl8RgmMxSnRtKEGZGGetTJjlRwQJjk+VsJ4EREaUoiaTb8NJOcUiKtoAiWn9EBg==
+  dependencies:
+    temporal-spec "1.0.1"
+    temporal-utils "1.0.2"
+
+temporal-spec@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/temporal-spec/-/temporal-spec-1.0.1.tgz"
+  integrity sha512-wxVoanmDeavXie1vu2JaQ3WIc3JZnWAOYFBsJyATaVsXsycKYUflGsyBmrRSnoCpZJpwPyr38VpgSUlQ8CbFxg==
+
+temporal-utils@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/temporal-utils/-/temporal-utils-1.0.2.tgz"
+  integrity sha512-1B8Dl4KzrOvsNUlpoWGno2VLQlxroLjDgc5NBjVC9ax9ymdo+ezfyvhyjEMx+IVfhINr6CIG2gcnlP95iRrybQ==
+
 text-decoder@^1.1.0:
   version "1.2.3"
   resolved "https://registry.npmjs.org/text-decoder/-/text-decoder-1.2.3.tgz"
@@ -7097,7 +7153,7 @@ ts-api-utils@^2.1.0, ts-api-utils@^2.4.0:
   resolved "https://registry.npmjs.org/ts-api-utils/-/ts-api-utils-2.4.0.tgz"
   integrity sha512-3TaVTaAv2gTiMB35i3FiGJaRfwb3Pyn/j3m/bfAvGe8FB7CF6u+LMYqYlDh7reQf7UNvoTvdfAqHGmPGOSsPmA==
 
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0, tslib@^2.8.0, tslib@^2.8.1:
+tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0, tslib@^2.6.2, tslib@^2.8.0, tslib@^2.8.1:
   version "2.8.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
