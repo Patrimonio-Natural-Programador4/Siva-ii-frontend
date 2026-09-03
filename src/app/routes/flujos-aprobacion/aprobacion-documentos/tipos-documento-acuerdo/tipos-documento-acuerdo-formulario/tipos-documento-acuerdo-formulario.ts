@@ -126,6 +126,7 @@ export class TiposDocumentoAcuerdoFormulario implements OnInit {
     this.AprobacionDocumentosService.getAprobDoc().subscribe({
       next: r => {
         this.documents = r;
+        this.cdr.detectChanges();
         console.log(r);
       },
       error: e => {

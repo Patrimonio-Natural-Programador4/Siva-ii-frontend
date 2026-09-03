@@ -30,16 +30,18 @@ import { AnticipoForm } from 'src/app/shared/anticipo-form';
 import { ChoiceWithIndices, NgxMentionsModule } from 'ngx-mentions';
 import { format } from 'date-fns';
 import { DomSanitizer } from '@angular/platform-browser';
-import { getFormattedHighlightText, parentCommentStatusBasedStyles } from 'src/app/shared/utilmentions';
+import {
+  getFormattedHighlightText,
+  parentCommentStatusBasedStyles,
+} from 'src/app/shared/utilmentions';
 import { HotelForm } from '../hotel/hotel-form';
 import { ItinerarioForm } from '../itinerario/itinerario-form';
 // import { ToastrService } from 'ngx-toastr';
 
-
 export const MY_FORMATS = {
   parse: {
     dateInput: 'yyyy-MM-dd',
-    timeInput: 'HH:mm'
+    timeInput: 'HH:mm',
   },
   display: {
     dateInput: 'yyyy-MM-dd',
@@ -47,7 +49,7 @@ export const MY_FORMATS = {
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'yyyy MMMM dd',
     timeInput: 'HH:mm',
-    timeOptionLabel: 'HH:mm'
+    timeOptionLabel: 'HH:mm',
   },
 };
 
@@ -70,16 +72,12 @@ export const MY_FORMATS = {
     MatDatepicker,
     MatDatepickerModule,
     MtxDrawerModule,
-    NgxMentionsModule
+    NgxMentionsModule,
   ],
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
-  providers: [
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ]
+  providers: [{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }],
 })
-
-
 export class AccionesViajes implements OnInit {
   @ViewChild('fRutas') fRutasForm!: NgForm;
   itinerarioChanged$ = new Subject<ViajesItinerario>();
@@ -95,10 +93,10 @@ export class AccionesViajes implements OnInit {
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
-  accion: string = 'Nuevo';
+  accion = 'Nuevo';
   usuariosFilter: ListaGenerica[] = [];
   usuarios: ListaGenerica[] = [];
-  choices: (ListaGenerica)[] = [];
+  choices: ListaGenerica[] = [];
   mentions: ChoiceWithIndices[] = [];
   searchRegexp = new RegExp('^([-&.\\w]+ *){0,3}$');
   emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -108,7 +106,7 @@ export class AccionesViajes implements OnInit {
       getChoiceLabel: (item: ListaGenerica): string => {
         return `@${item.valor}`;
       },
-    }
+    },
   ];
   selectedChoices: ChoiceWithIndices[] = [];
   loading = false;
@@ -117,7 +115,7 @@ export class AccionesViajes implements OnInit {
     hotel: [],
     asociado_taller: false,
     id_rol_aprobacion_supervisor: null!,
-    guid:null!,
+    guid: null!,
     id_supervisor_aprueba: null!,
     id_programa: null!,
     id_tipo_cuenta: null!,
@@ -127,11 +125,26 @@ export class AccionesViajes implements OnInit {
       id_anticipo: null!,
       id_relacion: null!,
       id_tipo_anticipo: null!,
-      detalle: []
-    }
+      detalle: [],
+    },
   };
-  displayedColumns: string[] = ['origen', 'fecha', 'destino', 'requiere_tiquetes', 'zona_rural', 'observaciones_zona_rural', 'observaciones', 'acciones'];
-  displayedColumnsHotel: string[] = ['ciudad', 'fecha_llegada', 'fecha_salida', 'observaciones', 'acciones'];
+  displayedColumns: string[] = [
+    'origen',
+    'fecha',
+    'destino',
+    'requiere_tiquetes',
+    'zona_rural',
+    'observaciones_zona_rural',
+    'observaciones',
+    'acciones',
+  ];
+  displayedColumnsHotel: string[] = [
+    'ciudad',
+    'fecha_llegada',
+    'fecha_salida',
+    'observaciones',
+    'acciones',
+  ];
   displayedColumnsAnticipo: string[] = ['concepto', 'valor', 'observaciones', 'acciones'];
   private readonly service = inject(ViajesService);
   private readonly snackBar = inject(MatSnackBar);
@@ -164,15 +177,14 @@ export class AccionesViajes implements OnInit {
   rubroSearch = '';
   showRubroDropdown = false;
 
-
   responseRequest = new ResponseRequest({
     mensaje: '',
     identity: null!,
     solicitud_exitosa: false,
   });
 
-  
   ngOnInit(): void {
+    console.log('6', this.listados[7]);
     this.id_viaje = this.activatedRoute.snapshot.params['id'];
     this.accion = this.id_viaje ? 'Editar' : 'Nuevo';
     this.getListados();
@@ -181,13 +193,11 @@ export class AccionesViajes implements OnInit {
       this.getValidacionAccionesAprobacion();
       this.getViaje();
     }
-    
+
     this.dataSourceAnticipo.data = this.viajeData.anticipo?.detalle ?? [];
   }
 
-  validarFecha() {
-
-  }
+  validarFecha() {}
 
   private ordenarItinerario(itinerario: ViajesItinerario[] = []): ViajesItinerario[] {
     return [...itinerario].sort((a, b) => {
@@ -223,27 +233,30 @@ export class AccionesViajes implements OnInit {
 
   private getViaje(): void {
     this.isLoading = true;
-    this.service.getViajeById(this.id_viaje).subscribe(data => {
-      this.viajeData = data;
-      this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
-      this.dataSourceHotel.data = this.viajeData.hotel ?? [];
-      this.fechaInicio = this.viajeData.fecha_inicio_viaje;
-      this.fechaFin = this.viajeData.fecha_fin_viaje;
-      this.fechaNacimiento = this.viajeData.fecha_nacimiento_viajero;
-      this.syncRubroSelection();
-      
-      if (this.viajeData.id_viaje) {
-        // this.getHistorialAprobacion(this.viajeData.id_viaje);
+    this.service.getViajeById(this.id_viaje).subscribe(
+      data => {
+        this.viajeData = data;
+        this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
+        this.dataSourceHotel.data = this.viajeData.hotel ?? [];
+        this.fechaInicio = this.viajeData.fecha_inicio_viaje;
+        this.fechaFin = this.viajeData.fecha_fin_viaje;
+        this.fechaNacimiento = this.viajeData.fecha_nacimiento_viajero;
+        this.syncRubroSelection();
+
+        if (this.viajeData.id_viaje) {
+          // this.getHistorialAprobacion(this.viajeData.id_viaje);
+        }
+        this.getValidacionAccionesAprobacion();
+        this.isLoading = false;
+      },
+      error => {
+        this.snackBar.open('Error al cargar el viaje', '', { duration: 3000 });
+        this.isLoading = false;
       }
-      this.getValidacionAccionesAprobacion();
-      this.isLoading = false;
-    }, error => {
-      this.snackBar.open('Error al cargar el viaje', '', { duration: 3000 });
-      this.isLoading = false;
-    });
+    );
   }
 
-   getHistorialAprobacion() {
+  getHistorialAprobacion() {
     // this.viajeService.getHistorialAprobacion(this.id_viaje, 'SV').subscribe(data => {
     //   if (data) {
     //     this.historialAprobacion = data;
@@ -261,7 +274,6 @@ export class AccionesViajes implements OnInit {
     //     this.validacionAcciones = data;
     //     this.habilitarAcciones = this.validacionAcciones.solicitud_exitosa;
     //     if (this.validacionAcciones.solicitud_exitosa) {
-
     //       this.acciones = JSON.parse(this.validacionAcciones.mensaje);
     //       if (this.acciones.usuario_solicito == false) {
     //         this.router.navigate(['/viajes/detalle', this.id_viaje]);
@@ -292,12 +304,7 @@ export class AccionesViajes implements OnInit {
   }
 
   onObservacionesChange(event: any) {
-    getFormattedHighlightText(
-      event,
-      this.mentions,
-      parentCommentStatusBasedStyles,
-      this.sanitizer
-    )
+    getFormattedHighlightText(event, this.mentions, parentCommentStatusBasedStyles, this.sanitizer);
   }
 
   onRubroSearchChange(value: string): void {
@@ -351,12 +358,11 @@ export class AccionesViajes implements OnInit {
     });
   }
 
-  
   volver(): void {
     this.router.navigate(['/viajes/listar']);
   }
 
-  agregarHotel(){
+  agregarHotel() {
     const drawerRef = this.drawer.open(HotelForm, {
       position: 'right',
       width: '30%',
@@ -368,16 +374,17 @@ export class AccionesViajes implements OnInit {
 
     const sub = this.hotelChanged$.subscribe(result => {
       // Resolve text names for visualization in the main table
-      const depto = this.listados[0]?.lista_generica?.find(p => p.identity === result.id_departamento)?.valor;
-      const municipio = this.listados[1]?.lista_generica?.find(p => p.identity === result.id_municipio)?.valor;
+      const depto = this.listados[0]?.lista_generica?.find(
+        p => p.identity === result.id_departamento
+      )?.valor;
+      const municipio = this.listados[1]?.lista_generica?.find(
+        p => p.identity === result.id_municipio
+      )?.valor;
 
       result.departamento = depto;
       result.municipio = municipio;
 
-      this.viajeData.hotel = this.ordenarHoteles([
-        ...(this.viajeData.hotel ?? []),
-        result
-      ]);
+      this.viajeData.hotel = this.ordenarHoteles([...(this.viajeData.hotel ?? []), result]);
       this.dataSourceHotel.data = this.viajeData.hotel;
 
       this.snackBar.open('Hotel agregado correctamente', '', { duration: 3000 });
@@ -397,18 +404,19 @@ export class AccionesViajes implements OnInit {
   }): ListaGenerica[] {
     if (triggerCharacter === '@') {
       const searchResults = this.getUsersFilter();
-      this.choices = searchResults.filter((user) => {
+      this.choices = searchResults.filter(user => {
         return user.valor!.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
       });
     }
-   
+
     return this.choices;
   }
 
   getUsersFilter(): ListaGenerica[] {
-    this.usuariosFilter = this.usuarios.filter(item =>
-      !this.mentions.some(mention => mention.choice.identity === Number(item.identity))
-    ) || [];
+    this.usuariosFilter =
+      this.usuarios.filter(
+        item => !this.mentions.some(mention => mention.choice.identity === Number(item.identity))
+      ) || [];
     return this.usuariosFilter;
   }
 
@@ -422,8 +430,7 @@ export class AccionesViajes implements OnInit {
     );
   }
 
-  onMenuShow(): void {
-  }
+  onMenuShow(): void {}
 
   onMenuHide(): void {
     this.choices = [];
@@ -442,8 +449,7 @@ export class AccionesViajes implements OnInit {
     return '';
   };
 
-
-  agregarAnticipo(){
+  agregarAnticipo() {
     const drawerRef = this.drawer.open(AnticipoForm, {
       position: 'right',
       width: '30%',
@@ -454,16 +460,15 @@ export class AccionesViajes implements OnInit {
     const sub = this.anticipoChanged$.subscribe(result => {
       if (!this.viajeData.anticipo) {
         this.viajeData.anticipo = {
-          detalle: []
-        }
+          detalle: [],
+        };
       }
-      const concepto = this.listados[4]?.lista_generica?.find(p => p.identity === result.id_concepto)?.valor;
+      const concepto = this.listados[4]?.lista_generica?.find(
+        p => p.identity === result.id_concepto
+      )?.valor;
 
       result.concepto = concepto;
-      this.viajeData.anticipo.detalle = [
-        ...(this.viajeData.anticipo.detalle ?? []),
-        { ...result }
-      ];
+      this.viajeData.anticipo.detalle = [...(this.viajeData.anticipo.detalle ?? []), { ...result }];
 
       this.dataSourceAnticipo.data = this.viajeData.anticipo.detalle;
       this.snackBar.open('Anticipo agregado correctamente', '', { duration: 3000 });
@@ -487,10 +492,18 @@ export class AccionesViajes implements OnInit {
 
     const sub = this.itinerarioChanged$.subscribe(result => {
       // Resolve text names for visualization in the main table
-      const deptoOrigen = this.listados[0]?.lista_generica?.find(p => p.identity === result.id_departamento_origen)?.valor;
-      const munOrigen = this.listados[1]?.lista_generica?.find(p => p.identity === result.id_municipio_origen)?.valor;
-      const deptoDestino = this.listados[0]?.lista_generica?.find(p => p.identity === result.id_departamento_destino)?.valor;
-      const munDestino = this.listados[1]?.lista_generica?.find(p => p.identity === result.id_municipio_destino)?.valor;
+      const deptoOrigen = this.listados[0]?.lista_generica?.find(
+        p => p.identity === result.id_departamento_origen
+      )?.valor;
+      const munOrigen = this.listados[1]?.lista_generica?.find(
+        p => p.identity === result.id_municipio_origen
+      )?.valor;
+      const deptoDestino = this.listados[0]?.lista_generica?.find(
+        p => p.identity === result.id_departamento_destino
+      )?.valor;
+      const munDestino = this.listados[1]?.lista_generica?.find(
+        p => p.identity === result.id_municipio_destino
+      )?.valor;
 
       result.departamento_origen = deptoOrigen;
       result.municipio_origen = munOrigen;
@@ -499,7 +512,7 @@ export class AccionesViajes implements OnInit {
 
       this.viajeData.itinerario = this.ordenarItinerario([
         ...(this.viajeData.itinerario ?? []),
-        result
+        result,
       ]);
       this.dataSourceItinerario.data = this.viajeData.itinerario;
 
@@ -508,10 +521,18 @@ export class AccionesViajes implements OnInit {
 
     const subRegreso = this.regresoChanged$.subscribe(result => {
       // Resolve text names for visualization in the main table
-      const deptoOrigen = this.listados[0]?.lista_generica?.find(p => p.identity === result.id_departamento_origen)?.valor;
-      const munOrigen = this.listados[1]?.lista_generica?.find(p => p.identity === result.id_municipio_origen)?.valor;
-      const deptoDestino = this.listados[0]?.lista_generica?.find(p => p.identity === result.id_departamento_destino)?.valor;
-      const munDestino = this.listados[1]?.lista_generica?.find(p => p.identity === result.id_municipio_destino)?.valor;
+      const deptoOrigen = this.listados[0]?.lista_generica?.find(
+        p => p.identity === result.id_departamento_origen
+      )?.valor;
+      const munOrigen = this.listados[1]?.lista_generica?.find(
+        p => p.identity === result.id_municipio_origen
+      )?.valor;
+      const deptoDestino = this.listados[0]?.lista_generica?.find(
+        p => p.identity === result.id_departamento_destino
+      )?.valor;
+      const munDestino = this.listados[1]?.lista_generica?.find(
+        p => p.identity === result.id_municipio_destino
+      )?.valor;
 
       result.departamento_origen = deptoOrigen;
       result.municipio_origen = munOrigen;
@@ -520,7 +541,7 @@ export class AccionesViajes implements OnInit {
 
       this.viajeData.itinerario = this.ordenarItinerario([
         ...(this.viajeData.itinerario ?? []),
-        result
+        result,
       ]);
       this.dataSourceItinerario.data = this.viajeData.itinerario;
 
@@ -546,8 +567,6 @@ export class AccionesViajes implements OnInit {
       // dialogConfig.disableClose = false;
       // dialogConfig.autoFocus = true;
       // dialogConfig.width = "60%";
-
-
       // const dialogRef = this.dialog.open(ItinerarioFormComponent, {
       //   // height: "calc(100% - 30px)",
       //   // width: "calc(100% - 30px)",
@@ -582,43 +601,38 @@ export class AccionesViajes implements OnInit {
     //   this.dataSourceHotel.data = [...this.viajeData.hotel];
     // }
   }
-  editarHotel(index: number) {
-
-  }
+  editarHotel(index: number) {}
   eliminarAnticipo(index: number) {
     // if (this.viajeData.anticipo?.detalle) {
     //   this.viajeData.anticipo.detalle.splice(index, 1);
     //   this.dataSourceAnticipo.data = [...this.viajeData.anticipo.detalle];
     // }
   }
-  editarAnticipo(index: number) {
+  editarAnticipo(index: number) {}
 
-  }
-
-  accionSolicitud(tipo_accion: string) {
-
-  }
-  guardarViaje(anviar_aprobacion: boolean = false) {
+  accionSolicitud(tipo_accion: string) {}
+  guardarViaje(anviar_aprobacion = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
     // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;
     const esNuevo = !this.viajeData.id_viaje || this.viajeData.id_viaje == 0;
-    this.viajeData.id_rol_aprobacion_supervisor = this.listados[5]?.lista_generica?.find(item => item.idrelacion == this.viajeData.id_supervisor_aprueba)?.identity || undefined;
+    this.viajeData.id_rol_aprobacion_supervisor =
+      this.listados[5]?.lista_generica?.find(
+        item => item.idrelacion == this.viajeData.id_supervisor_aprueba
+      )?.identity || undefined;
 
     this.viajeData.fecha_inicio_viaje = this.fechaInicio;
     this.viajeData.fecha_fin_viaje = this.fechaFin;
     this.viajeData.fecha_nacimiento_viajero = this.fechaNacimiento;
-    this.viajeData.hora_inicio = this.horaInicio ? this.horaInicio.format('HH:mm') : this.viajeData.hora_inicio;
+    this.viajeData.hora_inicio = this.horaInicio
+      ? this.horaInicio.format('HH:mm')
+      : this.viajeData.hora_inicio;
     this.viajeData.hora_fin = this.horaFin ? this.horaFin.format('HH:mm') : this.viajeData.hora_fin;
 
-
-   
-    
     this.viajeData.id_usuarios_mencion = [];
     this.mentions.forEach(mention => {
       this.viajeData.id_usuarios_mencion!.push(Number(mention.choice.identity));
     });
-
 
     this.viajeData.menciones_json = JSON.stringify(this.mentions);
 
@@ -632,7 +646,7 @@ export class AccionesViajes implements OnInit {
       : this.service.updateViaje(this.viajeData);
 
     request$.subscribe({
-      next: (response) => {
+      next: response => {
         this.responseRequest = response;
         // this.isLoading = false; //  Ocultar spinner
         if (this.responseRequest.solicitud_exitosa) {
@@ -653,7 +667,7 @@ export class AccionesViajes implements OnInit {
         // this.toastr.error(mensajeError, 'Error', {
         //   timeOut: 3000, positionClass: 'toast-top-center',
         // });
-      }
+      },
     });
   }
 }

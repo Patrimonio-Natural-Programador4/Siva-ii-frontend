@@ -90,7 +90,7 @@
       "type": "link"
     },
     {
-      "route": "acuerdos/nuevo",
+      "route": "estudios-previos",
       "name": "Estudios-previos",
       "type": "link"
     }

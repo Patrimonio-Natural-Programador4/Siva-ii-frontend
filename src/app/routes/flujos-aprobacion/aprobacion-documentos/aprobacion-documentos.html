@@ -19,16 +19,19 @@
           <small>Total de registros [{{ aproDocsTable.filteredData.length }}]</small>
         </div>
 
-        <div class="app-data-table-wrapper">
+        <div class="app-data-table-wrapper" style=" max-height:500px; overflow:auto" ;>
+
           <table mat-table [dataSource]="aproDocsTable" class="app-data-table mat-elevation-z1">
             <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>Id</th>
+              <th mat-header-cell *matHeaderCellDef
+                style="position:sticky; top:0; background:#fff; z-index:2;">Id</th>
               <td mat-cell *matCellDef="let row; let i = index">{{ getRowNumber(i) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="documento">
               <th mat-header-cell *matHeaderCellDef
-                style="justify-content: center; text-align: center;"> Documento </th>
+                style="justify-content: center; text-align: center; position:sticky; top:0; background:#fff; z-index:2">
+                Documento </th>
               <td mat-cell *matCellDef="let row"
                 style="justify-content: center; text-align: center;">{{ row.documento | uppercase }}
               </td>
@@ -38,13 +41,15 @@
               <th mat-header-cell *matHeaderCellDef
                 style="justify-content: center; text-align: center;">Categoria aprobación</th>
               <td mat-cell *matCellDef="let row"
-                style="justify-content: center; text-align: center;">{{ row.categoria | uppercase }}
+                style="justify-content: center; text-align: center; position:sticky; top:0; background:#fff; z-index:2">
+                {{ row.categoria | uppercase }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="programa">
               <th mat-header-cell *matHeaderCellDef
-                style="justify-content: center; text-align: center;">Programa</th>
+                style="justify-content: center; text-align: center; position:sticky; top:0; background:#fff; z-index:2">
+                Programa</th>
               <td mat-cell *matCellDef="let row"
                 style="justify-content: center; text-align: center;">{{ row.programa | uppercase }}
               </td>
@@ -53,7 +58,8 @@
 
             <ng-container matColumnDef="acciones">
               <th mat-header-cell *matHeaderCellDef
-                style="justify-content: center; text-align: center;">Acciones</th>
+                style="justify-content: center; text-align: center; position:sticky; top:0; background:#fff; z-index:2">
+                Acciones</th>
               <td mat-cell *matCellDef="let row" class="app-data-table__actions"
                 style="justify-content: center; text-align: center;">
                 <button mat-icon-button type="button" aria-label="Editar flujo"
@@ -75,7 +81,7 @@
         </div>
 
         <mat-paginator [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions"
-          showFirstLastButtons aria-label="Paginación de programas"></mat-paginator>
+          showFirstLastButtons aria-label="Paginación de aprobación documentos"></mat-paginator>
       </mat-card-content>
     </mat-card>
   </div>
