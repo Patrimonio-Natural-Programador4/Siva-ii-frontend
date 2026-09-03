@@ -1,4 +1,4 @@
-<page-header/>
+<page-header />
 <div class="row">
   <div class="col-sm-12">
     <mat-card class="app-data-card">
@@ -12,197 +12,274 @@
             <mat-icon>add</mat-icon>
             Crear solicitud de viaje
           </button>
-          
         </div>
 
-        <div style="width:100%;">
-            <div class="form-row">
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="id_estado">Filtrar por estado</label>
-                  <mat-form-field class="small" appearance="outline">
-                    <mat-select aria-label="Filtrar por estado" id="id_estado" name="id_estado" multiple
-                      [(ngModel)]="id_estado" (selectionChange)="filtrarDatos(true)" placeholder="Seleccione el estado">
-                      <mat-option [value]="null" disabled>Seleccione el estado</mat-option>
-                      <mat-option *ngFor="let data of listados[0]?.lista_generica" [value]="data.identity">
-                        {{ data.valor | uppercase }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                  <label for="fecha_superior">Fecha de viaje igual o posterior a</label>
-                  <mat-form-field class="small" appearance="outline">
-                    <input matInput [matDatepicker]="picker1" (click)="picker1.open()" (dateChange)="filtrarDatos(true)"
-                      [(ngModel)]="fechaInicio" name="fecha_inicio_viaje" id="fecha_inicio_viaje">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                    <div class="invalid-feedback">
-                      Este campo es requerido.
-                    </div>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                  <label for="fecha_anterior">Fecha de viaje igual o anterior a</label>
-                  <mat-form-field class="small" appearance="outline">
-                    <input matInput [matDatepicker]="picker2" [min]="fechaInicio" (click)="picker2.open()"
-                      (dateChange)="filtrarDatos(true)" [(ngModel)]="fechaFin" name="fecha_fin_viaje"
-                      id="fecha_fin_viaje">
-                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker #picker2></mat-datepicker>
-                    <div class="invalid-feedback">
-                      Este campo es requerido.
-                    </div>
-                  </mat-form-field>
-                </div>
+        <div style="width: 100%">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="id_estado">Filtrar por estado</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select
+                    aria-label="Filtrar por estado"
+                    id="id_estado"
+                    name="id_estado"
+                    multiple
+                    [(ngModel)]="id_estado"
+                    (selectionChange)="filtrarDatos(true)"
+                    placeholder="Seleccione el estado"
+                  >
+                    <mat-option [value]="null" disabled>Seleccione el estado</mat-option>
+                    <mat-option
+                      *ngFor="let data of listados[0]?.lista_generica"
+                      [value]="data.identity"
+                    >
+                      {{ data.valor | uppercase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="id_programa">Filtrar por programa</label>
-                  <br>
-                  <select aria-label="Small select example" class="form-select" (change)="filtrarDatos(true);" sizing="sm"
-                    name="id_programa" id="id_programa" [(ngModel)]="id_programa">
-                    <option [ngValue]="-1">Seleccione la programa</option>
-                    <option *ngFor="let data of listados[1]?.lista_generica" [value]="data.identity">{{ data.valor |
-                      uppercase}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="ruc">Filtrar por nombre del viajero o código del viaje</label>
-                  <input type="text" (ngModelChange)="filtroText($event);" class="form-control" id="filtrobusqueda"
-                    name="filtrobusqueda" placeholder="Nombre de viajero o código de viaje"
-                    [(ngModel)]="filtrobusqueda">
-                </div>
-                <div class="col-md-2 mt-4">
-                  <button mat-stroked-button type="button" (click)="limpiarFiltros()" aria-label="Limpiar filtros">
-                    <mat-icon>clear_all</mat-icon>
-                    Limpiar filtros
-                  </button>
-                </div>
+              <div class="col-md-4">
+                <label for="fecha_superior">Fecha de viaje igual o posterior a</label>
+                <mat-form-field class="small" appearance="outline">
+                  <input
+                    matInput
+                    [matDatepicker]="picker1"
+                    (click)="picker1.open()"
+                    (dateChange)="filtrarDatos(true)"
+                    [(ngModel)]="fechaInicio"
+                    name="fecha_inicio_viaje"
+                    id="fecha_inicio_viaje"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <div class="invalid-feedback">Este campo es requerido.</div>
+                </mat-form-field>
               </div>
-
+              <div class="col-md-4">
+                <label for="fecha_anterior">Fecha de viaje igual o anterior a</label>
+                <mat-form-field class="small" appearance="outline">
+                  <input
+                    matInput
+                    [matDatepicker]="picker2"
+                    [min]="fechaInicio"
+                    (click)="picker2.open()"
+                    (dateChange)="filtrarDatos(true)"
+                    [(ngModel)]="fechaFin"
+                    name="fecha_fin_viaje"
+                    id="fecha_fin_viaje"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <div class="invalid-feedback">Este campo es requerido.</div>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="id_programa">Filtrar por programa</label>
+                <br />
+                <select
+                  aria-label="Small select example"
+                  class="form-select"
+                  (change)="filtrarDatos(true)"
+                  sizing="sm"
+                  name="id_programa"
+                  id="id_programa"
+                  [(ngModel)]="id_programa"
+                >
+                  <option [ngValue]="-1">Seleccione la programa</option>
+                  <option *ngFor="let data of listados[1]?.lista_generica" [value]="data.identity">
+                    {{ data.valor | uppercase }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="ruc">Filtrar por nombre del viajero o código del viaje</label>
+                <input
+                  type="text"
+                  (ngModelChange)="filtroText($event)"
+                  class="form-control"
+                  id="filtrobusqueda"
+                  name="filtrobusqueda"
+                  placeholder="Nombre de viajero o código de viaje"
+                  [(ngModel)]="filtrobusqueda"
+                />
+              </div>
+              <div class="col-md-2 mt-4">
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="limpiarFiltros()"
+                  aria-label="Limpiar filtros"
+                >
+                  <mat-icon>clear_all</mat-icon>
+                  Limpiar filtros
+                </button>
+              </div>
             </div>
           </div>
-          <div style="width:100%;">
-            <hr>
+        </div>
+        <div style="width: 100%">
+          <hr />
+        </div>
+        <div style="width: 100%">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+            <small>
+              <b>Total de registros [{{ total }}]</b>
+            </small>
           </div>
-          <div style="width:100%;">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2"><small><b>Total de registros
-                  [{{total}}]</b></small></div>
-          </div>
-
-        <div class="app-data-table-wrapper viajes-table-wrapper">
-          <table mat-table [dataSource]="viajes" multiTemplateDataRows class="mat-elevation-z8 viajes-table">
-              <ng-container matColumnDef="posicion">
-                <th mat-header-cell *matHeaderCellDef> Código </th>
-                <td mat-cell *matCellDef="let element">{{element.codigo}}</td>
-              </ng-container>
-              <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> Viajero </th>
-                <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
-              </ng-container>
-              <ng-container matColumnDef="fecha_solicitud">
-                <th mat-header-cell *matHeaderCellDef> Fecha de solicitud </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_solicitud | date: 'yyyy-MM-dd'}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="fecha_inicio">
-                <th mat-header-cell *matHeaderCellDef> Fecha de inicio </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_inicio_viaje | date: 'yyyy-MM-dd'}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="fecha_fin">
-                <th mat-header-cell *matHeaderCellDef> Fecha de finalización </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_fin_viaje | date: 'yyyy-MM-dd'}} </td>
-              </ng-container>
-              <ng-container matColumnDef="requiere_anticipo">
-                <th mat-header-cell *matHeaderCellDef> Requiere anticipo </th>
-                <td mat-cell *matCellDef="let element"> {{ element.requiere_anticipo ? 'Sí' : 'No' }} </td>
-              </ng-container>
-              <ng-container matColumnDef="valor_anticipo">
-                <th mat-header-cell *matHeaderCellDef>Valor del anticipo </th>
-                <td mat-cell *matCellDef="let element">
-                  {{element.valor_anticipo | currency}}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="valor_reintegro">
-                <th mat-header-cell *matHeaderCellDef>Valor del reintegro </th>
-                <td mat-cell *matCellDef="let element">
-                  {{element.valor_reintegro | currency}}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="legalizacion_fuera_tiempo">
-                <th mat-header-cell *matHeaderCellDef>Legalización fuera de tiempo </th>
-                <td mat-cell *matCellDef="let element">
-                  {{element.legalizacion_fuera_tiempo}}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="dias_despues_finalizado">
-                <th mat-header-cell *matHeaderCellDef># Días</th>
-                <td mat-cell *matCellDef="let element">
-                  <!-- <span *ngIf="element.legalizacion_fuera_tiempo == 'SI'"> -->
-                    {{element.dias_despues_finalizado}}
-                  <!-- </span> -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef>Estado </th>
-                <td mat-cell *matCellDef="let element">
-                  <span>{{element.estado}}</span>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="acciones" stickyEnd>
-                <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                <td mat-cell *matCellDef="let element">
-                  <a href="javascript:void(0)" *ngIf="habilitarEdicion(element.guid)" style="text-decoration: none;"
-                    (click)="editViaje(element.guid)">
-                    <mat-icon>edit</mat-icon>
-                  </a>
-                  <a href="javascript:void(0)" style="text-decoration: none;" title="Continuar flujo de aprobación"
-                    alt="Continuar flujo de aprobación" (click)="continuarFlujo(element.guid)">
-                    <mat-icon title="Continuar flujo de aprobación"
-                      alt="Continuar flujo de aprobación">clear_all</mat-icon>
-                  </a>
-
-                  <button matButton [matMenuTriggerFor]="menu"
-                    style="background-color: transparent; border: none; color: #5856d6;"><mat-icon>visibility</mat-icon></button>
-                  <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="verPDF(element.guid)">Información general</button>
-                  </mat-menu>
-
-                  <!-- <a href="javascript:void(0)" style="text-decoration: none;" title="Continuar flujo de aprobación"
-                    alt="Continuar flujo de aprobación" (click)="continuarFlujo(element.guid)">
-                    <mat-icon title="Continuar flujo de aprobación"
-                      alt="Continuar flujo de aprobación">compare_arrows</mat-icon>
-                  </a>
-                  <a href="javascript:void(0)" *ngIf="habilitarLegalizacion(element.guid)"
-                    style="text-decoration: none;" title="Legalización de viaje"
-                    alt="Legalización de viaje" (click)="legalizacion(element.guid)">
-                    <mat-icon title="Legalización de viaje" alt="Legalización de viaje">attach_money</mat-icon>
-                  </a>
-                  <a href="javascript:void(0)"
-                    *ngIf="(((element.id_estado == 1) || (element.id_estado == 3 && element.guid_msft_ajuste == guidUsr) || (element.orden_actual_solicitud != null && element.orden_actual_solicitud <= 2 && element.id_estado == 2)) && element.aprobo_supervisor == false && element.guid_usr == guidUsr) || habilitarAnular"
-                    style="text-decoration: none; color: #ff0000;" title="Anular viaje"
-                    alt="Anular viaje" (click)="anular(element.guid)">
-                    <mat-icon title="Anular viaje" alt="Anular viaje">cancel</mat-icon>
-                  </a> -->
-
-                  <!-- (click)="verPDF(element.guid)" -->
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="columnasViaje"></tr>
-              <tr mat-row *matRowDef="let row; columns: columnasViaje;" [ngClass]="getRowClass(row)"></tr>
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell text-center" [attr.colspan]="columnasViaje.length">
-                  No se encontraron registros
-                </td>
-              </tr>
-            </table>
         </div>
 
-        <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChange($event)" />
+        <div class="app-data-table-wrapper viajes-table-wrapper">
+          <table
+            mat-table
+            [dataSource]="viajes"
+            multiTemplateDataRows
+            class="mat-elevation-z8 viajes-table"
+          >
+            <ng-container matColumnDef="posicion">
+              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Viajero</th>
+              <td mat-cell *matCellDef="let element">{{ element.usuario }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fecha_solicitud">
+              <th mat-header-cell *matHeaderCellDef>Fecha de solicitud</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.fecha_solicitud | date: 'yyyy-MM-dd' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_inicio">
+              <th mat-header-cell *matHeaderCellDef>Fecha de inicio</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.fecha_inicio_viaje | date: 'yyyy-MM-dd' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_fin">
+              <th mat-header-cell *matHeaderCellDef>Fecha de finalización</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.fecha_fin_viaje | date: 'yyyy-MM-dd' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="requiere_anticipo">
+              <th mat-header-cell *matHeaderCellDef>Requiere anticipo</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.requiere_anticipo ? 'Sí' : 'No' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="valor_anticipo">
+              <th mat-header-cell *matHeaderCellDef>Valor del anticipo</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.valor_anticipo | currency }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="valor_reintegro">
+              <th mat-header-cell *matHeaderCellDef>Valor del reintegro</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.valor_reintegro | currency }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="legalizacion_fuera_tiempo">
+              <th mat-header-cell *matHeaderCellDef>Legalización fuera de tiempo</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.legalizacion_fuera_tiempo }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="dias_despues_finalizado">
+              <th mat-header-cell *matHeaderCellDef># Días</th>
+              <td mat-cell *matCellDef="let element">
+                <!-- <span *ngIf="element.legalizacion_fuera_tiempo == 'SI'"> -->
+                {{ element.dias_despues_finalizado }}
+                <!-- </span> -->
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let element">
+                <span>{{ element.estado }}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="acciones-cell">
+                  <a
+                    href="javascript:void(0)"
+                    class="btn-accion"
+                    *ngIf="habilitarEdicion(element.guid)"
+                    title="Editar viaje"
+                    (click)="editViaje(element.guid)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </a>
+
+                  <a
+                    href="javascript:void(0)"
+                    class="btn-accion"
+                    title="Continuar flujo de aprobación"
+                    (click)="continuarFlujo(element.guid)"
+                  >
+                    <mat-icon
+                      title="Continuar flujo de aprobación"
+                      alt="Continuar flujo de aprobación"
+                    >
+                      clear_all
+                    </mat-icon>
+                  </a>
+
+                  <button
+                    mat-icon-button
+                    class="btn-accion"
+                    [matMenuTriggerFor]="menuDetalle"
+                    title="Detalles"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <mat-menu #menuDetalle="matMenu">
+                    <button
+                      mat-menu-item
+                      (click)="verDetallesLegalizacion(element.guid)"
+                      *ngIf="aplicaLegalizacion(element)"
+                    >
+                      <mat-icon>receipt_long</mat-icon>
+                      <span>Ver detalles de legalización</span>
+                    </button>
+                    <button mat-menu-item (click)="verPDF(element.guid)">
+                      <mat-icon>picture_as_pdf</mat-icon>
+                      <span>Información general (PDF)</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasViaje"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: columnasViaje"
+              [ngClass]="getRowClass(row)"
+            ></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center" [attr.colspan]="columnasViaje.length">
+                No se encontraron registros
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [length]="total"
+          [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions"
+          showFirstLastButtons
+          (page)="pageChange($event)"
+        />
       </mat-card-content>
     </mat-card>
   </div>

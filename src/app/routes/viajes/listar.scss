@@ -33,22 +33,50 @@
 		}
 	}
 
-	td.mat-mdc-cell a {
+	.acciones-cell {
 		display: inline-flex;
+		gap: 6px;
 		align-items: center;
-		justify-content: center;
-		margin-right: 12px;
-		color: var(--mat-sys-primary);
+		vertical-align: middle;
+	}
+
+	.btn-accion {
+		display: inline-flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		line-height: 1 !important;
+		vertical-align: middle !important;
+		color: #5856d6 !important;
+		text-decoration: none !important;
+		cursor: pointer;
+		background: transparent !important;
+		border: none !important;
 		transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
 
 		&:hover {
 			opacity: 0.8;
 			transform: scale(1.15);
 		}
+
+		mat-icon,
+		.material-symbols-outlined {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			width: 24px !important;
+			height: 24px !important;
+			font-size: 24px !important;
+			line-height: 24px !important;
+			vertical-align: middle !important;
+		}
 	}
 }
 
 
 .pendiente {
-  background-color: #ffcccc; /* Rojo claro para pendiente */
+  background-color: #fcc; /* Rojo claro para pendiente */
 }

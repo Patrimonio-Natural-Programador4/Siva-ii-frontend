@@ -46,3 +46,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Lock files
+yarn.lock
+package-lock.json
+
+# Lint
+.eslintcache
+.stylelintcache

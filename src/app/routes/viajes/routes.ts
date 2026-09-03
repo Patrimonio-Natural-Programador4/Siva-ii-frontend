@@ -39,7 +39,23 @@ export const routes: Routes = [
         data: {
           title: 'Detalle de viaje',
         },
-      }
+      },
+      {
+        path: 'legalizacion/detalle/:id',
+        loadComponent: () =>
+          import('./legalizacion/detalle/detalle').then(m => m.DetalleLegalizacion),
+        data: {
+          title: 'Detalle de legalización',
+        },
+      },
+      {
+        path: 'legalizacion/ver/:idviaje/:idleg',
+        loadComponent: () =>
+          import('./legalizacion/ver-detalle/ver-detalle').then(m => m.VerDetalleLegalizacion),
+        data: {
+          title: 'Ver detalle de legalización',
+        },
+      },
     ],
   },
 ];

@@ -1,5 +1,14 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +45,7 @@ import {
 } from 'src/app/shared/utilmentions';
 import { HotelForm } from '../hotel/hotel-form';
 import { ItinerarioForm } from '../itinerario/itinerario-form';
+import { numeroALetrasEspanol } from 'src/app/shared/utils';
 // import { ToastrService } from 'ngx-toastr';
 
 export const MY_FORMATS = {
@@ -73,6 +83,7 @@ export const MY_FORMATS = {
     MatDatepickerModule,
     MtxDrawerModule,
     NgxMentionsModule,
+    TextFieldModule,
   ],
   templateUrl: './acciones.html',
   styleUrl: './acciones.scss',
@@ -80,6 +91,7 @@ export const MY_FORMATS = {
 })
 export class AccionesViajes implements OnInit {
   @ViewChild('fRutas') fRutasForm!: NgForm;
+  @ViewChild('abcTextarea') abcTextarea?: ElementRef<HTMLTextAreaElement>;
   itinerarioChanged$ = new Subject<ViajesItinerario>();
   regresoChanged$ = new Subject<ViajesItinerario>();
   hotelChanged$ = new Subject<ViajesHotel>();
@@ -93,7 +105,7 @@ export class AccionesViajes implements OnInit {
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
-  accion = 'Nuevo';
+  accion: string = 'Nuevo';
   usuariosFilter: ListaGenerica[] = [];
   usuarios: ListaGenerica[] = [];
   choices: ListaGenerica[] = [];
@@ -110,10 +122,14 @@ export class AccionesViajes implements OnInit {
   ];
   selectedChoices: ChoiceWithIndices[] = [];
   loading = false;
+  valorAnticipoLetras = '';
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
     asociado_taller: false,
+    dos_o_mas_personas: false,
+    soporte_dos_o_mas_personas: '',
+    nombre_archivo_dos_o_mas_personas: '',
     id_rol_aprobacion_supervisor: null!,
     guid: null!,
     id_supervisor_aprueba: null!,
@@ -153,6 +169,7 @@ export class AccionesViajes implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly drawer = inject(MtxDrawer);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   get rubroOptions(): ListaGenerica[] {
     return this.listados[8]?.lista_generica ?? [];
@@ -177,6 +194,12 @@ export class AccionesViajes implements OnInit {
   rubroSearch = '';
   showRubroDropdown = false;
 
+  // Subir archivo Excel (.xlsx) para dos o más personas
+  archivoExcelBase64: string | null = null;
+  archivoExcelNombre = '';
+  errorArchivoExcel = '';
+  archivoExcelTouched = false;
+
   responseRequest = new ResponseRequest({
     mensaje: '',
     identity: null!,
@@ -184,7 +207,6 @@ export class AccionesViajes implements OnInit {
   });
 
   ngOnInit(): void {
-    console.log('6', this.listados[7]);
     this.id_viaje = this.activatedRoute.snapshot.params['id'];
     this.accion = this.id_viaje ? 'Editar' : 'Nuevo';
     this.getListados();
@@ -198,6 +220,73 @@ export class AccionesViajes implements OnInit {
   }
 
   validarFecha() {}
+
+  onEsInvitadoChange(valor: boolean): void {
+    this.viajeData.es_invitado = valor;
+    if (!valor) {
+      this.viajeData.dos_o_mas_personas = false;
+      this.onDosOMasPersonasChange(false);
+      this.viajeData.documento_persona_invitada = '';
+      this.viajeData.persona_invitada = '';
+      this.viajeData.correo_persona_invitada = '';
+    }
+  }
+
+  onDosOMasPersonasChange(valor: boolean): void {
+    this.viajeData.dos_o_mas_personas = valor;
+    if (!valor) {
+      this.archivoExcelBase64 = null;
+      this.archivoExcelNombre = '';
+      this.errorArchivoExcel = '';
+      this.archivoExcelTouched = false;
+      this.viajeData.soporte_dos_o_mas_personas = '';
+      this.viajeData.nombre_archivo_dos_o_mas_personas = '';
+    }
+  }
+
+  onArchivoDosOMasChange(event: Event): void {
+    this.archivoExcelTouched = true;
+    this.errorArchivoExcel = '';
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const fileName = file.name.toLowerCase();
+
+      if (!fileName.endsWith('.xlsx')) {
+        this.errorArchivoExcel = 'Solo se permiten archivos con formato .xlsx (Excel).';
+        this.archivoExcelBase64 = null;
+        this.archivoExcelNombre = '';
+        this.viajeData.soporte_dos_o_mas_personas = '';
+        this.viajeData.nombre_archivo_dos_o_mas_personas = '';
+        input.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.archivoExcelBase64 = reader.result as string;
+        this.archivoExcelNombre = file.name;
+        this.viajeData.soporte_dos_o_mas_personas = this.archivoExcelBase64;
+        this.viajeData.nombre_archivo_dos_o_mas_personas = file.name;
+        this.cdr.markForCheck();
+      };
+      reader.onerror = () => {
+        this.errorArchivoExcel = 'Error al leer el archivo. Inténtelo nuevamente.';
+        this.archivoExcelBase64 = null;
+        this.archivoExcelNombre = '';
+        this.viajeData.soporte_dos_o_mas_personas = '';
+        this.viajeData.nombre_archivo_dos_o_mas_personas = '';
+        this.cdr.markForCheck();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.archivoExcelBase64 = null;
+      this.archivoExcelNombre = '';
+      this.viajeData.soporte_dos_o_mas_personas = '';
+      this.viajeData.nombre_archivo_dos_o_mas_personas = '';
+    }
+  }
 
   private ordenarItinerario(itinerario: ViajesItinerario[] = []): ViajesItinerario[] {
     return [...itinerario].sort((a, b) => {
@@ -242,6 +331,16 @@ export class AccionesViajes implements OnInit {
         this.fechaFin = this.viajeData.fecha_fin_viaje;
         this.fechaNacimiento = this.viajeData.fecha_nacimiento_viajero;
         this.syncRubroSelection();
+        if (this.viajeData.soporte_dos_o_mas_personas) {
+          this.archivoExcelBase64 = this.viajeData.soporte_dos_o_mas_personas;
+          this.archivoExcelNombre =
+            this.viajeData.nombre_archivo_dos_o_mas_personas || 'archivo.xlsx';
+        }
+
+        // Precargar valor anticipo en letras si existe
+        if (this.viajeData.valor_anticipo && this.viajeData.requiere_anticipo) {
+          this.onValorAnticipoChange(this.viajeData.valor_anticipo);
+        }
 
         if (this.viajeData.id_viaje) {
           // this.getHistorialAprobacion(this.viajeData.id_viaje);
@@ -610,8 +709,32 @@ export class AccionesViajes implements OnInit {
   }
   editarAnticipo(index: number) {}
 
+  onValorAnticipoChange(valor: number): void {
+    if (!valor || valor <= 0) {
+      this.valorAnticipoLetras = '';
+      this.adjustTextareaHeight();
+      return;
+    }
+    try {
+      this.valorAnticipoLetras = numeroALetrasEspanol(valor);
+    } catch {
+      this.valorAnticipoLetras = '';
+    }
+    this.adjustTextareaHeight();
+  }
+
+  adjustTextareaHeight(): void {
+    setTimeout(() => {
+      if (this.abcTextarea?.nativeElement) {
+        const el = this.abcTextarea.nativeElement;
+        el.style.height = 'auto';
+        el.style.height = `${Math.max(el.scrollHeight, 38)}px`;
+      }
+    }, 0);
+  }
+
   accionSolicitud(tipo_accion: string) {}
-  guardarViaje(anviar_aprobacion = false) {
+  guardarViaje(anviar_aprobacion: boolean = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
     // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;

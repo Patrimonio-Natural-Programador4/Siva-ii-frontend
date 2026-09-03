@@ -27,6 +27,7 @@ import { Listados } from 'src/app/models/listados';
 import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { MsalService } from '@azure/msal-angular';
+import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
 
 @Component({
   selector: 'app-listar',
@@ -49,6 +50,7 @@ import { MsalService } from '@azure/msal-angular';
     FormsModule,
     MatDatepickerModule,
     MatMenuModule,
+    MtxDrawerModule,
   ],
 })
 export class ListarViajes implements OnInit, AfterViewInit {
@@ -57,6 +59,7 @@ export class ListarViajes implements OnInit, AfterViewInit {
   private readonly service = inject(ViajesService);
   private readonly authService = inject(MsalService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly drawer = inject(MtxDrawer);
   columnasViaje = [
     'posicion',
     'nombre',
@@ -130,7 +133,7 @@ export class ListarViajes implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const paginator = this.paginator();
     if (paginator) {
-      // pendiente de implementación
+      // Paginator initialized
     }
   }
 
@@ -224,5 +227,32 @@ export class ListarViajes implements OnInit, AfterViewInit {
   verPDF(guid: string): void {
     const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
     window.open(url, '_blank');
+  }
+
+  verDetallesViaje(guid: string): void {
+    this.router.navigate(['/viajes/detalle', guid]);
+  }
+
+  verDetallesLegalizacion(guid: string): void {
+    this.router.navigate(['/viajes/legalizacion/detalle', guid]);
+  }
+
+  aplicaLegalizacion(element: any): boolean {
+    const estado = element?.estado
+      ? element.estado
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+      : '';
+    return (
+      estado === 'pendiente de legalizacion' ||
+      estado === 'en proceso de legalizacion' ||
+      estado === 'legalizacion aprobada' ||
+      estado === 'legalizacion en proceso de aprobacion' ||
+      element?.id_estado === 4 ||
+      element?.id_estado === 5 ||
+      element?.id_estado === 7
+    );
   }
 }
