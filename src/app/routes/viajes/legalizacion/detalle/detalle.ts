@@ -28,6 +28,8 @@ import { CommonModule } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { Viajes } from 'src/app/models/viajes';
+import { ViajesItinerario } from 'src/app/models/viajes-itinerario';
+import { ViajesHotel } from 'src/app/models/viajes-hotel';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
 import { MatTableDataSource } from '@angular/material/table';
@@ -37,6 +39,8 @@ import {
 } from 'src/app/shared/utilmentions';
 import { numeroALetrasEspanol } from 'src/app/shared/utils';
 // import { ToastrService } from 'ngx-toastr';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgxMentionsModule, ChoiceWithIndices } from 'ngx-mentions';
 
 export const MY_FORMATS = {
   parse: {
@@ -96,7 +100,7 @@ export class DetalleLegalizacion implements OnInit {
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
-  accion: string = 'Legalización';
+  accion = 'Legalización';
   
   usuariosFilter: ListaGenerica[] = [];
   usuarios: ListaGenerica[] = [];
