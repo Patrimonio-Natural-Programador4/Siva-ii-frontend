@@ -11,8 +11,14 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeader } from '@shared';
-import { AccionAprobacion, DialogResult } from '@shared/components/accion-aprobacion/accion-aprobacion';
-import { AccionesSolicitudAprobacion, UsuarioDisponibleAjuste } from 'src/app/models/acciones-solicitud-aprobacion';
+import {
+  AccionAprobacion,
+  DialogResult,
+} from '@shared/components/accion-aprobacion/accion-aprobacion';
+import {
+  AccionesSolicitudAprobacion,
+  UsuarioDisponibleAjuste,
+} from 'src/app/models/acciones-solicitud-aprobacion';
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { Viajes } from 'src/app/models/viajes';
@@ -51,8 +57,8 @@ export class Detalle implements OnInit {
   isLinear = false;
   guidViaje = '';
   comentariosAprobacion = '';
-  habilitarAcciones: boolean = false;
-  
+  habilitarAcciones = false;
+
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
@@ -67,19 +73,10 @@ export class Detalle implements OnInit {
     'destino',
     'requiere_tiquetes',
     'zona_rural',
-    'observaciones'
-  ];
-  displayedColumnsHotel: string[] = [
-    'ciudad',
-    'fecha_llegada',
-    'fecha_salida',
-    'observaciones'
-  ];
-  displayedColumnsAnticipo: string[] = [
-    'concepto',
-    'valor',
     'observaciones',
   ];
+  displayedColumnsHotel: string[] = ['ciudad', 'fecha_llegada', 'fecha_salida', 'observaciones'];
+  displayedColumnsAnticipo: string[] = ['concepto', 'valor', 'observaciones'];
   displayedColumnsAprobacion: string[] = [
     'rol',
     'usuario',
@@ -92,10 +89,10 @@ export class Detalle implements OnInit {
   accionesAprobacion: AccionesSolicitudAprobacion = {};
 
   public responseRequest: ResponseRequest = {
-    mensaje: "",
+    mensaje: '',
     identity: null!,
-    solicitud_exitosa: false
-  }
+    solicitud_exitosa: false,
+  };
 
   ngOnInit(): void {
     this.guidViaje = this.activatedRoute.snapshot.params['id'];
@@ -149,18 +146,19 @@ export class Detalle implements OnInit {
       data: {
         titulo,
         tipoAccion,
-        comentarios: this.accionesAprobacion.comentarios || ''
-      }
+        comentarios: this.accionesAprobacion.comentarios || '',
+      },
     });
 
-    dialogRef.componentInstance.usuarios_disponibles = this.accionesAprobacion.usuarios_disponibles_ajustes || [];
+    dialogRef.componentInstance.usuarios_disponibles =
+      this.accionesAprobacion.usuarios_disponibles_ajustes || [];
 
     dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {
       if (!result) {
         return;
       }
       this.accionesAprobacion.comentarios = result.comentarios;
-      if(tipoAccion === 'AJUSTAR') {
+      if (tipoAccion === 'AJUSTAR') {
         this.accionesAprobacion.id_usuario_ajuste = result.id_usuario_ajuste;
         this.accionesAprobacion.id_rol_aprobacion_ajuste = result.id_rol_aprobacion_ajuste;
       }
@@ -170,7 +168,6 @@ export class Detalle implements OnInit {
 
   accionSolicitud(tipo_accion: string) {
     // Validar que si habilitar_pago es true, debe haber detalles de pago
-    
 
     this.accionesAprobacion.tipo_accion = tipo_accion;
     this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
@@ -184,10 +181,13 @@ export class Detalle implements OnInit {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     this.accionesAprobacion.viaje = this.viajeData;
     // this.accionesAprobacion.id_solicitud_aprobacion = this.informe.id_solicitud_aprobacion;
-    const request$ = this.service.accionSolicitudAprobacion(this.guidViaje, this.accionesAprobacion);
+    const request$ = this.service.accionSolicitudAprobacion(
+      this.guidViaje,
+      this.accionesAprobacion
+    );
 
     request$.subscribe({
-      next: (response) => {
+      next: response => {
         this.responseRequest = response;
         if (this.responseRequest.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
@@ -198,54 +198,29 @@ export class Detalle implements OnInit {
       },
       error: () => {
         this.isLoading = false; //  Ocultar spinner si hay error
-        const mensajeError = "Error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.";
+        const mensajeError =
+          'Error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.';
         this.snackBar.open(mensajeError, '', { duration: 3000 });
-      }
+      },
     });
   }
 
-  // aprobarSolicitud(): void {
-  //   this.ejecutarAccionAprobacion('APROBAR');
-  // }
-
-  // solicitarAjustes(): void {
-  //   const usuarios = this.accionesAprobacion.usuarios_disponibles_ajustes ?? [];
-  //   if (!usuarios.length) {
-  //     this.snackBar.open('No hay usuarios disponibles para solicitar ajustes', '', { duration: 3000 });
-  //     return;
-  //   }
-
-  //   if (usuarios.length === 1) {
-  //     this.ejecutarAccionAprobacion('AJUSTAR', usuarios[0]);
-  //     return;
-  //   }
-
-  //   const dialogRef = this.dialog.open(UsuarioAjusteForm, {
-  //     width: '520px',
-  //     data: { usuariosDisponibles: usuarios },
-  //   });
-
-  //   dialogRef.afterClosed().subscribe((result?: UsuarioDisponibleAjuste) => {
-  //     if (!result) {
-  //       return;
-  //     }
-  //     this.ejecutarAccionAprobacion('AJUSTAR', result);
-  //   });
-  // }
-
   private getViaje(): void {
     this.isLoading = true;
-    this.service.getViajeById(this.guidViaje).subscribe(data => {
-      this.viajeData = data;
-      if (this.viajeData.id_viaje) {
-        this.getHistorialAprobacion(this.viajeData.id_viaje);
+    this.service.getViajeById(this.guidViaje).subscribe(
+      data => {
+        this.viajeData = data;
+        if (this.viajeData.id_viaje) {
+          this.getHistorialAprobacion(this.viajeData.id_viaje);
+        }
+        this.getValidacionAccionesAprobacion();
+        this.isLoading = false;
+      },
+      error => {
+        this.snackBar.open('Error al cargar el viaje', '', { duration: 3000 });
+        this.isLoading = false;
       }
-      this.getValidacionAccionesAprobacion();
-      this.isLoading = false;
-    }, error => {
-      this.snackBar.open('Error al cargar el viaje', '', { duration: 3000 });
-      this.isLoading = false;
-    });
+    );
   }
 
   private getHistorialAprobacion(idRegistro: number): void {
@@ -263,32 +238,37 @@ export class Detalle implements OnInit {
   }
 
   private getValidacionAccionesAprobacion(): void {
-    this.service.getValidacionAccionesAprobacion(this.guidViaje, this.tipoSolicitudAprobacion).subscribe({
-      next: response => {
-        console.log('response', response);
-        if (!response.solicitud_exitosa || !response.mensaje) {
-          this.accionesAprobacion = {};
-          return;
-        }
+    this.service
+      .getValidacionAccionesAprobacion(this.guidViaje, this.tipoSolicitudAprobacion)
+      .subscribe({
+        next: response => {
+          console.log('response', response);
+          if (!response.solicitud_exitosa || !response.mensaje) {
+            this.accionesAprobacion = {};
+            return;
+          }
 
-        this.habilitarAcciones = response.solicitud_exitosa;
-        
-        const acciones = JSON.parse(response.mensaje) as AccionesSolicitudAprobacion;
-        if (acciones.usuario_solicito && this.habilitarAcciones) {
-          this.router.navigate(['/viajes/editar', this.guidViaje]);
-        }
-        this.accionesAprobacion = {
-          ...acciones,
-          id_solicitud_aprobacion: this.viajeData.id_solicitud_aprobacion,
-        };
-      },
-      error: () => {
-        this.accionesAprobacion = {};
-      },
-    });
+          this.habilitarAcciones = response.solicitud_exitosa;
+
+          const acciones = JSON.parse(response.mensaje) as AccionesSolicitudAprobacion;
+          if (acciones.usuario_solicito && this.habilitarAcciones) {
+            this.router.navigate(['/viajes/editar', this.guidViaje]);
+          }
+          this.accionesAprobacion = {
+            ...acciones,
+            id_solicitud_aprobacion: this.viajeData.id_solicitud_aprobacion,
+          };
+        },
+        error: () => {
+          this.accionesAprobacion = {};
+        },
+      });
   }
 
-  private ejecutarAccionAprobacion(tipoAccion: 'APROBAR' | 'AJUSTAR', destinoAjuste?: UsuarioDisponibleAjuste): void {
+  private ejecutarAccionAprobacion(
+    tipoAccion: 'APROBAR' | 'AJUSTAR',
+    destinoAjuste?: UsuarioDisponibleAjuste
+  ): void {
     if (!this.habilitarAccionesAprobacion) {
       return;
     }
@@ -307,12 +287,16 @@ export class Detalle implements OnInit {
       next: response => {
         this.isSavingAprobacion = false;
         if (!response.solicitud_exitosa) {
-          this.snackBar.open(response.mensaje || 'La acción no pudo completarse', '', { duration: 3000 });
+          this.snackBar.open(response.mensaje || 'La acción no pudo completarse', '', {
+            duration: 3000,
+          });
           return;
         }
 
         this.comentariosAprobacion = '';
-        this.snackBar.open(response.mensaje || 'La acción se completó correctamente', '', { duration: 3000 });
+        this.snackBar.open(response.mensaje || 'La acción se completó correctamente', '', {
+          duration: 3000,
+        });
         this.getViaje();
       },
       error: () => {

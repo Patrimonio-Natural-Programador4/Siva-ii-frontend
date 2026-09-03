@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject, viewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  viewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,9 +26,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Listados } from 'src/app/models/listados';
 import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
-import {
-  MsalService
-} from '@azure/msal-angular';
+import { MsalService } from '@azure/msal-angular';
 import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
 import { LegalizacionForm } from './legalizacion/legalizacion-form';
 
@@ -45,30 +51,40 @@ import { LegalizacionForm } from './legalizacion/legalizacion-form';
     FormsModule,
     MatDatepickerModule,
     MatMenuModule,
-    MtxDrawerModule
-],
+    MtxDrawerModule,
+  ],
 })
-export class ListarViajes  implements OnInit, AfterViewInit {
+export class ListarViajes implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   readonly paginator = viewChild(MatPaginator);
   private readonly service = inject(ViajesService);
   private readonly authService = inject(MsalService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly drawer = inject(MtxDrawer);
-  columnasViaje = ['posicion', 'nombre', 'fecha_solicitud', 'fecha_inicio', 'fecha_fin', 'requiere_anticipo', 'valor_anticipo', 'dias_despues_finalizado', 'estado', 'acciones'];
+  columnasViaje = [
+    'posicion',
+    'nombre',
+    'fecha_solicitud',
+    'fecha_inicio',
+    'fecha_fin',
+    'requiere_anticipo',
+    'valor_anticipo',
+    'dias_despues_finalizado',
+    'estado',
+    'acciones',
+  ];
   readonly pageSizeOptions = [20];
   id_estado: number[] = [];
   id_programa: number | null = -1;
   viajes: Viajes[] = [];
-  total: number = 0;
+  total = 0;
   page = 1;
   currentPage = 0;
   fechaInicio?: any = null;
   fechaFin?: any = null;
-  filtrobusqueda: string = "";
+  filtrobusqueda = '';
   listados: Listados[] = [];
-  guidUsr: string = '';
-
+  guidUsr = '';
 
   ngOnInit(): void {
     this.getUidUsr();
@@ -81,34 +97,35 @@ export class ListarViajes  implements OnInit, AfterViewInit {
     this.guidUsr = account?.idTokenClaims!['oid'] || '';
   }
 
-  filtroText(newValue: any)
-  {
-    this.filtrobusqueda = newValue
+  filtroText(newValue: any) {
+    this.filtrobusqueda = newValue;
     this.filtrarDatos(true);
   }
 
   getListados(): void {
-    this.service.getListadosListaViajes().subscribe(data => {
-      this.listados = data;
-    }, error => {
-    });
+    this.service.getListadosListaViajes().subscribe(
+      data => {
+        this.listados = data;
+      },
+      error => {}
+    );
   }
 
-   getViajes(){
-    this.service.getViajesFiltro(1, this.id_estado, "", null, null, this.id_programa).subscribe({
-      next: (response) => {
+  getViajes() {
+    this.service.getViajesFiltro(1, this.id_estado, '', null, null, this.id_programa).subscribe({
+      next: response => {
         this.viajes = response;
         this.total = response.length > 0 ? response[0].total_registros! : 0;
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error fetching viajes:', error);
-      }
+      },
     });
   }
 
   getRowClass(row: any) {
-    if(row.pendiente_mi_aprobacion) {
+    if (row.pendiente_mi_aprobacion) {
       return 'pendiente';
     }
     return '';
@@ -117,6 +134,7 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const paginator = this.paginator();
     if (paginator) {
+      // Paginator initialized
     }
   }
 
@@ -156,27 +174,39 @@ export class ListarViajes  implements OnInit, AfterViewInit {
     this.filtrarDatos(false);
   }
   continuarFlujo(id: string) {
-    let viaje = this.viajes.find(v => v.guid == id);
-    if(viaje!.tipo_solicitud_aprobacion == "SV" || viaje!.id_estado == 8 || viaje!.id_estado == 1){
+    const viaje = this.viajes.find(v => v.guid == id);
+    if (
+      viaje!.tipo_solicitud_aprobacion == 'SV' ||
+      viaje!.id_estado == 8 ||
+      viaje!.id_estado == 1
+    ) {
       this.router.navigate(['/viajes/detalle', id]);
-    }
-    else if(viaje!.tipo_solicitud_aprobacion == "LV"){
+    } else if (viaje!.tipo_solicitud_aprobacion == 'LV') {
       this.router.navigate(['/viajes/legalizacion/detalle', id]);
     }
   }
-  filtrarDatos(filtrar: boolean = false){
-    let fechadesde = this.fechaInicio ? this.fechaInicio.format('YYYY-MM-DD') : null;
-    let fechahasta = this.fechaFin ? this.fechaFin.format('YYYY-MM-DD') : null;
-    this.service.getViajesFiltro(this.currentPage + 1, this.id_estado, this.filtrobusqueda, fechadesde, fechahasta, this.id_programa).subscribe({
-      next: (response) => {
-        this.viajes = response;
-        this.total = response.length > 0 ? response[0].total_registros! : 0;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error fetching viajes:', error);
-      }
-    });
+  filtrarDatos(filtrar = false) {
+    const fechadesde = this.fechaInicio ? this.fechaInicio.format('YYYY-MM-DD') : null;
+    const fechahasta = this.fechaFin ? this.fechaFin.format('YYYY-MM-DD') : null;
+    this.service
+      .getViajesFiltro(
+        this.currentPage + 1,
+        this.id_estado,
+        this.filtrobusqueda,
+        fechadesde,
+        fechahasta,
+        this.id_programa
+      )
+      .subscribe({
+        next: response => {
+          this.viajes = response;
+          this.total = response.length > 0 ? response[0].total_registros! : 0;
+          this.cdr.detectChanges();
+        },
+        error: error => {
+          console.error('Error fetching viajes:', error);
+        },
+      });
   }
   editViaje(id: string) {
     this.router.navigate(['/viajes/editar', id]);
@@ -188,7 +218,7 @@ export class ListarViajes  implements OnInit, AfterViewInit {
       width: '40%',
     });
     drawerRef.instance.travelRequestId = id_viaje;
-    drawerRef.afterDismissed().subscribe((res) => {
+    drawerRef.afterDismissed().subscribe(res => {
       if (res) {
         this.filtrarDatos(false);
       }
@@ -196,9 +226,13 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   }
 
   habilitarEdicion(id: string): boolean {
-    let viaje = this.viajes.find(v => v.guid == id);
+    const viaje = this.viajes.find(v => v.guid == id);
     let habilitarEdicion = false;
-    if((viaje?.id_estado == 1 || (viaje?.id_estado == 3 && viaje.guid_msft_ajuste == this.guidUsr)) && viaje.guid_usr == this.guidUsr){
+    if (
+      (viaje?.id_estado == 1 ||
+        (viaje?.id_estado == 3 && viaje.guid_msft_ajuste == this.guidUsr)) &&
+      viaje.guid_usr == this.guidUsr
+    ) {
       habilitarEdicion = true;
     }
     return habilitarEdicion;
@@ -207,5 +241,32 @@ export class ListarViajes  implements OnInit, AfterViewInit {
   verPDF(guid: string): void {
     const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
     window.open(url, '_blank');
+  }
+
+  verDetallesViaje(guid: string): void {
+    this.router.navigate(['/viajes/detalle', guid]);
+  }
+
+  verDetallesLegalizacion(guid: string): void {
+    this.router.navigate(['/viajes/legalizacion/detalle', guid]);
+  }
+
+  aplicaLegalizacion(element: any): boolean {
+    const estado = element?.estado
+      ? element.estado
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+      : '';
+    return (
+      estado === 'pendiente de legalizacion' ||
+      estado === 'en proceso de legalizacion' ||
+      estado === 'legalizacion aprobada' ||
+      estado === 'legalizacion en proceso de aprobacion' ||
+      element?.id_estado === 4 ||
+      element?.id_estado === 5 ||
+      element?.id_estado === 7
+    );
   }
 }
