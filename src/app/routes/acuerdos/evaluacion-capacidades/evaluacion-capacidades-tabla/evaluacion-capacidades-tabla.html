@@ -1,5 +1,4 @@
-<page-header />
-
+<page-header title="Evaluación de capacidades"></page-header>
 <div class="row">
   <div class="col-sm-12">
     <mat-card class="app-data-card">
@@ -8,129 +7,122 @@
       </mat-card-header>
 
       <mat-card-content class="app-data-card__content">
-        <div class="app-data-card__toolbar d-inline-flex">
-          <mat-form-field appearance="outline" class="app-data-card__search">
-            <mat-label>Buscar</mat-label>
-            <input matInput type="text" (keyup)="applyFilter($event)"
-              placeholder="Buscar por nombre" />
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </div>
-
         <div class="app-data-card__toolbar">
-          <button mat-flat-button color="primary" type="button" (click)="crearEvaCapacidades()">
+          <button mat-flat-button color="primary" type="button" (click)="crear()">
             <mat-icon>add</mat-icon>
             Crear evaluación de capacidades
           </button>
         </div>
 
+        <div style="width:100%;">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="id_ev">Filtrar por estado</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select aria-label="Filtrar por estado" id="id_ev" name="id_ev" multiple
+                    [(ngModel)]="id_ev" placeholder="Seleccione el estado"
+                    (selectionChange)="filtrarDatos(true)">
+                    <mat-option [value]="null" disabled>Seleccione el estado</mat-option>
+                    @for (eva of statesEvaCap; track eva.id) {
+                    <mat-option [value]="eva.id">
+                      {{ eva.state | uppercase }}
+                    </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2 text-left">
-          <small>Total de registros [{{ evCapacidadesTable.filteredData.length }}]</small>
+
+              <div class="col-md-6">
+                <label for="id_programa">Filtrar por programa</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select aria-label="Filtrar por programa" id="id_programa" name="id_programa"
+                    multiple [(ngModel)]="id_programa" placeholder="Seleccione el programa"
+                    (selectionChange)="filtrarDatos(true)">
+                    <mat-option [value]="null" disabled>Seleccione el programa</mat-option>
+                    @for (pro of programs; track pro.id_programa) {
+                    <mat-option [value]="pro.id_programa">
+                      {{ pro.name | uppercase }}
+                    </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+            </div>
+          </div>
         </div>
 
-        <div class="app-data-table-wrapper">
-          <table mat-table [dataSource]="evCapacidadesTable"
-            class="app-data-table mat-elevation-z1">
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        <div style="width:100%;">
+          <hr>
+        </div>
+        <div style="width:100%;">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+            <small><b>Total de registros [{{total}}]</b></small>
+          </div>
+        </div>
+
+        <div class="app-data-table-wrapper viajes-table-wrapper">
+          <table mat-table [dataSource]="evaluaciones" class="mat-elevation-z8 viajes-table">
+            <ng-container matColumnDef="posicion">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ getRowNumber(i) }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="name">
+            <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef>Nombre</th>
-              <td mat-cell *matCellDef="let row">{{ row.name | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.name }}</td>
             </ng-container>
-
-            <ng-container matColumnDef="observation">
+            <!---
+            <ng-container matColumnDef="observacion">
               <th mat-header-cell *matHeaderCellDef>Observación</th>
-              <td mat-cell *matCellDef="let row">{{ row.observation | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.observation }}</td>
             </ng-container>
+            --->
 
-            <ng-container matColumnDef="approximate_value">
-              <th mat-header-cell *matHeaderCellDef>Valor aproximado</th>
-              <td mat-cell *matCellDef="let row">{{ row.approximate_value | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="create_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha de creación</th>
-              <td mat-cell *matCellDef="let row">{{ row.create_date | date: 'dd/MM/yyyy' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="policy_approval_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha aprobación política</th>
-              <td mat-cell *matCellDef="let row">{{ row.policy_approval_date | date: 'dd/MM/yyyy' }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="document_signature_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha firma documento</th>
-              <td mat-cell *matCellDef="let row">{{ row.document_signature_date | date: 'dd/MM/yyyy'
-                }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="start_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha inicio</th>
-              <td mat-cell *matCellDef="let row">{{ row.start_date | date: 'dd/MM/yyyy' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="end_date">
-              <th mat-header-cell *matHeaderCellDef>Fecha fin</th>
-              <td mat-cell *matCellDef="let row">{{ row.end_date | date: 'dd/MM/yyyy' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="code">
+            <ng-container matColumnDef="codigo">
               <th mat-header-cell *matHeaderCellDef>Código</th>
-              <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="programa">
-              <th mat-header-cell *matHeaderCellDef>Programa</th>
-              <td mat-cell *matCellDef="let row">{{ row.programa }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="pid">
-              <th mat-header-cell *matHeaderCellDef>PID</th>
-              <td mat-cell *matCellDef="let row">{{ row.pid }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="implementer">
+            <ng-container matColumnDef="implementador">
               <th mat-header-cell *matHeaderCellDef>Implementador</th>
-              <td mat-cell *matCellDef="let row">{{ row.implementer }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.implementer_name }}</td>
             </ng-container>
+            <!---
 
-            <ng-container matColumnDef="aproval_request">
-              <th mat-header-cell *matHeaderCellDef>Solicitud de aprobación</th>
-              <td mat-cell *matCellDef="let row">{{ row.aproval_request }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="person">
-              <th mat-header-cell *matHeaderCellDef>Persona</th>
-              <td mat-cell *matCellDef="let row">{{ row.person }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="capacity_assessments_state">
+            <ng-container matColumnDef="estado">
               <th mat-header-cell *matHeaderCellDef>Estado</th>
-              <td mat-cell *matCellDef="let row">{{ row.capacity_assessments_state }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="modalitie">
-              <th mat-header-cell *matHeaderCellDef>Modalidad</th>
-              <td mat-cell *matCellDef="let row">{{ row.modalitie }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell app-data-table__empty" [attr.colspan]="displayedColumns.length">
-                No se encontraron evaluaciones con ese criterio.
+              <td mat-cell *matCellDef="let row">
+                <span>{{ row.state }}</span>
               </td>
-            </tr>
+            </ng-container>
+--->
+
+            <ng-container matColumnDef="acciones" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let element">
+                <a href="javascript:void(0)" style="text-decoration: none;"
+                  (click)="editEvaluacion(element.guid)">
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <a href="javascript:void(0)" style="text-decoration: none;"
+                  title="Continuar flujo de aprobación" alt="Continuar flujo de aprobación"
+                  (click)="continuarFlujo(element.guid)">
+                  <mat-icon title="Continuar flujo de aprobación"
+                    alt="Continuar flujo de aprobación">clear_all</mat-icon>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;" [ngClass]="getRowClass(row)"></tr>
           </table>
         </div>
 
-        <mat-paginator [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions"
-          showFirstLastButtons aria-label="Paginación de evaluación de capacidades" />
+        <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChange($event)" />
       </mat-card-content>
     </mat-card>
   </div>

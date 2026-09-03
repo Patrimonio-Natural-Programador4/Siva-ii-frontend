@@ -33,7 +33,7 @@
             <div class="col-md-6 mb-3">
               <label for="code" class="form-label font-weight-bold">Código*</label>
               <input id="code" type="text" class="form-control" placeholder="Ingrese el código"
-                required [(ngModel)]="evaCapacidadesData.code" name="code" maxlength="255"
+                required [(ngModel)]="evaCapacidadesData.codigo" name="code" maxlength="255"
                 #code="ngModel" [class.is-invalid]="code.invalid && (code.dirty || code.touched)" />
               @if (code.invalid && (code.dirty || code.touched)) {
               <div class="invalid-feedback d-block">
@@ -43,26 +43,13 @@
             </div>
 
             <!-- Estado de Evaluación -->
-            <div class="col-md-6 mb-3">
-              <label for="capacity_assessments_state" class="form-label font-weight-bold">Estado de
-                Evaluación</label>
-              <select id="capacity_assessments_state" name="capacity_assessments_state"
-                class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.capacity_assessments_state">
-                <option value="" disabled selected>Seleccione un estado</option>
-                @for (item of states; track item.id || $index) {
-                <option [value]="item.id" class="text-capitalize">
-                  {{ (item.state || '') | titlecase }}
-                </option>
-                }
-              </select>
-            </div>
+
 
             <!-- Modalidad -->
             <div class="col-md-6 mb-3">
               <label for="modalities" class="form-label font-weight-bold">Modalidad</label>
-              <select id="modalities" name="modalities" class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.modalitie">
+              <select id="modalities" name="modality_id" class="form-select text-capitalize"
+                [(ngModel)]="evaCapacidadesData.modality_id">
                 <option value="" disabled selected>Seleccione una modalidad</option>
                 @for (item of modalities; track item.id || $index) {
                 <option [value]="item.id" class="text-capitalize">
@@ -89,13 +76,16 @@
               </h6>
             </div>
 
+
             <!-- Programa -->
+
+
             <div class="col-md-6 mb-3">
               <label for="programa" class="form-label font-weight-bold">Programa</label>
-              <select id="programa" name="programa" class="form-select"
-                [(ngModel)]="evaCapacidadesData.programa">
+              <select id="programa" name="program_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.program_id">
                 <option value="" disabled selected>Seleccione un programa</option>
-                @for (prog of programs; track prog.id_programa || $index) {
+                @for (prog of programsByMtf; track prog.id_programa || $index) {
                 <option [value]="prog.id_programa">
                   {{ prog.name }}
                 </option>
@@ -106,7 +96,8 @@
             <!-- PID -->
             <div class="col-md-6 mb-3">
               <label for="pid" class="form-label font-weight-bold">PID</label>
-              <select id="pid" name="pid" class="form-select" [(ngModel)]="evaCapacidadesData.pid">
+              <select id="pid" name="pid_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.pid_id">
                 <option value="" disabled selected>Seleccione un PID</option>
                 @for (pid of pids; track pid.id || $index) {
                 <option [value]="pid.id">
@@ -119,8 +110,8 @@
             <!-- Implementadora -->
             <div class="col-md-6 mb-3">
               <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
-              <select id="implementer" name="implementer" class="form-select"
-                [(ngModel)]="evaCapacidadesData.implementer">
+              <select id="implementer" name="implementer_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.implementer_id">
                 <option value="" disabled selected>Seleccione una implementadora</option>
                 @for (implementer of implementers; track implementer.id || $index) {
                 <option [value]="implementer.id">
@@ -133,8 +124,8 @@
             <!-- Persona -->
             <div class="col-md-6 mb-3">
               <label for="person" class="form-label font-weight-bold">Persona Responsable</label>
-              <select id="person" name="person" class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.person">
+              <select id="person" name="persons_id" class="form-select text-capitalize"
+                [(ngModel)]="evaCapacidadesData.persons_id">
                 <option value="" disabled selected>Seleccione una persona</option>
                 @for (person of persons; track person.id || $index) {
                 <option [value]="person.id" class="text-capitalize">

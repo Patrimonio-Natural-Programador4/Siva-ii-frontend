@@ -1,0 +1,191 @@
+<page-header />
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header
+        class="app-data-card__header d-flex justify-content-between align-items-center"
+        style="flex-direction: row;">
+        <mat-card-title>Evaluación de capacidades - Detalle</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="loading-box" *ngIf="isLoading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Cargando información de la evaluación...</span>
+        </div>
+
+        <div *ngIf="!isLoading && !evaluacion.guid" class="empty-state">
+          <p>No se encontró información para esta evaluación.</p>
+          <button mat-raised-button color="primary" (click)="volver()">Volver al listado</button>
+        </div>
+
+        <mat-vertical-stepper *ngIf="!isLoading && evaluacion.guid" orientation="vertical"
+          [linear]="isLinear">
+
+          // info generak
+
+          <mat-step>
+            <ng-template matStepLabel>Información general</ng-template>
+
+            <div class="table_a mt-3">
+              <div class="row_a header_a">
+                <div class="cell_a" style="flex: 1">Campo</div>
+                <div class="cell_a" style="flex: 3">Detalle</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Código</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.codigo || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Nombre</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.name || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Observación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.observation || '--' }}
+                </div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor aproximado</div>
+                <div class="cell_a info_a" style="flex: 3">
+                  {{ evaluacion.approximate_value || 0 | currency: 'COP':'symbol':'1.0-0' }}
+                </div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Programa</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.programa || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">PID</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.pid || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Implementador</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.implementer || '--' }}
+                </div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Modalidad</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.modalitie || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Persona</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.person || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de aprobación de política</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.policy_approval_date |
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de firma del documento</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.document_signature_date |
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de inicio</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.start_date | date:
+                  'yyyy-MM-dd' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de fin</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.end_date | date:
+                  'yyyy-MM-dd' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de creación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.create_date | date:
+                  'yyyy-MM-dd HH:mm' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Estado de la solicitud</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.capacity_assessments_state
+                  || '--' }}</div>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
+          // flujo aprobación
+
+          <mat-step>
+            <ng-template matStepLabel>Flujo de aprobación</ng-template>
+
+            <div class="table-wrap mt-3"
+              *ngIf="!isLoadingAprobacion && hasHistorialAprobacion; else flujoAprobacionEstado">
+              <table mat-table [dataSource]="historialAprobacion"
+                class="mat-elevation-z2 full-width-table">
+                <ng-container matColumnDef="rol">
+                  <th mat-header-cell *matHeaderCellDef>Rol</th>
+                  <td mat-cell *matCellDef="let item">{{ item.rol || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="usuario">
+                  <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                  <td mat-cell *matCellDef="let item">{{ item.usuario || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_requerimiento">
+                  <th mat-header-cell *matHeaderCellDef>Fecha requerimiento</th>
+                  <td mat-cell *matCellDef="let item">{{ item.fecha_crea | date: 'yyyy-MM-dd HH:mm'
+                    }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_aprobacion">
+                  <th mat-header-cell *matHeaderCellDef>Fecha aprobación</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.fecha_aprobacion ? (item.fecha_aprobacion | date: 'yyyy-MM-dd HH:mm') :
+                    '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef>Estado</th>
+                  <td mat-cell *matCellDef="let item">{{ item.estado_aprobacion_ruta || '--' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAprobacion"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAprobacion"></tr>
+              </table>
+            </div>
+
+            <ng-template #flujoAprobacionEstado>
+              <div class="empty-step" *ngIf="isLoadingAprobacion">Cargando flujo de aprobación...
+              </div>
+              <div class="empty-step" *ngIf="!isLoadingAprobacion">No hay historial de aprobación
+                registrado.</div>
+            </ng-template>
+
+            <div class="approval-actions">
+              <div class="approval-actions__buttons" *ngIf="habilitarAcciones">
+                <button mat-raised-button color="primary" type="button"
+                  (click)="abrirModalAccion('APROBAR')" [disabled]="isSavingAprobacion">
+                  Aprobar
+                </button>
+                <button mat-stroked-button type="button" (click)="abrirModalAccion('AJUSTAR')"
+                  [disabled]="isSavingAprobacion || !accionesAprobacion.habilitar_solicitar_ajustes">
+                  Solicitar ajustes
+                </button>
+              </div>
+            </div>
+
+            <div class="step-actions between">
+              <button mat-stroked-button matStepperPrevious>Atrás</button>
+              <button mat-stroked-button (click)="volver()">Volver al listado</button>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

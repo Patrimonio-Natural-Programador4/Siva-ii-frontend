@@ -83,7 +83,7 @@
             [(ngModel)]="typedocagreData.documents_approval_id" name="documents_approval_id"
             #documents_approval_id="ngModel"
             [class.is-invalid]="documents_approval_id.invalid && (documents_approval_id.dirty || documents_approval_id.touched)">
-            <option [ngValue]="0" disabled selected>Selecciona una opción...</option>
+            <option [ngValue]="0" disabled>Selecciona una opción...</option>
             @for (item of documents; track item.id) {
             <option [ngValue]="item.id">{{ item.documento }}</option>
             }

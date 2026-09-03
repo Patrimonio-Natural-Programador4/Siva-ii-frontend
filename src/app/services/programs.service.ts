@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -11,11 +11,15 @@ import { ResponseRequest } from '../models/response-request';
 })
 export class ProgramsService {
   private apiUrl = `${environment.apiUrl2}/programas`;
-
-  constructor(private http: HttpClient) {}
+  private apiUrl2 = `${environment.apiUrl2}/usuarios`;
+  private http = inject(HttpClient);
 
   getPrograms(): Observable<Programs[]> {
     return this.http.get<Programs[]>(this.apiUrl);
+  }
+
+  getProgramsByUser(guid: string): Observable<Programs[]> {
+    return this.http.get<Programs[]>(`${this.apiUrl2}/${guid}/programas`);
   }
 
   getProgramById(id: number): Observable<Programs> {

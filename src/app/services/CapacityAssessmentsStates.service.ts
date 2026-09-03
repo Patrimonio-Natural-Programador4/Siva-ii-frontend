@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import { ResponseRequest } from 'src/app/models/response-request';
 
 import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
+import { EvaluacionCapacidadesModel } from 'src/app/models/evaluacion-capacidades';
 
 @Injectable({
   providedIn: 'root',
