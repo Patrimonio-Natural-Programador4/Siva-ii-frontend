@@ -1,6 +1,7 @@
 import { ConfigOption } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormlyFieldCombobox } from './formly-templates';
+import { FormlyFieldDate, FormlyFieldWysiwyg } from './formly-types';
 import { FormlyWrapperCard, FormlyWrapperDiv } from './formly-wrappers';
 
 export function formlyConfigFactory(translate: TranslateService): ConfigOption {
@@ -10,6 +11,14 @@ export function formlyConfigFactory(translate: TranslateService): ConfigOption {
         name: 'combobox',
         component: FormlyFieldCombobox,
         wrappers: ['form-field'],
+      },
+      {
+        name: 'wysiwyg',
+        component: FormlyFieldWysiwyg,
+      },
+      {
+        name: 'date',
+        component: FormlyFieldDate,
       },
     ],
     wrappers: [

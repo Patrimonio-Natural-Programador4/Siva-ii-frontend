@@ -13,6 +13,12 @@
       "icon": "people"
     },
     {
+      "route": "tdr",
+      "name": "tdr",
+      "type": "link",
+      "icon": "people"
+    },
+    {
       "route": "roles",
       "name": "roles",
       "type": "link",

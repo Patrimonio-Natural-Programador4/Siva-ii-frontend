@@ -92,6 +92,14 @@ export const routes: Routes = [
           title: 'Aprobación de documentos',
         },
       },
+      {
+        path: 'extraccion-parametros',
+        loadComponent: () =>
+          import('./extraccion-parametros/extraccion-parametros').then(m => m.ExtraccionParametros),
+        data: {
+          title: 'Extracción de parámetros',
+        },
+      },
 
       {
         path: 'aprobacion-documentos/crear',

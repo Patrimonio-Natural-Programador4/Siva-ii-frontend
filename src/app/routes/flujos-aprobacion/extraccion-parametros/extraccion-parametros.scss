@@ -1,0 +1,15 @@
+.upload-form {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-form__file {
+  overflow-wrap: anywhere;
+}
+
+.upload-form__empty {
+  margin: 0;
+}
