@@ -28,7 +28,6 @@ import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { MsalService } from '@azure/msal-angular';
 import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
-import { LegalizacionForm } from './legalizacion/legalizacion-form';
 
 @Component({
   selector: 'app-listar',
@@ -210,19 +209,6 @@ export class ListarViajes implements OnInit, AfterViewInit {
   }
   editViaje(id: string) {
     this.router.navigate(['/viajes/editar', id]);
-  }
-
-  legalizarViaje(id_viaje: number) {
-    const drawerRef = this.drawer.open(LegalizacionForm, {
-      position: 'right',
-      width: '40%',
-    });
-    drawerRef.instance.travelRequestId = id_viaje;
-    drawerRef.afterDismissed().subscribe(res => {
-      if (res) {
-        this.filtrarDatos(false);
-      }
-    });
   }
 
   habilitarEdicion(id: string): boolean {
