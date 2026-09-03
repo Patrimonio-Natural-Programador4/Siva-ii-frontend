@@ -76,43 +76,61 @@ export class LegalizacionForm implements OnInit {
     observations: null,
   };
 
+  private _legalizacionId?: number;
+  get legalizacionId(): number | undefined {
+    return this._legalizacionId;
+  }
+  set legalizacionId(val: number | undefined) {
+    this._legalizacionId = val;
+    if (this._travelRequestId && val && !this.isLoading && !this.datosCargados) {
+      this.cargarLegalizacionExistente();
+    }
+  }
+
   ngOnInit(): void {
-    if (this._travelRequestId && !this.datosCargados) {
+    if (this._travelRequestId && this._legalizacionId && !this.datosCargados) {
       this.cargarLegalizacionExistente();
     }
   }
 
   cargarLegalizacionExistente() {
-    if (!this._travelRequestId) return;
+    if (!this._travelRequestId || !this._legalizacionId) return;
     this.isLoading = true;
     this.viajesService.getLegalizacionByTravelId(this._travelRequestId).subscribe({
-      next: res => {
+      next: (res: any) => {
         this.isLoading = false;
         this.datosCargados = true;
-        if (res && res.legalization_id) {
+        
+        let targetLeg = null;
+        if (Array.isArray(res)) {
+          targetLeg = res.find((l: any) => l.legalization_id === this._legalizacionId);
+        } else {
+          targetLeg = res;
+        }
+
+        if (targetLeg && targetLeg.legalization_id) {
           this.isEdit = true;
-          this.legalizationId = res.legalization_id;
+          this.legalizationId = targetLeg.legalization_id;
 
           let parsedDate: Date | null = null;
-          if (res.check_date) {
-            const dateStr = String(res.check_date).substring(0, 10);
+          if (targetLeg.check_date) {
+            const dateStr = String(targetLeg.check_date).substring(0, 10);
             parsedDate = new Date(`${dateStr}T00:00:00`);
           }
 
           this.legalizacion = {
             check_date: parsedDate,
-            check_number: res.check_number ?? null,
-            beneficiary: res.beneficiary ?? null,
-            nit_beneficiary: res.nit_beneficiary ?? null,
-            observations_outlay: res.observations_outlay ?? null,
-            regimen_type_id: res.regimen_type_id ?? null,
-            subtotal: res.subtotal != null ? Number(res.subtotal) : 0,
-            iva: res.iva != null ? Number(res.iva) : 0,
-            retention_porcentage:
-              res.retention_porcentage != null ? Number(res.retention_porcentage) : 0,
-            retention: res.retention != null ? Number(res.retention) : 0,
-            amount_paid: res.amount_paid != null ? Number(res.amount_paid) : 0,
-            observations: res.observations ?? null,
+            check_number: targetLeg.check_number ?? null,
+            beneficiary: targetLeg.beneficiary ?? null,
+            nit_beneficiary: targetLeg.nit_beneficiary ?? null,
+            observations_outlay: targetLeg.observations_outlay ?? null,
+            regimen_type_id: targetLeg.regimen_type_id ?? null,
+            subtotal: targetLeg.subtotal != null ? Number(targetLeg.subtotal) : 0,
+            iva: targetLeg.iva != null ? Number(targetLeg.iva) : 0,
+            retention_porcentage: targetLeg.retention_porcentage != null ? Number(targetLeg.retention_porcentage) : 0,
+            retention: targetLeg.retention != null ? Number(targetLeg.retention) : 0,
+            amount_paid: targetLeg.amount_paid != null ? Number(targetLeg.amount_paid) : 0,
+            observations: targetLeg.observations ?? null,
           };
         }
       },
@@ -170,8 +188,8 @@ export class LegalizacionForm implements OnInit {
 
     this.isSaving = true;
 
-    if (this.isEdit) {
-      this.viajesService.actualizarLegalizacion(this._travelRequestId, payload).subscribe({
+    if (this.isEdit && this.legalizationId) {
+      this.viajesService.actualizarLegalizacion(this.legalizationId, payload).subscribe({
         next: res => {
           this.isSaving = false;
           this.snackBar.open('Legalización actualizada correctamente', 'Cerrar', {

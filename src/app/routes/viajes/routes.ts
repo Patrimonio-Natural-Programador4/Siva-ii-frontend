@@ -48,6 +48,14 @@ export const routes: Routes = [
           title: 'Detalle de legalización',
         },
       },
+      {
+        path: 'legalizacion/ver/:idviaje/:idleg',
+        loadComponent: () =>
+          import('./legalizacion/ver-detalle/ver-detalle').then(m => m.VerDetalleLegalizacion),
+        data: {
+          title: 'Ver detalle de legalización',
+        },
+      },
     ],
   },
 ];

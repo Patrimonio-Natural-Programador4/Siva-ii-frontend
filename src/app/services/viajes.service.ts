@@ -140,17 +140,17 @@ export class ViajesService {
     );
   }
 
-  getLegalizacionByTravelId(travelRequestId: number): Observable<TravelLegalization> {
-    return this.http.get<TravelLegalization>(`${this.apiUrl}/legalizaciones/${travelRequestId}`);
+  getLegalizacionByTravelId(travelRequestId: number): Observable<TravelLegalization[]> {
+    return this.http.get<TravelLegalization[]>(`${this.apiUrl}/legalizaciones/${travelRequestId}`);
   }
 
   guardarLegalizacion(payload: any): Observable<ResponseRequest> {
-    return this.http.post<ResponseRequest>(`${this.apiUrl}/legalizaciones`, payload);
+    return this.http.post<ResponseRequest>(`${this.apiUrl}/legalizaciones/Legalizacion`, payload);
   }
 
-  actualizarLegalizacion(travelRequestId: number, payload: any): Observable<ResponseRequest> {
+  actualizarLegalizacion(legalizationId: number, payload: any): Observable<ResponseRequest> {
     return this.http.patch<ResponseRequest>(
-      `${this.apiUrl}/legalizaciones/${travelRequestId}`,
+      `${this.apiUrl}/legalizaciones/${legalizationId}`,
       payload
     );
   }
