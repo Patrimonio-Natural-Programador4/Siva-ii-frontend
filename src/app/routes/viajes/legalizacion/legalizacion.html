@@ -327,6 +327,13 @@
                   </td>
                   <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
+                <ng-container matColumnDef="observations_outlay">
+                  <th mat-header-cell *matHeaderCellDef>Descripción del gasto</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.observations_outlay || '--' }}
+                  </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
 
                 <ng-container matColumnDef="regimen_name">
                   <th mat-header-cell *matHeaderCellDef>Régimen</th>

@@ -81,6 +81,7 @@ export class Legalizacion implements OnInit {
     'check_number',
     'beneficiary',
     'nit_beneficiary',
+    'observations_outlay',
     'regimen_name',
     'subtotal',
     'iva',
@@ -88,7 +89,7 @@ export class Legalizacion implements OnInit {
     'retention',
     'amount_paid',
     'observations',
-    'acciones',
+    'acciones'
   ];
   displayedColumnsAprobacion: string[] = [
     'rol',
