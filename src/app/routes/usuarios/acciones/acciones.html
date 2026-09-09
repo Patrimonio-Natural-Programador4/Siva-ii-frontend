@@ -81,23 +81,20 @@
                   />
                 </div>
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                   <label for="identification_type" class="form-label">Tipo identificación*</label>
-                  <input
-                    id="identification_type"
-                    type="number"
-                    class="form-control"
-                    required
-                    placeholder="Tipo identificación"
-                    [(ngModel)]="usuarioData.identification_type"
-                    name="identification_type"
-                    #identificationType="ngModel"
-                    [class.is-invalid]="identificationType.invalid && (identificationType.dirty || identificationType.touched)"
-                  />
+                  <select id="identification_type" class="form-select" #identificationType="ngModel"
+                    required [(ngModel)]="usuarioData.identification_type"
+                    name="identification_type">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el tipo de identificación</option>
+                    @for (data of listados[2]?.lista_generica ?? []; track data.identity) {
+                    <option [ngValue]="data.identity">{{ data.valor }}</option>
+                    }
+                  </select>
                   @if (identificationType.invalid && (identificationType.dirty || identificationType.touched)) {
-                    <div class="invalid-feedback d-block">
-                      <span class="text-danger">Este campo es requerido.</span>
-                    </div>
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
                   }
                 </div>
 
@@ -198,13 +195,13 @@
               </div>
 
               <div class="usuarios-selection-grid">
-                @for (programa of programasCatalogo; track programa.id_programa) {
+                @for (programa of listados[0]?.lista_generica ?? []; track programa.identity) {
                   <mat-checkbox
-                    [checked]="isProgramaSeleccionado(programa.id_programa)"
-                    (change)="onProgramaChange(programa.id_programa!, $event)"
+                    [checked]="isProgramaSeleccionado(programa.identity)"
+                    (change)="onProgramaChange(programa.identity!, $event)"
                     color="primary"
                   >
-                    {{ programa.name }}
+                    {{ programa.valor }}
                   </mat-checkbox>
                 }
               </div>

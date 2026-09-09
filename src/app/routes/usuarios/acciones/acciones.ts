@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Listados } from 'src/app/models/listados';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -53,7 +54,7 @@ export class Acciones implements OnInit {
   userGuid = '';
   idRolSeleccionado: number | null = null;
   readonly columnasRoles = ['numero', 'rol', 'descripcion', 'acciones'];
-
+  listados: Listados[] = [];
   usuarioData: Usuarios = new Usuarios({
     first_name: '',
     other_name: '',
@@ -85,7 +86,9 @@ export class Acciones implements OnInit {
       // return;
       this.getUsuario();
     }
-    this.getProgramas();
+
+    this.getListados();
+    // this.getProgramas();
     this.getRoles();
 
 
@@ -109,6 +112,21 @@ export class Acciones implements OnInit {
   //       this.volver();
   //     },
   //   });
+  }
+
+
+  
+  getListados(): void {
+    this.usuariosService.getListados(this.userGuid || '').subscribe({
+      next: data => {
+        setTimeout(() => {
+          this.listados = data;
+        });
+      },
+      error: () => {
+        this.snackBar.open('No se pudieron cargar los listados', '', { duration: 3000 });
+      },
+    });
   }
 
   private getProgramas(): void {

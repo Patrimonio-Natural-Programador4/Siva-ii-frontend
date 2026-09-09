@@ -7,6 +7,7 @@ import { environment } from '@env/environment';
 import { Usuarios } from '../models/usuarios';
 import { ResponseRequest } from '../models/response-request';
 import { Programs } from '../models/programs';
+import { Listados } from '../models/listados';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +53,10 @@ export class UsuariosService {
 
   validarCorreoEnGrupo(correo: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/validar_correo_grupo/${correo}`);
+  }
+
+  getListados(userGuid: string): Observable<Listados[]> {
+    return this.http.get<Listados[]>(`${this.apiUrl}/listados/${userGuid}`);
   }
 
   validarUsuarioCorporativo(guid: string, datosValidacion: any): Observable<unknown> {
