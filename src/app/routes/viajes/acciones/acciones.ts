@@ -105,7 +105,7 @@ export class AccionesViajes implements OnInit {
   horaInicio?: any = null;
   horaFin?: any = null;
   id_viaje: string = null!;
-  accion: string = 'Nuevo';
+  accion = 'Nuevo';
   usuariosFilter: ListaGenerica[] = [];
   usuarios: ListaGenerica[] = [];
   choices: ListaGenerica[] = [];
@@ -137,6 +137,8 @@ export class AccionesViajes implements OnInit {
     id_tipo_cuenta: null!,
     id_entidad_bancaria: null!,
     guid_soporte_pasaporte: '',
+    es_para_funcionario: false,
+    id_funcionario_responsable: null!,
     anticipo: {
       id_anticipo: null!,
       id_relacion: null!,
@@ -223,12 +225,26 @@ export class AccionesViajes implements OnInit {
 
   onEsInvitadoChange(valor: boolean): void {
     this.viajeData.es_invitado = valor;
+    if (valor) {
+      this.viajeData.es_para_funcionario = false;
+      this.viajeData.id_funcionario_responsable = null!;
+    }
     if (!valor) {
       this.viajeData.dos_o_mas_personas = false;
       this.onDosOMasPersonasChange(false);
       this.viajeData.documento_persona_invitada = '';
       this.viajeData.persona_invitada = '';
       this.viajeData.correo_persona_invitada = '';
+    }
+  }
+
+  onEsParaFuncionarioChange(valor: boolean): void {
+    this.viajeData.es_para_funcionario = valor;
+    if (valor) {
+      this.viajeData.es_invitado = false;
+      this.onEsInvitadoChange(false);
+    } else {
+      this.viajeData.id_funcionario_responsable = null!;
     }
   }
 
@@ -734,7 +750,7 @@ export class AccionesViajes implements OnInit {
   }
 
   accionSolicitud(tipo_accion: string) {}
-  guardarViaje(anviar_aprobacion: boolean = false) {
+  guardarViaje(anviar_aprobacion = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
     // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
     // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;

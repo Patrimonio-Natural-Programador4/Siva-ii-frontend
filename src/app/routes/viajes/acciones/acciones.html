@@ -163,19 +163,59 @@
                   }
                 </div>
                 <div class="col-md-4">
+                  <label for="es_para_funcionario" class="form-label">El viaje es para un
+                    funcionario?*</label>
+                  <div>
+                    <input type="radio" [value]="true" id="es_para_funcionario_s"
+                      name="es_para_funcionario" [(ngModel)]="viajeData.es_para_funcionario"
+                      (ngModelChange)="onEsParaFuncionarioChange($event)" />
+                    <label class="" for="es_para_funcionario_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="es_para_funcionario_n"
+                      name="es_para_funcionario" [(ngModel)]="viajeData.es_para_funcionario"
+                      (ngModelChange)="onEsParaFuncionarioChange($event)" />
+                    <label class="" for="es_para_funcionario_n">&nbsp;No</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4" *ngIf="viajeData.es_para_funcionario">
+                  <label for="id_funcionario_responsable" class="form-label">Funcionario
+                    Responsable*</label>
+                  <select id="id_funcionario_responsable" class="form-select"
+                    #funcionario_responsable="ngModel" required
+                    [(ngModel)]="viajeData.id_funcionario_responsable"
+                    name="id_funcionario_responsable">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el funcionario</option>
+                    @for (data of listados[9]?.lista_generica ?? []; track data.identity) {
+                    <option [ngValue]="data.identity">{{ data.valor }}</option>
+                    }
+                  </select>
+                  @if (funcionario_responsable.invalid && (funcionario_responsable.dirty ||
+                  funcionario_responsable.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+
+                <div class="col-md-4" *ngIf="!viajeData.es_para_funcionario">
                   <label for="es_invitado" class="form-label">El viaje es para un invitado?*</label>
                   <div>
                     <input type="radio" [value]="true" id="es_invitado_s" name="es_invitado"
-                      [(ngModel)]="viajeData.es_invitado" />
+                      [(ngModel)]="viajeData.es_invitado"
+                      (ngModelChange)="onEsInvitadoChange($event)" />
                     <label class="" for="es_invitado_s">&nbsp;Si</label>
                     &nbsp;
                     <input type="radio" [value]="false" id="es_invitado_n" name="es_invitado"
-                      [(ngModel)]="viajeData.es_invitado" />
+                      [(ngModel)]="viajeData.es_invitado"
+                      (ngModelChange)="onEsInvitadoChange($event)" />
                     <label class="" for="es_invitado_n">&nbsp;No</label>
                   </div>
                 </div>
-                <div class="col-md-4" *ngIf="viajeData.es_invitado">
-                  <label for="dos_o_mas_personas" class="form-label">Son mas de dos invitados?*</label>
+                <div class="col-md-4"
+                  *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado">
+                  <label for="dos_o_mas_personas" class="form-label">Son mas de dos
+                    invitados?*</label>
                   <div>
                     <input type="radio" [value]="true" id="dos_o_mas_personas_s"
                       name="dos_o_mas_personas" [(ngModel)]="viajeData.dos_o_mas_personas"
@@ -217,7 +257,8 @@
                   }
                 </div>
                 }
-                <div class="col-md-4" *ngIf="viajeData.es_invitado && !viajeData.dos_o_mas_personas">
+                <div class="col-md-4"
+                  *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado && !viajeData.dos_o_mas_personas">
                   <label for="persona_invitada" class="form-label">
                     Nombre de la persona invitada*
                   </label>
@@ -237,7 +278,8 @@
                   </div>
                   }
                 </div>
-                <div class="col-md-4" *ngIf="viajeData.es_invitado && !viajeData.dos_o_mas_personas">
+                <div class="col-md-4"
+                  *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado && !viajeData.dos_o_mas_personas">
                   <label for="correo_persona_invitada" class="form-label">
                     Correo de la persona invitada*
                   </label>
@@ -395,9 +437,9 @@
                 <div class="col-md-4">
                   <label for="valor_anticipo_letras" class="form-label">Valor anticipo (ABC)</label>
                   <textarea #abcTextarea class="form-control" id="valor_anticipo_letras"
-                    name="valor_anticipo_letras" [(ngModel)]="valorAnticipoLetras"
-                    readonly placeholder="Lectura automatica"
-                    cdkTextareaAutosize [cdkAutosizeMinRows]="1" [cdkAutosizeMaxRows]="6"
+                    name="valor_anticipo_letras" [(ngModel)]="valorAnticipoLetras" readonly
+                    placeholder="Lectura automatica" cdkTextareaAutosize [cdkAutosizeMinRows]="1"
+                    [cdkAutosizeMaxRows]="6"
                     style="resize: none; overflow: hidden; line-height: 1.4; min-height: 38px;"></textarea>
                 </div>
                 <div class="col-md-4">
