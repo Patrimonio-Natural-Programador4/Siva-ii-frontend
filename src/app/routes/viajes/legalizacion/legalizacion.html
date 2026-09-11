@@ -435,8 +435,80 @@
             </div>
           </mat-step>
 
-          <!-- STEP 5: Flujo de aprobación (REUBICADO DEL STEP 4) -->
-          <!-- <mat-step>
+          <!-- STEP 5: Documentos Asociados a la Legalización -->
+          <mat-step>
+            <ng-template matStepLabel>Documentos Asociados a la Legalización</ng-template>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+              <h4 class="mb-0 fw-bold">Documentos Adjuntos</h4>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="abrirModalDocumentos()"
+              >
+                <mat-icon>add</mat-icon>
+                Agregar Documento
+              </button>
+            </div>
+
+            <div class="table-wrap" *ngIf="hasDocumentos; else noDocumentos">
+              <table
+                mat-table
+                [dataSource]="dataSourceDocumentos"
+                class="mat-elevation-z2 full-width-table"
+              >
+                <ng-container matColumnDef="tipo_documento">
+                  <th mat-header-cell *matHeaderCellDef>Tipo de Documento</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ getNombreTipoDocumento(element.document_type_id) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre_archivo">
+                  <th mat-header-cell *matHeaderCellDef>Documento</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a
+                      href="javascript:void(0)"
+                      class="d-flex align-items-center text-decoration-none"
+                      (click)="descargarDocumentoAsociado(element)"
+                      title="Descargar documento"
+                    >
+                      <mat-icon class="me-1">download</mat-icon>
+                      {{ element.attachment_name }}
+                    </a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.observaciones || '--' }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDocumentos"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsDocumentos"></tr>
+              </table>
+            </div>
+
+            <ng-template #noDocumentos>
+              <div class="empty-step" *ngIf="!isLoadingDocumentos">
+                No hay documentos asociados.
+              </div>
+              <div class="empty-step" *ngIf="isLoadingDocumentos">
+                Cargando documentos...
+              </div>
+            </ng-template>
+
+            <div class="step-actions between">
+              <button mat-stroked-button matStepperPrevious>Atrás</button>
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
+          <!-- STEP 6: Flujo de aprobación -->
+          <mat-step>
             <ng-template matStepLabel>Flujo de aprobación</ng-template>
 
             <div

@@ -43,6 +43,8 @@ export class Viajes {
   entidad_bancaria?: string; // Nombre de la entidad bancaria (opcional)
   id_solicitud_aprobacion?: number;
   es_invitado?: boolean;
+  es_para_funcionario?: boolean;
+  id_funcionario_responsable?: number;
   dos_o_mas_personas?: boolean;
   soporte_dos_o_mas_personas?: string;
   nombre_archivo_dos_o_mas_personas?: string;

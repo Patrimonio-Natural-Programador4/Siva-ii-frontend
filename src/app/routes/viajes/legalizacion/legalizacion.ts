@@ -24,6 +24,8 @@ import { Viajes } from 'src/app/models/viajes';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { environment } from '@env/environment';
 import { LegalizacionForm } from './legalizacion-form';
+import { DocumentosAsociadosForm } from './documentos-asociados-form/documentos-asociados-form';
+import { DocumentoAsociado } from 'src/app/models/documento-asociado';
 
 @Component({
   selector: 'app-legalizacion',
@@ -56,6 +58,7 @@ export class Legalizacion implements OnInit {
   isLoading = false;
   isLoadingAprobacion = false;
   isLoadingLegalizaciones = false;
+  isLoadingDocumentos = false;
   isSavingAprobacion = false;
   isLinear = false;
   guidViaje = '';
@@ -89,7 +92,7 @@ export class Legalizacion implements OnInit {
     'retention',
     'amount_paid',
     'observations',
-    'acciones'
+    'acciones',
   ];
   displayedColumnsAprobacion: string[] = [
     'rol',
@@ -101,6 +104,7 @@ export class Legalizacion implements OnInit {
   ];
 
   dataSourceLegalizaciones = new MatTableDataSource<TravelLegalization>([]);
+  dataSourceDocumentos = new MatTableDataSource<DocumentoAsociado>([]);
   historialAprobacion: SolicitudAprobacionHistorial[] = [];
   accionesAprobacion: AccionesSolicitudAprobacion = {};
 
@@ -136,6 +140,10 @@ export class Legalizacion implements OnInit {
 
   get hasLegalizaciones(): boolean {
     return this.dataSourceLegalizaciones.data.length > 0;
+  }
+
+  get hasDocumentos(): boolean {
+    return this.dataSourceDocumentos.data.length > 0;
   }
 
   get totalSubtotalLegalizaciones(): number {
@@ -233,7 +241,52 @@ export class Legalizacion implements OnInit {
     });
   }
 
-  // --- GESTIÓN DE APROBACIÓN (STEP 5) ---
+  // --- GESTIÓN DE DOCUMENTOS ASOCIADOS (STEP 5) ---
+
+  displayedColumnsDocumentos: string[] = ['tipo_documento', 'nombre_archivo', 'observaciones'];
+
+  cargarDocumentosAsociados(): void {
+    if (!this.guidViaje) return;
+    this.isLoadingDocumentos = true;
+    this.service.getDocumentosAsociados(this.guidViaje).subscribe({
+      next: docs => {
+        this.isLoadingDocumentos = false;
+        this.dataSourceDocumentos = new MatTableDataSource<DocumentoAsociado>(docs);
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoadingDocumentos = false;
+        this.dataSourceDocumentos = new MatTableDataSource<DocumentoAsociado>([]);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  abrirModalDocumentos(): void {
+    if (!this.guidViaje) return;
+    const drawerRef = this.drawer.open(DocumentosAsociadosForm, {
+      position: 'right',
+      width: '45%',
+    });
+    drawerRef.instance.guidViaje = this.guidViaje;
+    drawerRef.instance.documentoAgregado$.subscribe(() => {
+      this.cargarDocumentosAsociados();
+    });
+  }
+
+  descargarDocumentoAsociado(doc: DocumentoAsociado): void {
+    if (doc.id) {
+      this.service.descargarArchivoAsociado(this.guidViaje, doc.id);
+    }
+  }
+
+  getNombreTipoDocumento(id?: number): string {
+    if (id === 1) return 'Factura';
+    if (id === 2) return 'Documento Relacionado';
+    return 'Otro';
+  }
+
+  // --- GESTIÓN DE APROBACIÓN (STEP 6) ---
 
   abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
     const titulo = tipoAccion === 'APROBAR' ? 'Aprobar solicitud' : 'Solicitar ajustes';
@@ -300,6 +353,7 @@ export class Legalizacion implements OnInit {
           this.getHistorialAprobacion(this.viajeData.id_viaje);
           this.cargarLegalizaciones();
         }
+        this.cargarDocumentosAsociados();
         this.getValidacionAccionesAprobacion();
         this.isLoading = false;
       },

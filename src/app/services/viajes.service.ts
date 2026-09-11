@@ -162,4 +162,17 @@ export class ViajesService {
       payload
     );
   }
+
+  getDocumentosAsociados(guid: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${guid}/documentos_asociados`);
+  }
+
+  subirDocumentoAsociado(guid: string, payload: any): Observable<ResponseRequest> {
+    return this.http.post<ResponseRequest>(`${this.apiUrl}/${guid}/documento_asociado`, payload);
+  }
+
+  descargarArchivoAsociado(guid: string, attachmentId: number): void {
+    const url = `${this.apiUrl}/${guid}/archivo/${attachmentId}`;
+    window.open(url, '_blank');
+  }
 }
