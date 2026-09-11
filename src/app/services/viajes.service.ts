@@ -153,7 +153,7 @@ export class ViajesService {
   }
 
   guardarLegalizacion(payload: any): Observable<ResponseRequest> {
-    return this.http.post<ResponseRequest>(`${this.apiUrl}/legalizaciones/Legalizacion`, payload);
+    return this.http.post<ResponseRequest>(`${this.apiUrl}/${payload.guid}/legalizacion`, payload);
   }
 
   actualizarLegalizacion(legalizationId: number, payload: any): Observable<ResponseRequest> {

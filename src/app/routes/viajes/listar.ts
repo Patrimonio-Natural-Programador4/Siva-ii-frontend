@@ -247,21 +247,9 @@ export class ListarViajes implements OnInit, AfterViewInit {
   }
 
   aplicaLegalizacion(element: any): boolean {
-    const estado = element?.estado
-      ? element.estado
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .trim()
-      : '';
     return (
-      estado === 'pendiente de legalizacion' ||
-      estado === 'en proceso de legalizacion' ||
-      estado === 'legalizacion aprobada' ||
-      estado === 'legalizacion en proceso de aprobacion' ||
       element?.id_estado === 4 ||
-      element?.id_estado === 5 ||
-      element?.id_estado === 7
+      element?.id_estado === 6 
     );
   }
 }

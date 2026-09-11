@@ -7,6 +7,7 @@ import { environment } from '@env/environment';
 import { Usuarios } from '../models/usuarios';
 import { ResponseRequest } from '../models/response-request';
 import { Programs } from '../models/programs';
+import { Menu } from '../models/menu';
 import { Listados } from '../models/listados';
 
 @Injectable({
@@ -31,9 +32,9 @@ export class UsuariosService {
   //   validarAcceso(): Observable<ResponseRequest> {
   //     return this.http.get<ResponseRequest>(`${this.apiUrl}/validar_acceso`);
   //   }
-  //   getMenu(): Observable<Menu[]> {
-  //     return this.http.get<Menu[]>(`${this.apiUrl}/menu`);
-  //   }
+  getMenu(): Observable<Menu[]> {
+    return this.http.get<Menu[]>(`${this.apiUrl}/menu`);
+  }
   crearUsuario(usuario: Usuarios): Observable<any> {
     return this.http.post<any>(this.apiUrl, usuario);
   }
