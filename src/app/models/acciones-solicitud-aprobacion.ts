@@ -5,6 +5,8 @@ import {
 
 import { Viajes } from './viajes';
 
+import { PreviousStudiesCreateModel } from './estudios-previos';
+
 export interface UsuarioDisponibleAjuste {
   id_rol_aprobacion_ajuste?: number;
   usuario?: string;
@@ -17,6 +19,7 @@ export interface AccionesSolicitudAprobacion {
   tipo_accion?: string;
   viaje?: Viajes;
   evaluacion_capacidades?: EvaluacionCapacidadesModel;
+  estudio_previo?: PreviousStudiesCreateModel;
   tipo_solicitud?: string;
   asigna_presupuesto_viajes?: boolean;
   ajusta_itinerario_viajes?: boolean;

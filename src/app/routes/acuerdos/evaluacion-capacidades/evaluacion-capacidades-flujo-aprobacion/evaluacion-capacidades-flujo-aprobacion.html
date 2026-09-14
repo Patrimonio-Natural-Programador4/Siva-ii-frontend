@@ -6,7 +6,8 @@
       <mat-card-header
         class="app-data-card__header d-flex justify-content-between align-items-center"
         style="flex-direction: row;">
-        <mat-card-title>Evaluación de capacidades - Detalle</mat-card-title>
+        <mat-card-title><strong> Evaluación de capacidades : {{ evaluacion.name
+            }}</strong></mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -75,30 +76,11 @@
                 <div class="cell_a info_a" style="flex: 3">{{ evaluacion.person || '--' }}</div>
               </div>
               <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">Fecha de aprobación de política</div>
+                <div class="cell_a info_b" style="flex: 1">Fecha de aprobación de evaluación</div>
                 <div class="cell_a info_a" style="flex: 3">{{ evaluacion.policy_approval_date |
                   date: 'yyyy-MM-dd' }}</div>
               </div>
-              <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">Fecha de firma del documento</div>
-                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.document_signature_date |
-                  date: 'yyyy-MM-dd' }}</div>
-              </div>
-              <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">Fecha de inicio</div>
-                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.start_date | date:
-                  'yyyy-MM-dd' }}</div>
-              </div>
-              <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">Fecha de fin</div>
-                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.end_date | date:
-                  'yyyy-MM-dd' }}</div>
-              </div>
-              <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">Fecha de creación</div>
-                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.create_date | date:
-                  'yyyy-MM-dd HH:mm' }}</div>
-              </div>
+
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Estado de la solicitud</div>
                 <div class="cell_a info_a" style="flex: 3">{{ evaluacion.capacity_assessments_state

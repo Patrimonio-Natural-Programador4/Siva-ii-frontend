@@ -48,6 +48,16 @@ export const routes: Routes = [
       },
 
       {
+        path: 'estudios-previos/:guid',
+        loadComponent: () =>
+          import('./estudios-previos/estudios-previos-especifico/estudios-previos-especifico').then(
+            m => m.EstudiosPreviosEspecifico
+          ),
+        data: {
+          title: 'Estudios previos ',
+        },
+      },
+      {
         path: 'evaluacion-capacidades',
         loadComponent: () =>
           import('./evaluacion-capacidades/evaluacion-capacidades-tabla/evaluacion-capacidades-tabla').then(

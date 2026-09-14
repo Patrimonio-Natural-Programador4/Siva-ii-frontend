@@ -27,6 +27,7 @@ export class EstudiosPreviosService {
 
   saveEstPrevios(evCap: PreviousStudiesModel): Observable<ResponseRequest> {
     try {
+      console.log('evaluacion', evCap);
       return this.http.post<ResponseRequest>(this.apiUrl, evCap);
     } catch (error) {
       console.log('Error en saveTipoDocAcuerdos', error);

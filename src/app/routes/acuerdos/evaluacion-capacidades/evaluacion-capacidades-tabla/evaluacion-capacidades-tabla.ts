@@ -57,7 +57,24 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   private readonly ProgramsService = inject(ProgramsService);
   readonly paginator = viewChild(MatPaginator);
   readonly evCapacidadesTable = new MatTableDataSource<EvaluacionCapacidadesModel>([]);
-  columnas = ['posicion', 'nombre', 'codigo', 'implementador', 'acciones'];
+  columnas = [
+    'posicion',
+    'nombre',
+    'codigo',
+    'observacion',
+    'valor_aproximado',
+    'programa',
+    'pid',
+    'implementador',
+    'persona',
+    'fecha_aprobacion_politica',
+    'fecha_firma_documento',
+    'fecha_inicio',
+    'fecha_fin',
+    'modalidad',
+    'estado',
+    'acciones',
+  ];
   readonly pageSizeOptions = [20];
   evaluaciones: EvaluacionCapacidadListSP[] = [];
   total = 0;
@@ -101,6 +118,11 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   }
   getRowClass(row: EvaluacionCapacidadListSP): string {
     return row.pending_my_approval ? 'pendiente' : '';
+  }
+
+  getEstadoNombre(id?: number): string {
+    const estado = this.statesEvaCap.find(e => e.id === id);
+    return estado?.state ?? '';
   }
   crear(): void {
     this.router.navigate(['acuerdos/evaluacion-capacidades/crear']);
@@ -162,5 +184,13 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
       },
       error: e => console.error(e),
     });
+  }
+
+  crearEstudioPrevio(guid: string): void {
+    const estudio = this.evaluaciones.find(e => e.guid === guid);
+    if (!estudio) {
+      return;
+    }
+    this.router.navigate(['/acuerdos/estudios-previos', guid]);
   }
 }

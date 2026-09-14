@@ -43,6 +43,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
+  private readonly urlActual = this.router.url;
   isLinear = false;
   isLoadingAprobacion = false;
   isSavingAprobacion = false;
@@ -153,6 +154,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   }
   abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
     const titulo = tipoAccion === 'APROBAR' ? 'Aprobar evaluación' : 'Solicitar ajustes';
+
     const dialogRef = this.dialog.open(AccionAprobacion, {
       width: '520px',
       disableClose: true,
@@ -172,6 +174,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   }
   private ejecutarAccion(tipoAccion: string): void {
     this.isLoading = true;
+    console.log('ejecutar', this.urlActual);
     // const payload = {
     //   id_solicitud_aprobacion: this.accionesAprobacion.id_solicitud_aprobacion,
     //   comentarios: this.accionesAprobacion.comentarios,
@@ -191,7 +194,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
-          this.router.navigate(['/evaluaciones-capacidad/listar']);
+          this.router.navigateByUrl(this.urlActual);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
             duration: 3000,

@@ -1,0 +1,380 @@
+<page-header />
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header
+        class="app-data-card__header d-flex justify-content-between align-items-center"
+        style="flex-direction: row;">
+        <mat-card-title><strong> Evaluación de capacidades : {{ evaluacion.name
+            }}</strong></mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="loading-box" *ngIf="isLoading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Cargando información de la evaluación...</span>
+        </div>
+
+        <div *ngIf="!isLoading && !evaluacion.guid" class="empty-state">
+          <p>No se encontró información para esta evaluación.</p>
+          <button mat-raised-button color="primary" (click)="volver()">Volver al listado</button>
+        </div>
+
+        <mat-vertical-stepper *ngIf="!isLoading && evaluacion.guid" orientation="vertical"
+          [linear]="isLinear">
+
+          // info generak
+
+          <mat-step>
+            <ng-template matStepLabel>Información general</ng-template>
+
+            <div class="table_a mt-3">
+              <div class="row_a header_a">
+                <div class="cell_a" style="flex: 1">Campo</div>
+                <div class="cell_a" style="flex: 3">Detalle</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Nombre</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.name || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Código</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.codigo || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Implementador</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.implementer || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Observación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.observation || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor aproximado</div>
+                <div class="cell_a info_a" style="flex: 3">
+                  {{ evaluacion.approximate_value || 0 | currency: 'COP':'symbol':'1.0-0' }}
+                </div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Programa</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.programa || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">PID</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.pid || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Modalidad</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.modalitie || '--' }}</div>
+              </div>
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Persona</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.person || '--' }}</div>
+              </div>
+
+
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Estado de la solicitud</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.capacity_assessments_state
+                  || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha de aprobación de evaluación</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.policy_approval_date|
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha firma de documento</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.document_signature_date|
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha final</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.end_date|
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Fecha inicial</div>
+                <div class="cell_a info_a" style="flex: 3">{{ evaluacion.start_date|
+                  date: 'yyyy-MM-dd' }}</div>
+              </div>
+
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
+          <!-- Crear estudio previo -->
+
+          <mat-step>
+            <ng-template matStepLabel>Crear estudio previo</ng-template>
+
+            <mat-card-header class="app-data-card__header pb-2">
+              <mat-card-title>{{ accion }} Estudios Previos</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content class="pt-3">
+              <form novalidate #fEvaluacion="ngForm" class="programs-form">
+
+                <!-- ==================== SECCIÓN 1: INFORMACIÓN GENERAL ==================== -->
+                <div class="row g-3 mb-4 form-section">
+                  <div class="col-12">
+                    <h6 class="form-section__title">
+                      <span class="section-icon-badge"><i class="bi bi-info-circle"></i></span>
+                      Información General
+                    </h6>
+                  </div>
+
+                  <!-- Antecedentes -->
+                  <div class="col-md-6">
+                    <label for="precedents" class="form-label fw-bold">Antecedentes <span
+                        class="text-danger">*</span></label>
+                    <textarea id="precedents" name="precedents" class="form-control" rows="2"
+                      placeholder="Ingresa los antecedentes" required
+                      [(ngModel)]="estuPreviosData.precedents" maxlength="500" #precedents="ngModel"
+                      [class.is-invalid]="precedents.invalid && (precedents.dirty || precedents.touched)"></textarea>
+                    @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Justificación -->
+                  <div class="col-md-6">
+                    <label for="justification" class="form-label fw-bold">Justificación <span
+                        class="text-danger">*</span></label>
+                    <textarea id="justification" name="justification" class="form-control" rows="2"
+                      placeholder="Ingresa la justificación" required
+                      [(ngModel)]="estuPreviosData.justification" maxlength="500"
+                      #justification="ngModel"
+                      [class.is-invalid]="justification.invalid && (justification.dirty || justification.touched)"></textarea>
+                    @if (justification.invalid && (justification.dirty || justification.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Alcance -->
+                  <div class="col-md-6">
+                    <label for="scope" class="form-label fw-bold">Alcance <span
+                        class="text-danger">*</span></label>
+                    <textarea id="scope" name="scope" class="form-control" rows="2"
+                      placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
+                      maxlength="500" #scope="ngModel"
+                      [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"></textarea>
+                    @if (scope.invalid && (scope.dirty || scope.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Objetivo General -->
+                  <div class="col-md-6">
+                    <label for="overall_objective" class="form-label fw-bold">Objetivo general <span
+                        class="text-danger">*</span></label>
+                    <textarea id="overall_objective" name="overall_objective" class="form-control"
+                      rows="2" placeholder="Ingresa el objetivo general" required
+                      [(ngModel)]="estuPreviosData.overall_objective" maxlength="500"
+                      #overall_objective="ngModel"
+                      [class.is-invalid]="overall_objective.invalid && (overall_objective.dirty || overall_objective.touched)"></textarea>
+                    @if (overall_objective.invalid && (overall_objective.dirty ||
+                    overall_objective.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+
+
+                  <!-- Obligaciones -->
+                  <div class="col-md-6">
+                    <label for="obligations" class="form-label fw-bold">Obligaciones <span
+                        class="text-danger">*</span></label>
+                    <textarea id="obligations" name="obligations" class="form-control" rows="2"
+                      placeholder="Ingresa las obligaciones" required
+                      [(ngModel)]="estuPreviosData.obligations" maxlength="500"
+                      #obligations="ngModel"
+                      [class.is-invalid]="obligations.invalid && (obligations.dirty || obligations.touched)"></textarea>
+                    @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Funciones del Supervisor -->
+                  <div class="col-md-6">
+                    <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
+                        class="text-danger">*</span></label>
+                    <textarea id="supervisor" name="supervisor" class="form-control" rows="2"
+                      placeholder="Ingresa las funciones del supervisor" required
+                      [(ngModel)]="estuPreviosData.supervisor" maxlength="500" #supervisor="ngModel"
+                      [class.is-invalid]="supervisor.invalid && (supervisor.dirty || supervisor.touched)"></textarea>
+                    @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Plazo -->
+                  <div class="col-md-6">
+                    <label for="term" class="form-label fw-bold">Plazo <span
+                        class="text-danger">*</span></label>
+                    <input id="term" name="term" type="text" class="form-control"
+                      placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
+                      maxlength="255" #term="ngModel"
+                      [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
+                    @if (term.invalid && (term.dirty || term.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+
+                  <!-- Plazo Estimado -->
+                  <div class="col-md-6">
+                    <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
+                        class="text-danger">*</span></label>
+                    <input id="estimated_term" name="estimated_term" type="text"
+                      class="form-control" placeholder="Ej. 60 días calendario" required
+                      [(ngModel)]="estuPreviosData.estimated_term" maxlength="255"
+                      #estimated_term="ngModel"
+                      [class.is-invalid]="estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)" />
+                    @if (estimated_term.invalid && (estimated_term.dirty || estimated_term.touched))
+                    {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    }
+                  </div>
+                </div>
+
+                <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
+                <div class="row g-3 mb-4 form-section">
+                  <div class="col-12">
+                    <h6 class="form-section__title">
+                      <span class="section-icon-badge"><i class="bi bi-cash-stack"></i></span>
+                      Aspectos Financieros
+                    </h6>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="total_value" class="form-label fw-bold">Valor total</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input id="total_value" name="total_value" type="number" class="form-control"
+                        placeholder="0.00" min="0" [(ngModel)]="estuPreviosData.total_value" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="contributions_ei" class="form-label fw-bold">Aportes EI</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input id="contributions_ei" name="contributions_ei" type="number"
+                        class="form-control" placeholder="0.00" min="0"
+                        [(ngModel)]="estuPreviosData.contributions_ei" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="contributions_fpn" class="form-label fw-bold">Aportes FPN</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input id="contributions_fpn" name="contributions_fpn" type="number"
+                        class="form-control" placeholder="0.00" min="0"
+                        [(ngModel)]="estuPreviosData.contributions_fpn" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="total_value_executes_fpn" class="form-label fw-bold">Valor total que
+                      ejecuta FPN</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input id="total_value_executes_fpn" name="total_value_executes_fpn"
+                        type="number" class="form-control" placeholder="0.00" min="0"
+                        [(ngModel)]="estuPreviosData.total_value_executes_fpn" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="total_value_executes_ei" class="form-label fw-bold">Valor total que
+                      ejecuta EI</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input id="total_value_executes_ei" name="total_value_executes_ei"
+                        type="number" class="form-control" placeholder="0.00" min="0"
+                        [(ngModel)]="estuPreviosData.total_value_executes_ei" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ==================== SECCIÓN 3: ASIGNACIÓN Y RELACIONES ==================== -->
+                <div class="row g-3 mb-2 form-section">
+                  <div class="col-12">
+                    <h6 class="form-section__title">
+                      <span class="section-icon-badge"><i class="bi bi-diagram-3"></i></span>
+                      Asignación y Clasificación
+                    </h6>
+                  </div>
+
+                  <!-- Líder del Pilar -->
+                  <div class="col-md-6">
+                    <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
+                    <select id="persons_id" name="persons_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.persons_id">
+                      <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
+                      @for (person of persons; track person.id || $index) {
+                      <option [value]="person.id" class="text-capitalize">
+                        {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
+                        }}{{
+                        person.last_name || '' }}
+                      </option>
+                      }
+                    </select>
+                  </div>
+
+                </div>
+
+              </form>
+            </mat-card-content>
+
+            <!-- Botones de Acción -->
+            <mat-card-actions align="end" class="p-3 bg-light border-top mt-3">
+              <div class="step-actions between w-100">
+                <button mat-stroked-button matStepperPrevious>
+                  <i class="bi bi-arrow-left me-1"></i> Atrás
+                </button>
+
+                <div class="end-actions">
+                  <button mat-stroked-button type="button" (click)="volver()">
+                    Volver al listado
+                  </button>
+                  <button mat-stroked-button type="button" (click)="volver()">
+                    Cancelar
+                  </button>
+                  <button mat-flat-button color="primary" type="button"
+                    (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid">
+                    @if (isLoading) {
+                    <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>
+                    Guardando...
+                    } @else {
+                    <i class="bi bi-check2-circle me-1"></i> Guardar
+                    }
+                  </button>
+                </div>
+              </div>
+            </mat-card-actions>
+
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
