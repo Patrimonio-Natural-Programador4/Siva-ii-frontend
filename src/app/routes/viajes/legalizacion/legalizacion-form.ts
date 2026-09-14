@@ -227,7 +227,7 @@ export class LegalizacionForm implements OnInit {
         },
       });
     } else {
-      this.viajesService.guardarLegalizacion(payload).subscribe({
+      this.viajesService.guardarFactura(payload).subscribe({
         next: res => {
           this.isSaving = false;
           this.snackBar.open('Legalización guardada correctamente', 'Cerrar', { duration: 3000 });

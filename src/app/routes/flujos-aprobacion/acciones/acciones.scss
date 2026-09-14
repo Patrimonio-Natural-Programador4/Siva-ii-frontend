@@ -102,36 +102,8 @@ textarea.form-control {
   width: 100%;
 }
 
-.drag-handle-cell {
-  width: 40px;
-  cursor: default;
-}
-
-.drag-handle-icon {
-  vertical-align: middle;
-  color: rgba(0, 0, 0, 0.38);
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-.dnd-row {
-  &.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-
-.cdk-drop-list-dragging .dnd-row:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.dnd-placeholder {
-  height: 48px;
-  background: #e3f2fd;
-  border: 2px dashed #90caf9;
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+.route-order-input {
+  width: 5rem;
 }
 
 mat-card-actions {

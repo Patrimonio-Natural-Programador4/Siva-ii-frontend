@@ -10,7 +10,7 @@ export class FlujosAprobacion {
   id_categoria?: number;
   id_programa?: number | null;
   programa?: string | null;
-
+  es_aprobacion_paralela?: boolean;
   constructor(data?: Partial<FlujosAprobacion>) {
     this.rutas = [];
     Object.assign(this, data);

@@ -1,11 +1,13 @@
-<div class="drawer-header">
-  <h2 class="drawer-title m-0">Agregar Documento Asociado</h2>
-  <button mat-icon-button (click)="cerrar()">
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
+<div class="drawer-container">
+  <div class="drawer-header">
+    <h2 class="d-flex align-items-center justify-content-between m-t-0 f-w-400 m-b-0">Agregar Documento Asociado
+      <button mat-icon-button (click)="cerrar()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+  </div>
 
-<div class="drawer-body p-3">
+  <div class="drawer-content position-relative">
   <form [formGroup]="form" (ngSubmit)="guardar()">
     <div class="row">
       <div class="col-sm-12">
@@ -51,13 +53,13 @@
       </div>
     </div>
   </form>
-</div>
-
-<div class="drawer-footer d-flex justify-content-end p-3 border-top">
-  <button mat-stroked-button color="warn" (click)="cerrar()" class="me-2" [disabled]="isSaving">
-    Cancelar
-  </button>
-  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="isSaving">
-    {{ isSaving ? 'Guardando...' : 'Guardar' }}
-  </button>
+  </div>
+  <div class="drawer-footer d-flex justify-content-end p-3 border-top">
+      <button mat-stroked-button color="warn" (click)="cerrar()" class="me-2" [disabled]="isSaving">
+        Cancelar
+      </button>
+      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="isSaving">
+        {{ isSaving ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map } from 'rxjs';
+import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs';
 
 import { Menu as CoreMenu } from '@core';
 import { Menu as ApiMenu } from '../../models/menu';
@@ -14,12 +14,15 @@ export class LoginService {
   private readonly routeAliases = new Map([
     ['flujos-de-aprobacion', 'flujos-aprobacion'],
   ]);
+  private menuCache$?: Observable<CoreMenu[]>;
 
   protected readonly http = inject(HttpClient);
   private readonly usuariosService = inject(UsuariosService);
 
   login(username: string, password: string, rememberMe = false) {
-    return this.http.post<Token>('/auth/login', { username, password, rememberMe });
+    return this.http
+      .post<Token>('/auth/login', { username, password, rememberMe })
+      .pipe(tap(() => this.clearMenuCache()));
   }
 
   refresh(params: Record<string, any>) {
@@ -27,7 +30,7 @@ export class LoginService {
   }
 
   logout() {
-    return this.http.post<any>('/auth/logout', {});
+    return this.http.post<any>('/auth/logout', {}).pipe(tap(() => this.clearMenuCache()));
   }
 
   user() {
@@ -35,7 +38,20 @@ export class LoginService {
   }
 
   menu() {
-    return this.usuariosService.getMenu().pipe(map(menu => this.buildMenu(menu)));
+    this.menuCache$ ??= this.usuariosService.getMenu().pipe(
+      map(menu => this.buildMenu(menu)),
+      catchError(error => {
+        this.clearMenuCache();
+        return throwError(() => error);
+      }),
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    return this.menuCache$;
+  }
+
+  clearMenuCache(): void {
+    this.menuCache$ = undefined;
   }
 
   private buildMenu(rows: ApiMenu[]): CoreMenu[] {
