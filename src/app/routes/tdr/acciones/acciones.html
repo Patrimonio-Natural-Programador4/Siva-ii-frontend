@@ -1,0 +1,108 @@
+<page-header />
+<div class="row">
+    <div class="col-sm-12">
+        <mat-card class="app-data-card">
+            <mat-card-header class="app-data-card__header">
+                <mat-card-title>TDR - Nuevo</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-vertical-stepper orientation="vertical" [linear]="isLinear">
+                    <mat-step [stepControl]="fGeneral.control">
+                        <form novalidate #fGeneral="ngForm" class="roles-step-form">
+                            <ng-template matStepLabel>Información del flujo de aprobación</ng-template>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="id_programa" class="form-label">Programa*</label>
+                                    <select id="id_programa" class="form-select" #programa="ngModel"
+                                        (change)="cargarFlujo();"
+                                        required [(ngModel)]="tdrData.program_id" name="program_id">
+                                        <option [ngValue]="null" [disabled]="true">Seleccione el programa</option>
+                                        @for (data of listados[0]?.lista_generica ?? []; track
+                                        data.identity) {
+                                        <option [ngValue]="data.identity">{{ data.valor }}</option>
+                                        }
+                                    </select>
+                                    @if (programa.invalid && (programa.dirty ||
+                                    programa.touched)) {
+                                    <div class="invalid-feedback d-block">
+                                        <span class="text-danger">Este campo es requerido.</span>
+                                    </div>
+                                    }
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="approval_flow_id" class="form-label">Tipo de solicitud*</label>
+                                    <select id="approval_flow_id" class="form-select" #approvalFlow="ngModel"
+                                        (change)="obtenerCamposTdr();"
+                                        required [(ngModel)]="tdrData.approval_flow_id" name="approval_flow_id">
+                                        <option [ngValue]="null" [disabled]="true">Seleccione el flujo de aprobación</option>
+                                        @for (data of flujos; track data.identity) {
+                                        <option [ngValue]="data.identity">{{ data.valor }}</option>
+                                        }
+                                    </select>
+                                    @if (approvalFlow.invalid && (approvalFlow.dirty ||
+                                    approvalFlow.touched)) {
+                                    <div class="invalid-feedback d-block">
+                                        <span class="text-danger">Este campo es requerido.</span>
+                                    </div>
+                                    }
+                                </div>
+                                <div class="col-md-12 mb-12">
+                                    <label for="description" class="form-label">Observaciones / Descripción*</label>
+                                    <textarea id="description" class="form-control" rows="3" required
+                                        #description="ngModel" placeholder="Observaciones / Descripción"
+                                        [(ngModel)]="tdrData.description" name="description"
+                                        [class.is-invalid]="description.invalid && (description.dirty || description.touched)"
+                                        maxlength="255"></textarea>
+                                    @if (description.invalid && (description.dirty || description.touched)) {
+                                    <div class="invalid-feedback d-block">
+                                        <span class="text-danger">Este campo es requerido.</span>
+                                    </div>
+                                    }
+
+                                </div>
+                            </div>
+                            
+
+
+                            <div class="step-actions">
+                                <button mat-flat-button color="primary" type="button" matStepperNext
+                                    [disabled]="!fGeneral.valid">
+                                    Continuar
+                                </button>
+                            </div>
+                        </form>
+                    </mat-step>
+
+                    <mat-step [stepControl]="dynamicFormGroup">
+                        <form [formGroup]="dynamicFormGroup" class="roles-step-form">
+                            <ng-template matStepLabel>Información de los TDR</ng-template>
+
+                            <formly-form [form]="dynamicFormGroup" [fields]="dynamicFormFields"
+                                [model]="dynamicFormModel"></formly-form>
+
+                            <div class="step-actions">
+                                <button mat-flat-button color="primary" type="button"
+                                    [disabled]="dynamicFormGroup.invalid" (click)="previsualizar()">
+                                    Previsualizar
+                                </button>
+                            </div>
+                        </form>
+                    </mat-step>
+                </mat-vertical-stepper>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+                <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+                <button mat-flat-button color="primary" type="button" (click)="guardarTdr()"
+                    [disabled]="isLoading">
+                    @if (isLoading) {
+                    <mat-spinner diameter="18" />
+                    } @else {
+                    Guardar
+                    }
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

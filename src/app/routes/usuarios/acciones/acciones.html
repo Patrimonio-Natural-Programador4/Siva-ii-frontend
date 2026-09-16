@@ -81,23 +81,20 @@
                   />
                 </div>
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                   <label for="identification_type" class="form-label">Tipo identificación*</label>
-                  <input
-                    id="identification_type"
-                    type="number"
-                    class="form-control"
-                    required
-                    placeholder="Tipo identificación"
-                    [(ngModel)]="usuarioData.identification_type"
-                    name="identification_type"
-                    #identificationType="ngModel"
-                    [class.is-invalid]="identificationType.invalid && (identificationType.dirty || identificationType.touched)"
-                  />
+                  <select id="identification_type" class="form-select" #identificationType="ngModel"
+                    required [(ngModel)]="usuarioData.identification_type"
+                    name="identification_type">
+                    <option [ngValue]="null" [disabled]="true">Seleccione el tipo de identificación</option>
+                    @for (data of listados[2]?.lista_generica ?? []; track data.identity) {
+                    <option [ngValue]="data.identity">{{ data.valor }}</option>
+                    }
+                  </select>
                   @if (identificationType.invalid && (identificationType.dirty || identificationType.touched)) {
-                    <div class="invalid-feedback d-block">
-                      <span class="text-danger">Este campo es requerido.</span>
-                    </div>
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
                   }
                 </div>
 
@@ -198,13 +195,13 @@
               </div>
 
               <div class="usuarios-selection-grid">
-                @for (programa of programasCatalogo; track programa.id_programa) {
+                @for (programa of listados[0]?.lista_generica ?? []; track programa.identity) {
                   <mat-checkbox
-                    [checked]="isProgramaSeleccionado(programa.id_programa)"
-                    (change)="onProgramaChange(programa.id_programa!, $event)"
+                    [checked]="isProgramaSeleccionado(programa.identity)"
+                    (change)="onProgramaChange(programa.identity!, $event)"
                     color="primary"
                   >
-                    {{ programa.name }}
+                    {{ programa.valor }}
                   </mat-checkbox>
                 }
               </div>
@@ -226,7 +223,6 @@
                   <select
                     id="id_rol"
                     class="form-select"
-                    required
                     [(ngModel)]="idRolSeleccionado"
                     name="id_rol"
                     #idRol="ngModel"
@@ -284,6 +280,76 @@
               <div class="usuarios-role-hint">
                 Los roles se guardan en model_has_roles usando model_id = id del usuario.
               </div> -->
+
+              <div class="usuarios-step-actions">
+                <button mat-stroked-button type="button" matStepperPrevious>Volver</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext>Continuar</button>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="fDelegados.control">
+            <form novalidate #fDelegados="ngForm" class="usuarios-step-form">
+              <ng-template matStepLabel>Delegados</ng-template>
+
+              <div class="mb-3">
+                <p>Seleccione los usuarios que podrán actuar como delegados de este responsable.</p>
+              </div>
+
+              <div class="usuarios-roles-add">
+                <div class="usuarios-roles-add__field">
+                  <label for="id_delegado" class="form-label">Delegado</label>
+                  <select
+                    id="id_delegado"
+                    class="form-select"
+                    [(ngModel)]="idDelegadoSeleccionado"
+                    name="id_delegado"
+                    #idDelegado="ngModel"
+                    [class.is-invalid]="idDelegado.invalid && (idDelegado.dirty || idDelegado.touched)"
+                  >
+                    <option [ngValue]="null" disabled>Seleccione el delegado</option>
+                    @for (delegado of delegadosDisponibles; track delegado.identity) {
+                      <option [ngValue]="delegado.identity">{{ delegado.valor }}</option>
+                    }
+                  </select>
+                  @if (idDelegado.invalid && (idDelegado.dirty || idDelegado.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <span class="text-danger">Seleccione un delegado.</span>
+                    </div>
+                  }
+                </div>
+
+                <button mat-flat-button color="primary" class="mt-4" type="button" (click)="asignarDelegado()" [disabled]="!idDelegadoSeleccionado">
+                  <mat-icon>add</mat-icon>
+                  Agregar delegado
+                </button>
+              </div>
+
+              <div class="app-data-table-wrapper">
+                <table mat-table [dataSource]="delegadosAsignados" class="app-data-table mat-elevation-z1">
+                  <ng-container matColumnDef="numero">
+                    <th mat-header-cell *matHeaderCellDef>No.</th>
+                    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="delegado">
+                    <th mat-header-cell *matHeaderCellDef>Delegado</th>
+                    <td mat-cell *matCellDef="let element">{{ element.valor }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button type="button" (click)="eliminarDelegado(element.identity)">
+                        <mat-icon class="mat-icon-danger">delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="columnasDelegados"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnasDelegados"></tr>
+                </table>
+              </div>
 
               <div class="usuarios-step-actions">
                 <button mat-stroked-button type="button" matStepperPrevious>Volver</button>

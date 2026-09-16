@@ -13,7 +13,8 @@
     "viajes": "Viajes",
     "Acuerdos": "Acuerdos",
     "Acuerdos.Evaluación-capacidades": "Evaluación capacidades",
-     "Acuerdos.Estudios-previos": "Estudios previos"
+    "Acuerdos.Estudios-previos": "Estudios previos",
+    "tdr": "TDR"
   },
   "paginator": {
     "items_per_page_label": "Items per page:",

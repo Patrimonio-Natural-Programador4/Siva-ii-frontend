@@ -114,6 +114,7 @@ export class AuthService implements OnDestroy {
 
   logout() {
     this.tokenService.clear();
+    this.loginService.clearMenuCache();
     this.user$.next({});
 
     if (!this.check()) {

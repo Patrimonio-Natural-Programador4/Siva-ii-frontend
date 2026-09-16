@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Listados } from 'src/app/models/listados';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -18,6 +19,7 @@ import { Usuarios } from 'src/app/models/usuarios';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { RolesService } from 'src/app/services/roles.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ListaGenerica } from 'src/app/models/lista-generica';
 
 @Component({
   selector: 'app-usuarios-acciones',
@@ -52,8 +54,10 @@ export class Acciones implements OnInit {
   asignarTodosProgramas = false;
   userGuid = '';
   idRolSeleccionado: number | null = null;
+  idDelegadoSeleccionado: number | null = null;
   readonly columnasRoles = ['numero', 'rol', 'descripcion', 'acciones'];
-
+  readonly columnasDelegados = ['numero', 'delegado', 'acciones'];
+  listados: Listados[] = [];
   usuarioData: Usuarios = new Usuarios({
     first_name: '',
     other_name: '',
@@ -66,6 +70,7 @@ export class Acciones implements OnInit {
     is_active: true,
     program_ids: [],
     role_ids: [],
+    delegados_ids: [],
   });
 
   programasCatalogo: Programs[] = [];
@@ -85,63 +90,78 @@ export class Acciones implements OnInit {
       // return;
       this.getUsuario();
     }
-    this.getProgramas();
+
+    this.getListados();
+    // this.getProgramas();
     this.getRoles();
 
+    //   forkJoin({
+    //     usuario: this.usuariosService.getUsuarioById(this.userGuid),
+    //     programas: this.programsService.getPrograms(),
+    //     roles: this.rolesService.getRoles(),
+    //   }).subscribe({
+    //     next: ({ usuario, programas, roles }) => {
+    //       this.usuarioData = new Usuarios({
+    //         ...usuario,
+    //         program_ids: usuario.program_ids ?? [],
+    //         role_ids: usuario.role_ids ?? [],
+    //       });
+    //       this.programasCatalogo = programas ?? [];
+    //       this.rolesCatalogo = roles ?? [];
+    //       this.sincronizarAsignarTodosProgramas();
+    //     },
+    //     error: () => {
+    //       this.snackBar.open('Error al cargar la información del usuario', '', { duration: 3000 });
+    //       this.volver();
+    //     },
+    //   });
+  }
 
-  //   forkJoin({
-  //     usuario: this.usuariosService.getUsuarioById(this.userGuid),
-  //     programas: this.programsService.getPrograms(),
-  //     roles: this.rolesService.getRoles(),
-  //   }).subscribe({
-  //     next: ({ usuario, programas, roles }) => {
-  //       this.usuarioData = new Usuarios({
-  //         ...usuario,
-  //         program_ids: usuario.program_ids ?? [],
-  //         role_ids: usuario.role_ids ?? [],
-  //       });
-  //       this.programasCatalogo = programas ?? [];
-  //       this.rolesCatalogo = roles ?? [];
-  //       this.sincronizarAsignarTodosProgramas();
-  //     },
-  //     error: () => {
-  //       this.snackBar.open('Error al cargar la información del usuario', '', { duration: 3000 });
-  //       this.volver();
-  //     },
-  //   });
+  getListados(): void {
+    this.usuariosService.getListados(this.userGuid || '').subscribe({
+      next: data => {
+        setTimeout(() => {
+          this.listados = data;
+        });
+      },
+      error: () => {
+        this.snackBar.open('No se pudieron cargar los listados', '', { duration: 3000 });
+      },
+    });
   }
 
   private getProgramas(): void {
     this.programsService.getPrograms().subscribe({
-      next: (programas) => {
+      next: programas => {
         this.programasCatalogo = programas ?? [];
         this.sincronizarAsignarTodosProgramas();
       },
       error: () => {
         this.snackBar.open('Error al cargar los programas', '', { duration: 3000 });
-      }
+      },
     });
   }
 
   private getRoles(): void {
     this.rolesService.getRoles().subscribe({
-      next: (roles) => {
+      next: roles => {
         this.rolesCatalogo = roles ?? [];
       },
       error: () => {
         this.snackBar.open('Error al cargar los roles', '', { duration: 3000 });
-      }
+      },
     });
   }
 
-   private getUsuario(): void {
+  private getUsuario(): void {
     this.isLoading = true;
     this.usuariosService.getUsuarioById(this.userGuid).subscribe({
-      next: (usuario) => {
+      next: usuario => {
         this.usuarioData = new Usuarios({
           ...usuario,
           program_ids: usuario.program_ids ?? [],
           role_ids: usuario.role_ids ?? [],
+          delegados_ids: usuario.delegados_ids ?? [],
         });
         this.isLoading = false;
       },
@@ -186,6 +206,39 @@ export class Acciones implements OnInit {
     return (this.usuarioData.program_ids ?? []).includes(idPrograma);
   }
 
+  get delegadosAsignados(): ListaGenerica[] {
+    const ids = new Set(this.usuarioData.delegados_ids ?? []);
+    const usuariosCatalogo = this.listados[3]?.lista_generica ?? [];
+    return usuariosCatalogo.filter(del => !!del.identity && ids.has(del.identity));
+  }
+
+  get delegadosDisponibles(): ListaGenerica[] {
+    const ids = new Set(this.usuarioData.delegados_ids ?? []);
+    const usuariosCatalogo = this.listados[3]?.lista_generica ?? [];
+    return usuariosCatalogo.filter(del => !!del.identity && !ids.has(del.identity));
+  }
+
+  asignarDelegado(): void {
+    if (!this.idDelegadoSeleccionado) {
+      return;
+    }
+
+    const ids = new Set(this.usuarioData.delegados_ids ?? []);
+    ids.add(this.idDelegadoSeleccionado);
+    this.usuarioData.delegados_ids = Array.from(ids);
+    this.idDelegadoSeleccionado = null;
+  }
+
+  eliminarDelegado(idDelegado: number | undefined): void {
+    if (!idDelegado) {
+      return;
+    }
+
+    this.usuarioData.delegados_ids = (this.usuarioData.delegados_ids ?? []).filter(
+      id => id !== idDelegado
+    );
+  }
+
   get rolesAsignados(): Roles[] {
     const ids = new Set(this.usuarioData.role_ids ?? []);
     return this.rolesCatalogo.filter(rol => !!rol.id_rol && ids.has(rol.id_rol));
@@ -216,7 +269,11 @@ export class Acciones implements OnInit {
   }
 
   guardarUsuario(): void {
-    if (this.usuarioData.email && this.usuarioData.email.trim().toLowerCase().endsWith('@fcds.org.co') && (this.usuarioData.id == 0 || this.usuarioData.id == null)) {
+    if (
+      this.usuarioData.email &&
+      this.usuarioData.email.trim().toLowerCase().endsWith('@fcds.org.co') &&
+      (this.usuarioData.id == 0 || this.usuarioData.id == null)
+    ) {
       // this.toastr.error('No se permiten correos asociados a la fundación', 'Error', {
       //   timeOut: 3000, positionClass: 'toast-top-center',
       // });
@@ -225,32 +282,35 @@ export class Acciones implements OnInit {
     }
 
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
-    this.usuarioData.is_guest = this.usuarioData.id == 0 || this.usuarioData.id == null ? true : this.usuarioData.is_guest;
+    this.usuarioData.is_guest =
+      this.usuarioData.id == 0 || this.usuarioData.id == null ? true : this.usuarioData.is_guest;
     const esNuevo = !this.usuarioData.guid;
     const request$ = esNuevo
       ? this.usuariosService.crearUsuario(this.usuarioData)
       : this.usuariosService.actualizarUsuario(this.userGuid, this.usuarioData);
 
     request$.subscribe({
-      next: (response) => {
+      next: response => {
         this.responseRequest = response;
         this.isLoading = false; //  Ocultar spinner
         if (this.responseRequest.solicitud_exitosa) {
-          const mensaje = esNuevo ? 'Usuario creado exitosamente' : 'Usuario actualizado correctamente';
+          const mensaje = esNuevo
+            ? 'Usuario creado exitosamente'
+            : 'Usuario actualizado correctamente';
           this.snackBar.open(mensaje, '', { duration: 3000 });
           this.router.navigate(['/usuarios/listar']);
         } else {
-          this.snackBar.open("Error al guardar el registro", '', { duration: 3000 });
+          this.snackBar.open('Error al guardar el registro', '', { duration: 3000 });
         }
       },
-      error: (error) => {
+      error: error => {
         console.error('Error en la solicitud:', error);
         this.isLoading = false; //  Ocultar spinner si hay error
         const mensajeError = esNuevo
           ? error?.error?.mensaje || 'Error al guardar el usuario'
           : error?.error?.mensaje || 'Error al actualizar el usuario';
         this.snackBar.open(mensajeError, '', { duration: 3000 });
-      }
+      },
     });
     // if (!this.userGuid) {
     //   return;

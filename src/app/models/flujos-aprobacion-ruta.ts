@@ -6,6 +6,10 @@ export class FlujosAprobacionRuta {
   activo?: boolean;
   rol?: string;
   descripcion?: string;
+  label_aprobacion?: string;
+  label_ajuste?: string;
+  asigna_revisor?: boolean;
+  label_pendiente?: string;
 
   constructor(data?: Partial<FlujosAprobacionRuta>) {
     Object.assign(this, data);

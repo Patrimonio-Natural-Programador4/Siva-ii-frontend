@@ -1,6 +1,5 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +24,6 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   imports: [
     PageHeader,
     FormsModule,
-    DragDropModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -36,18 +34,26 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
   ],
 })
 export class AccionesFlujosAprobacion implements OnInit {
-  @ViewChild('fRutas') fRutasForm!: NgForm;
-
   private readonly service = inject(FlujosAprobacionService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   accion = 'Nuevo';
   idFlujo: number | null = null;
   isLoading = false;
   isLinear = true;
-  columnas = ['drag', 'posicion', 'rol', 'descripcion', 'acciones'];
+  columnas = [
+    'posicion',
+    'rol',
+    'descripcion',
+    'labelPendiente',
+    'labelAprobacion',
+    'labelAjuste',
+    'asignaRevisor',
+    'acciones',
+  ];
   listados: Listados[] = [];
   listaRoles: ListaGenerica[] = [];
   numeroRolesAsignados: number | null = null;
@@ -73,6 +79,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     id_categoria: null!,
     rutas: [],
     id_programa: null,
+    es_aprobacion_paralela: false,
   });
 
   ngOnInit(): void {
@@ -85,9 +92,12 @@ export class AccionesFlujosAprobacion implements OnInit {
     if (this.idFlujo) {
       this.service.getFlujoById(this.idFlujo).subscribe({
         next: data => {
-          this.flujoData = new FlujosAprobacion(data);
-          this.flujoData.rutas = this.flujoData.rutas ?? [];
-          this.actualizarRolesDisponibles();
+          setTimeout(() => {
+            this.flujoData = new FlujosAprobacion(data);
+            this.flujoData.rutas = this.flujoData.rutas ?? [];
+            this.actualizarRolesDisponibles();
+            this.cdr.markForCheck();
+          });
         },
         error: () => {
           this.snackBar.open('Error al cargar el flujo', '', { duration: 3000 });
@@ -99,8 +109,11 @@ export class AccionesFlujosAprobacion implements OnInit {
   getListados(): void {
     this.service.getListadosFlujos().subscribe({
       next: data => {
-        this.listados = data;
-        this.actualizarRolesDisponibles();
+        setTimeout(() => {
+          this.listados = data;
+          this.actualizarRolesDisponibles();
+          this.cdr.markForCheck();
+        });
       },
       error: () => {
         this.snackBar.open('No se pudieron cargar los listados del flujo', '', { duration: 3000 });
@@ -132,7 +145,11 @@ export class AccionesFlujosAprobacion implements OnInit {
       id_rol_aprobacion: rol.identity,
       rol: rol.valor,
       descripcion: rol.valor_referencia,
-      orden: (this.flujoData.rutas ?? []).length + 1,
+      orden: undefined,
+      label_pendiente: '',
+      label_aprobacion: '',
+      label_ajuste: '',
+      asigna_revisor: false,
     });
 
     this.flujoData.rutas = [...(this.flujoData.rutas ?? []), nuevaRuta];
@@ -143,7 +160,6 @@ export class AccionesFlujosAprobacion implements OnInit {
       orden: null!,
       descripcion: '',
     });
-    this.fRutasForm.resetForm();
     this.actualizarRolesDisponibles();
   }
 
@@ -152,17 +168,41 @@ export class AccionesFlujosAprobacion implements OnInit {
       return;
     }
 
-    this.flujoData.rutas = (this.flujoData.rutas ?? [])
-      .filter(item => item.id_ruta !== idRuta)
-      .map((item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 }));
+    this.flujoData.rutas = (this.flujoData.rutas ?? []).filter(item => item.id_ruta !== idRuta);
     this.actualizarRolesDisponibles();
   }
 
-  dropRuta(event: CdkDragDrop<FlujosAprobacionRuta[]>): void {
-    const rutas = [...(this.flujoData.rutas ?? [])];
-    moveItemInArray(rutas, event.previousIndex, event.currentIndex);
-    this.flujoData.rutas = rutas.map(
-      (item, index) => new FlujosAprobacionRuta({ ...item, orden: index + 1 })
+  cambiarOrden(ruta: FlujosAprobacionRuta, orden: number | string | null | undefined): void {
+    if (orden === null || orden === undefined || orden === '') {
+      ruta.orden = undefined;
+      return;
+    }
+
+    const ordenSolicitado = Math.trunc(Number(orden));
+    ruta.orden = Math.max(ordenSolicitado, 1);
+    this.flujoData.rutas = [...(this.flujoData.rutas ?? [])].sort(
+      (rutaActual, rutaSiguiente) => (rutaActual.orden ?? 0) - (rutaSiguiente.orden ?? 0)
+    );
+  }
+
+  tieneOrdenesSecuenciales(): boolean {
+    const ordenes = (this.flujoData.rutas ?? [])
+      .map(ruta => ruta.orden)
+      .filter(
+        (orden): orden is number =>
+          typeof orden === 'number' && Number.isInteger(orden) && orden > 0
+      )
+      .sort((ordenActual, ordenSiguiente) => ordenActual - ordenSiguiente);
+
+    if (ordenes.length !== (this.flujoData.rutas ?? []).length || ordenes[0] !== 1) {
+      return false;
+    }
+
+    return ordenes.every(
+      (orden, indice) => {
+        const ordenAnterior = ordenes[indice - 1];
+        return indice === 0 || orden === ordenAnterior || orden === (ordenAnterior ?? 0) + 1;
+      }
     );
   }
 
@@ -174,6 +214,15 @@ export class AccionesFlujosAprobacion implements OnInit {
 
     if (!this.flujoData.id_categoria) {
       this.snackBar.open('La categoría es obligatoria', '', { duration: 3000 });
+      return;
+    }
+
+    if (!this.tieneOrdenesSecuenciales()) {
+      this.snackBar.open(
+        'Los órdenes deben iniciar en 1 y continuar secuencialmente; se permiten órdenes repetidos.',
+        '',
+        { duration: 4000 }
+      );
       return;
     }
 

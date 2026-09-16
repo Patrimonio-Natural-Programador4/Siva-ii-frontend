@@ -1,0 +1,55 @@
+<page-header />
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Extraer parámetros de documento</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="app-data-card__content">
+        <div class="upload-form">
+          <input
+            #archivoInput
+            type="file"
+            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            hidden
+            (change)="seleccionarArchivo($event)"
+          />
+          <button mat-stroked-button type="button" (click)="archivoInput.click()" [disabled]="isLoading">
+            <mat-icon>attach_file</mat-icon>
+            Seleccionar documento
+          </button>
+          <span class="upload-form__file">{{ archivoSeleccionado?.name ?? 'Ningún archivo seleccionado' }}</span>
+          <button mat-flat-button color="primary" type="button" (click)="extraerParametros()"
+            [disabled]="!archivoSeleccionado || isLoading">
+            @if (isLoading) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>table_view</mat-icon>
+              Extraer parámetros
+            }
+          </button>
+        </div>
+
+        @if (parametros.length) {
+          <div class="app-data-table-wrapper">
+            <table mat-table [dataSource]="parametros" class="app-data-table mat-elevation-z1">
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let parametro">{{ parametro.nombre }}</td>
+              </ng-container>
+              <ng-container matColumnDef="valor">
+                <th mat-header-cell *matHeaderCellDef>Valor</th>
+                <td mat-cell *matCellDef="let parametro">{{ parametro.valor }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        } @else if (!isLoading && archivoSeleccionado) {
+          <p class="upload-form__empty">El documento no contiene parámetros para mostrar.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

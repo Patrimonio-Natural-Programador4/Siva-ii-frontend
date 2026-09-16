@@ -1,0 +1,56 @@
+.app-data-card {
+  border-radius: 12px;
+}
+
+.loading-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: #5a627c;
+}
+
+.table_a {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.row_a {
+  display: flex;
+  background-color: #fff;
+  border-right: 1px solid #e1e3ea;
+  border-bottom: 1px solid #e1e3ea;
+  border-left: 1px solid #e1e3ea;
+}
+
+.header_a {
+  color: #fff;
+  background-color: #5a627c;
+}
+
+.cell_a {
+  display: table-cell;
+  padding: 8px;
+  text-align: left;
+}
+
+.info_b {
+  color: #000;
+}
+
+.info_a {
+  font-style: italic;
+  color: #333847;
+}
+
+.empty-step {
+  padding: 16px;
+  margin-top: 1rem;
+  color: #5a627c;
+  text-align: center;
+  border: 1px dashed #c4cad8;
+  border-radius: 6px;
+}

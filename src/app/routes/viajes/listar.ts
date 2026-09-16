@@ -27,6 +27,7 @@ import { Listados } from 'src/app/models/listados';
 import { environment } from '@env/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { MsalService } from '@azure/msal-angular';
+import { MtxDrawer, MtxDrawerModule } from '@ng-matero/extensions/drawer';
 
 @Component({
   selector: 'app-listar',
@@ -49,6 +50,7 @@ import { MsalService } from '@azure/msal-angular';
     FormsModule,
     MatDatepickerModule,
     MatMenuModule,
+    MtxDrawerModule,
   ],
 })
 export class ListarViajes implements OnInit, AfterViewInit {
@@ -57,6 +59,7 @@ export class ListarViajes implements OnInit, AfterViewInit {
   private readonly service = inject(ViajesService);
   private readonly authService = inject(MsalService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly drawer = inject(MtxDrawer);
   columnasViaje = [
     'posicion',
     'nombre',
@@ -130,7 +133,7 @@ export class ListarViajes implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const paginator = this.paginator();
     if (paginator) {
-      // pendiente de implementación
+      // Paginator initialized
     }
   }
 
@@ -145,6 +148,10 @@ export class ListarViajes implements OnInit, AfterViewInit {
 
   crearViaje(): void {
     this.router.navigate(['/viajes/crear']);
+  }
+
+  abrirCalendario(): void {
+    this.router.navigate(['/viajes/calendario']);
   }
 
   limpiarFiltros(): void {
@@ -224,5 +231,25 @@ export class ListarViajes implements OnInit, AfterViewInit {
   verPDF(guid: string): void {
     const url = `${environment.apiUrl2}/viajes/${guid}/pdf_solicitud/documento`;
     window.open(url, '_blank');
+  }
+
+  verPDFLeg(guid: string): void {
+    const url = `${environment.apiUrl2}/viajes/${guid}/pdf_legalizacion/documento`;
+    window.open(url, '_blank');
+  }
+
+  verDetallesViaje(guid: string): void {
+    this.router.navigate(['/viajes/detalle', guid]);
+  }
+
+  verDetallesLegalizacion(guid: string): void {
+    this.router.navigate(['/viajes/legalizacion', guid]);
+  }
+
+  aplicaLegalizacion(element: any): boolean {
+    return (
+      element?.id_estado === 4 ||
+      element?.id_estado === 6 
+    );
   }
 }
