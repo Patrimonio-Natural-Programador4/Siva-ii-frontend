@@ -26,7 +26,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'estudios-previos/detalle',
+        path: 'estudios-previos/detalle/:guid',
         loadComponent: () =>
           import('./estudios-previos/estudios-previos-flujo/estudios-previos-flujo').then(
             m => m.EstudiosPreviosFlujo

@@ -115,10 +115,27 @@
 
             </div>
 
-            <div class="step-actions">
-              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
-            </div>
+            <mat-card-actions align="end" class="p-3  border-top mt-3">
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                  matTooltip="Continuar al paso 2"
+                  matTooltipPosition="above"><mat-icon>directions_alt</mat-icon>Continuar</button>
+              </div>
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                  (click)="verPDF(evaluacion.guid)" matTooltip="Ver PDF de la evaluación"
+                  matTooltipPosition="above">
+                  <mat-icon>picture_as_pdf</mat-icon> Generar PDF
+                </button>
+              </div>
+
+            </mat-card-actions>
+
+
           </mat-step>
+
+
 
           <!-- Crear estudio previo -->
 
@@ -349,14 +366,15 @@
             <mat-card-actions align="end" class="p-3 bg-light border-top mt-3">
               <div class="step-actions between w-100">
                 <button mat-stroked-button matStepperPrevious>
-                  <i class="bi bi-arrow-left me-1"></i> Atrás
+                  <i class="bi bi-arrow-left me-1"></i><mat-icon>arrow_circle_left</mat-icon>Atrás
                 </button>
 
                 <div class="end-actions">
                   <button mat-stroked-button type="button" (click)="volver()">
                     Volver al listado
                   </button>
-                  <button mat-stroked-button type="button" (click)="volver()">
+                  <button mat-stroked-button type="button"
+                    (click)="volver()"><mat-icon>cancel</mat-icon>
                     Cancelar
                   </button>
                   <button mat-flat-button color="primary" type="button"

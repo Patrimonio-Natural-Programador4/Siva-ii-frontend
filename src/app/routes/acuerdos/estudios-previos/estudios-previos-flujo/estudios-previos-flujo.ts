@@ -19,6 +19,7 @@ import {
   AccionAprobacion,
   DialogResult,
 } from '@shared/components/accion-aprobacion/accion-aprobacion';
+import { ResponseRequest } from 'src/app/models/response-request';
 
 @Component({
   selector: 'app-estudios-previos-flujo',
@@ -43,14 +44,19 @@ export class EstudiosPreviosFlujo implements OnInit {
   private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly urlActual = this.router.url;
 
   isLoading = false;
   isLinear = false;
   isLoadingAprobacion = false;
   isSavingAprobacion = false;
   habilitarAcciones = false;
-
+  guidEstudio = '';
+  estudio: PreviousStudiesModel = {};
+  historialAprobacion: SolicitudAprobacionHistorial[] = [];
   estudioData: PreviousStudiesModel = {};
+  accionesAprobacion: AccionesSolicitudAprobacion = {};
+  tipoSolicitudAprobacion: string | undefined;
 
   displayedColumnsAprobacion: string[] = [
     'rol',
@@ -60,9 +66,6 @@ export class EstudiosPreviosFlujo implements OnInit {
     'estado',
     'observaciones',
   ];
-  historialAprobacion: SolicitudAprobacionHistorial[] = [];
-  accionesAprobacion: AccionesSolicitudAprobacion = {};
-  tipoSolicitudAprobacion: string | undefined;
 
   ngOnInit(): void {
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
@@ -72,6 +75,7 @@ export class EstudiosPreviosFlujo implements OnInit {
     } else {
       console.warn('No se encontró el parámetro ID en la URL');
     }
+    console.log('DAta', this.estudioData);
   }
 
   cargarDetalle(id: number): void {
@@ -94,6 +98,59 @@ export class EstudiosPreviosFlujo implements OnInit {
     this.router.navigate(['./estudios-previos/estudios-previos-tabla/estudios-previos-tabla']);
   }
 
+  private getEstudioPrevio(): void {
+    this.isLoading = true;
+    this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
+      next: data => {
+        console.log('1. DATA RECIBIDA:', data);
+        this.estudio = data;
+        console.log('2. EVALUACION ASIGNADA:', this.estudio, 'guid:', this.estudio.guid);
+        if (this.estudio.id) {
+          this.getHistorialAprobacion(this.estudio.id);
+        }
+        this.getValidacionAccionesAprobacion();
+        this.isLoading = false;
+        console.log('3. isLoading:', this.isLoading);
+      },
+      error: err => {
+        console.error('ERROR COMPLETO:', err);
+        console.log('status:', err?.status);
+        console.log('statusText:', err?.statusText);
+        console.log('message:', err?.message);
+        console.log('name:', err?.name);
+        console.log('error.error (body):', err?.error);
+        console.log('url:', err?.url);
+        this.snackBar.open('Error al cargar la evaluación', '', { duration: 3000 });
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private getHistorialAprobacion(idEvaluacion: number): void {
+    this.EstudiosPreviosService.getHistorialAprobacion(idEvaluacion).subscribe({
+      next: data => (this.historialAprobacion = data ?? []),
+      error: () => (this.historialAprobacion = []),
+    });
+  }
+
+  private getValidacionAccionesAprobacion(): void {
+    this.EstudiosPreviosService.getValidacionAccionesAprobacion(this.guidEstudio).subscribe({
+      next: response => {
+        if (!response.solicitud_exitosa || !response.mensaje) {
+          this.accionesAprobacion = {};
+          return;
+        }
+        this.habilitarAcciones = response.solicitud_exitosa;
+        const acciones = JSON.parse(response.mensaje);
+        this.accionesAprobacion = {
+          ...acciones,
+          id_solicitud_aprobacion: this.estudio.approval_request_id,
+        };
+      },
+      error: () => (this.accionesAprobacion = {}),
+    });
+  }
+
   get hasHistorialAprobacion(): boolean {
     return this.historialAprobacion.length > 0;
   }
@@ -102,7 +159,54 @@ export class EstudiosPreviosFlujo implements OnInit {
     return !!this.accionesAprobacion.id_solicitud_aprobacion;
   }
 
-  abrirModalAccion(): void {}
+  abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
+    const titulo = tipoAccion === 'APROBAR' ? 'Aprobar evaluación' : 'Solicitar ajustes';
 
-  accionSolicitud() {}
+    const dialogRef = this.dialog.open(AccionAprobacion, {
+      width: '520px',
+      disableClose: true,
+      data: { titulo, tipoAccion, comentarios: this.accionesAprobacion.comentarios || '' },
+    });
+    dialogRef.componentInstance.usuarios_disponibles =
+      this.accionesAprobacion.usuarios_disponibles_ajustes || [];
+    dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {
+      if (!result) return;
+      this.accionesAprobacion.comentarios = result.comentarios;
+      if (tipoAccion === 'AJUSTAR') {
+        this.accionesAprobacion.id_usuario_ajuste = result.id_usuario_ajuste;
+        this.accionesAprobacion.id_rol_aprobacion_ajuste = result.id_rol_aprobacion_ajuste;
+      }
+      this.ejecutarAccion(result.tipoAccion);
+    });
+  }
+
+  private ejecutarAccion(tipoAccion: string): void {
+    this.isLoading = true;
+    console.log('ejecutar', this.urlActual);
+
+    this.accionesAprobacion.tipo_accion = tipoAccion;
+    this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
+    this.accionesAprobacion.evaluacion_capacidades = this.estudio;
+
+    this.EstudiosPreviosService.accionSolicitudAprobacion(
+      this.guidEstudio,
+      this.accionesAprobacion
+    ).subscribe({
+      next: (response: ResponseRequest) => {
+        this.isLoading = false;
+        if (response.solicitud_exitosa) {
+          this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.router.navigateByUrl(this.urlActual);
+        } else {
+          this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
+            duration: 3000,
+          });
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.snackBar.open('Error al procesar la solicitud', '', { duration: 3000 });
+      },
+    });
+  }
 }

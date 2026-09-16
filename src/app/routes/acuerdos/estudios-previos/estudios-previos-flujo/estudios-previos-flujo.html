@@ -31,7 +31,7 @@
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Antecedentes</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.precedents || '--' }}
+                <div class="cell_a info_a" style="flex: 3">{{ estudioData.precedents || '--'}}
                 </div>
               </div>
 
@@ -192,12 +192,12 @@
 
             <div class="approval-actions mt-3">
               <div class="approval-actions__buttons" *ngIf="habilitarAcciones">
-                <button mat-raised-button color="primary" type="button" (click)="abrirModalAccion()"
-                  [disabled]="isSavingAprobacion">
+                <button mat-raised-button color="primary" type="button"
+                  (click)="abrirModalAccion('APROBAR')" [disabled]="isSavingAprobacion">
                   Aprobar
                 </button>
-                <button mat-stroked-button type="button" (click)="abrirModalAccion()"
-                  [disabled]="isSavingAprobacion || !accionesAprobacion?.habilitar_solicitar_ajustes">
+                <button mat-stroked-button type="button" (click)="abrirModalAccion('AJUSTAR')"
+                  [disabled]="isSavingAprobacion || !accionesAprobacion.habilitar_solicitar_ajustes">
                   Solicitar ajustes
                 </button>
               </div>

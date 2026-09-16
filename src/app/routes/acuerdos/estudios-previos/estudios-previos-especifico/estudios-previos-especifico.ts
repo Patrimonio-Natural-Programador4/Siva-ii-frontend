@@ -30,6 +30,8 @@ import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
 import { ProgramsService } from 'src/app/services/programs.service';
+import { environment } from '@env/environment';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-estudios-previos-especifico',
@@ -44,6 +46,7 @@ import { ProgramsService } from 'src/app/services/programs.service';
     MatSnackBarModule,
     MatStepperModule,
     FormsModule,
+    MatTooltipModule,
   ],
   templateUrl: './estudios-previos-especifico.html',
   styleUrl: './estudios-previos-especifico.scss',
@@ -422,5 +425,11 @@ export class EstudiosPreviosEspecifico implements OnInit {
 
   volver_form(): void {
     this.router.navigate(['/acuerdos/estudios-previos']);
+  }
+
+  verPDF(guid: string): void {
+    const url = `${environment.apiUrl2}/evaluaciones-de-capacidades/${guid}/pdf_solicitud/documento`;
+    window.open(url, '_blank');
+    console.log('URL', url);
   }
 }
