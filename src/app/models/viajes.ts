@@ -98,6 +98,7 @@ export class Viajes {
   telefono_emergencia?: string;
   parentesco_emergencia?: string;
   valor_anticipo_letras?: string;
+  includes_food?: boolean;
   constructor(data?: Partial<Viajes>) {
     Object.assign(this, data);
   }

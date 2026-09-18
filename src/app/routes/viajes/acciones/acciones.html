@@ -403,6 +403,18 @@
                   </mat-form-field>
                 </div>
                 <div class="col-md-4">
+                  <label for="includes_food" class="form-label">Incluye alimentación?</label>
+                  <div>
+                    <input type="radio" [value]="true" id="includes_food_s" name="includes_food"
+                      [(ngModel)]="viajeData.includes_food" />
+                    <label class="" for="includes_food_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="includes_food_n" name="includes_food"
+                      [(ngModel)]="viajeData.includes_food" />
+                    <label class="" for="includes_food_n">&nbsp;No</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
                   <label for="requiere_anticipo" class="form-label">Requiere anticipo?*</label>
                   <div>
                     <input type="radio" [value]="true" id="requiere_anticipo_s"
