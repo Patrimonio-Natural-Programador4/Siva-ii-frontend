@@ -238,6 +238,11 @@ export class ListarViajes implements OnInit, AfterViewInit {
     window.open(url, '_blank');
   }
 
+  descargarExcelFacturas(guid: string): void {
+    const url = `${environment.apiUrl2}/viajes/${guid}/excel_facturas/documento`;
+    window.open(url, '_blank');
+  }
+
   verDetallesViaje(guid: string): void {
     this.router.navigate(['/viajes/detalle', guid]);
   }

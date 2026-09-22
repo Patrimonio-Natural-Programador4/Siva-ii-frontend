@@ -262,6 +262,10 @@
                       <mat-icon>picture_as_pdf</mat-icon>
                       <span>Formato Legalización (PDF)</span>
                     </button>
+                    <button mat-menu-item (click)="descargarExcelFacturas(element.guid)">
+                      <mat-icon>download</mat-icon>
+                      <span>Descargar excel facturas</span>
+                    </button>
                   </mat-menu>
                    <a href="javascript:void(0)" *ngIf="aplicaLegalizacion(element)"
                     class="btn-accion" title="Legalización de viaje"
