@@ -214,6 +214,11 @@ export class EstudiosPreviosFlujo implements OnInit {
     this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
     this.accionesAprobacion.evaluacion_capacidades = this.estudio;
 
+    if (tipoAccion !== 'AJUSTAR') {
+      this.accionesAprobacion.id_usuario_ajuste = undefined;
+      this.accionesAprobacion.id_rol_aprobacion_ajuste = undefined;
+    }
+
     this.EstudiosPreviosService.accionSolicitudAprobacion(
       this.guidEstudio,
       this.accionesAprobacion
@@ -223,7 +228,9 @@ export class EstudiosPreviosFlujo implements OnInit {
         console.log('>>> isLoadingDetail = false');
         if (response.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.accionesAprobacion = {};
           this.getHistorialAprobacion(this.estudio_Previo_Id);
+          this.getValidacionAccionesAprobacion();
           console.log('ESTUDIO PREVIO ID----', this.estudio_Previo_Id);
 
           this.router.navigateByUrl(this.urlActual);

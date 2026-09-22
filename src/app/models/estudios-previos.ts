@@ -31,6 +31,7 @@ export class PreviousStudiesModel {
   guid?: string;
   total_registros?: number;
   capacity_assessments_states_id?: number;
+  enviar_aprobacion?: boolean;
 
   constructor(data?: Partial<PreviousStudiesModel>) {
     Object.assign(this, data);

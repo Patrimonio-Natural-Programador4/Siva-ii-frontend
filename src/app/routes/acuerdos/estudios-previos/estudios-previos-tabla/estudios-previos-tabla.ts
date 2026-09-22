@@ -245,4 +245,10 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
       },
     });
   }
+
+  editarEstudioPrevio(guid: number): void {
+    console.log('Boton editar AQUIIIIII', guid);
+
+    this.router.navigate(['/acuerdos/estudios-previos/editar', guid]);
+  }
 }

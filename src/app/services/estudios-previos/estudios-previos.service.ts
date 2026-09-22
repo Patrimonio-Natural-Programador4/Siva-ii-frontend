@@ -41,7 +41,7 @@ export class EstudiosPreviosService {
   }
 
   updateEstPrevios(est_prev: PreviousStudiesModel): Observable<ResponseRequest> {
-    return this.http.put<ResponseRequest>(`${this.apiUrl}/${est_prev.id}`, est_prev);
+    return this.http.put<ResponseRequest>(`${this.apiUrl}/${est_prev.guid}`, est_prev);
   }
 
   getEstudiosPreviosFiltro(

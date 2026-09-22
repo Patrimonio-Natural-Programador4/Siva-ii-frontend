@@ -53,6 +53,7 @@ export class EstudiosPreviosFormulario implements OnInit {
 
   accion = 'Nuevo';
   idEstPrevios: number | null = null;
+  guidEstudio: string | null = null;
   isLoading = false;
   implementers: ImplementerModel[] = [];
   persons: PersonModel[] = [];
@@ -81,6 +82,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     contributions_fpn: 0,
     estimated_term: '',
     program_id: 0,
+    enviar_aprobacion: false,
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -90,17 +92,18 @@ export class EstudiosPreviosFormulario implements OnInit {
   });
 
   ngOnInit(): void {
-    const idParam = this.activatedRoute.snapshot.params['id'];
-    this.idEstPrevios = idParam ? Number(idParam) : null;
-    this.accion = this.idEstPrevios ? 'Editar' : 'Nuevo';
+    const guidParam = this.activatedRoute.snapshot.params['guid'];
+    this.guidEstudio = guidParam ?? null;
+    this.accion = this.guidEstudio ? 'Editar' : 'Nuevo';
+
     this.listarImplementers();
     this.listarPersons();
     this.listarStates();
     this.listarCapacity();
     this.listarPrograms();
 
-    if (this.idEstPrevios) {
-      this.EstudiosPreviosService.getEstPreviosById(this.idEstPrevios).subscribe({
+    if (this.guidEstudio) {
+      this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
         next: data => {
           this.estuPreviosData = new PreviousStudiesModel(data);
         },
@@ -173,14 +176,15 @@ export class EstudiosPreviosFormulario implements OnInit {
     });
   }
 
-  guardarEstudiosPrevios(): void {
+  guardarEstudiosPrevios(enviarAprobacion: boolean): void {
     if (this.isLoading) {
       return;
     }
 
     this.isLoading = true;
+    this.estuPreviosData.enviar_aprobacion = enviarAprobacion;
 
-    const request$ = this.idEstPrevios
+    const request$ = this.guidEstudio
       ? this.EstudiosPreviosService.updateEstPrevios(this.estuPreviosData)
       : this.EstudiosPreviosService.saveEstPrevios(this.estuPreviosData);
 

@@ -189,11 +189,19 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
     this.accionesAprobacion.evaluacion_capacidades = this.evaluacion;
 
+    if (tipoAccion !== 'AJUSTAR') {
+      this.accionesAprobacion.id_usuario_ajuste = undefined;
+      this.accionesAprobacion.id_rol_aprobacion_ajuste = undefined;
+    }
+
     this.service.accionSolicitudAprobacion(this.guidEvaluacion, this.accionesAprobacion).subscribe({
       next: (response: ResponseRequest) => {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.accionesAprobacion = {};
+          this.getHistorialAprobacion(this.evaluacion.id!);
+          this.getValidacionAccionesAprobacion();
           this.router.navigateByUrl(this.urlActual);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
