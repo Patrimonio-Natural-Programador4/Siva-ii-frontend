@@ -20,12 +20,13 @@ import { RouterLink } from '@angular/router';
 
 import { Programs } from 'src/app/models/programs';
 
-import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
+import { PreviousStudiesListModel, PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { EstudiosPreviosService as estpreviosser } from 'src/app/services/estudios-previos/estudios-previos.service';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { FormsModule } from '@angular/forms';
 import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
 import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-estudios-previos-tabla',
@@ -53,10 +54,6 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
   private readonly ProgramsService = inject(ProgramsService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
 
-  programs: Programs[] = [];
-
-  selectedProgramId: number | null = null;
-
   readonly paginator = viewChild(MatPaginator);
   readonly displayedColumns = [
     'id',
@@ -73,21 +70,25 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     'contributions_ei',
     'total_value_executes_fpn',
     'total_value_executes_ei',
-    'cap_assessments_state',
-    'app_request',
+
+    //'cap_assessments_state',
+    //'app_request',
     'implementers',
     'persons',
     'capacity_assessment',
     'contributions_fpn',
     'estimated_term',
     'programs',
+    'prev_studies_state',
     'acciones',
   ];
 
   readonly pageSizeOptions = [20];
   readonly estPreviosTable = new MatTableDataSource<PreviousStudiesModel>([]);
-
+  programs: Programs[] = [];
+  selectedProgramId: number | null = null;
   estudiosPrevios: PreviousStudiesModel[] = [];
+  estudios: PreviousStudiesListModel[] = [];
   id_estado: number[] = [];
   id_programa: number | null = -1;
   estudios_previos: PreviousStudiesModel[] = [];
@@ -127,12 +128,11 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
       const f = normalize(filter);
       return normalize(p.justification ?? '').includes(f);
     };
-    this.getEstudiosPreviosAcuerdo();
 
     this.listarProgramas();
     this.listarStates();
-
-    this.estPreviosService.refrescarTabla$.subscribe(() => this.getEstudiosPreviosAcuerdo());
+    this.getEstudios();
+    //this.estPreviosService.refrescarTabla$.subscribe(() => this.getEstudios());
   }
 
   pageChange(event: any) {
@@ -147,10 +147,15 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     }
   }
 
-  getEstudiosPreviosAcuerdo(): void {
-    this.estPreviosService.getEstPrevios().subscribe(data => {
-      this.estPreviosTable.data = data;
-      console.log('estudios previos', data);
+  getEstudios(): void {
+    this.estPreviosService.getListado(this.currentPage + 1, [-1], this.filtrobusqueda).subscribe({
+      next: response => {
+        console.log('dataestudios', response);
+        this.estudios = response;
+        this.total = response.length > 0 ? response[0].total_records! : 0;
+        this.cdr.detectChanges();
+      },
+      error: error => console.error('Error al listar estudios previos:', error),
     });
   }
 
@@ -162,6 +167,10 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     return paginator.pageIndex * paginator.pageSize + index + 1;
   }
 
+  getRowClass(row: PreviousStudiesListModel): string {
+    return row.pending_my_approval ? 'pendiente' : '';
+  }
+
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.estPreviosTable.filter = filterValue.trim().toLowerCase();
@@ -171,8 +180,15 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     this.router.navigate(['/acuerdos/estudios-previos/crear']);
   }
 
-  continuarFlujo(id: number) {
-    this.router.navigate(['/acuerdos/estudios-previos/detalle']);
+  continuarFlujo(guid: string): void {
+    console.log('GUID', guid);
+    console.log('estudios', this.estudios);
+    const estudio = this.estudios.find(e => e.guid === guid);
+    if (!estudio) {
+      console.log('estudio', estudio);
+      return;
+    }
+    this.router.navigate(['/acuerdos/estudios-previos/detalle', guid]);
   }
 
   /*

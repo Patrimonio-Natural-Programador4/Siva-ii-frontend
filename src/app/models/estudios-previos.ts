@@ -26,7 +26,7 @@ export class PreviousStudiesModel {
   estimated_term?: string;
   programs?: string;
   program_id?: number;
-  code?: string;
+  codde?: string;
   approval_request_id?: number;
   guid?: string;
   total_registros?: number;
@@ -52,6 +52,7 @@ export class PreviousStudiesCreateModel {
   contributions_ei?: number;
   total_value_executes_fpn?: number;
   total_value_executes_ei?: number;
+  prev_studies_state?: string;
   previous_studies_states_id?: number;
   implementer_id?: number;
   persons?: string;
@@ -85,7 +86,7 @@ export class PreviousStudiesListModel {
   contributions_ei?: number;
   total_value_executes_fpn?: number;
   total_value_executes_ei?: number;
-  prev_studies_state?: number;
+  prev_studies_state?: string;
   previous_studies_states_id?: number;
   implementer_id?: number;
   implementer?: string;
@@ -100,7 +101,7 @@ export class PreviousStudiesListModel {
   estimated_term?: string;
   program_id?: number;
   program_name?: string;
-  code?: string;
+  codde?: string;
   guid?: string;
   pending_my_approval?: boolean;
   user_id?: number;

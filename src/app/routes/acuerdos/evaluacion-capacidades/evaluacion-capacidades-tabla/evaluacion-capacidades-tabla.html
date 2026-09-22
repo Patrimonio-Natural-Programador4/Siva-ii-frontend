@@ -146,8 +146,8 @@
             <ng-container matColumnDef="acciones" stickyEnd>
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let element">
-                <a href="javascript:void(0)" style="text-decoration: none;"
-                  (click)="editEvaluacion(element.guid)">
+                <a *ngIf="element.capacity_assessments_states_id === 3" href="javascript:void(0)"
+                  style="text-decoration: none;" (click)="editEvaluacion(element.guid)">
                   <mat-icon>edit</mat-icon>
                 </a>
                 <a href="javascript:void(0)" style="text-decoration: none;"

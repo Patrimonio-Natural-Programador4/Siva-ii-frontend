@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, catchError, throwError } from 'rxjs';
 import { AccionesSolicitudAprobacion } from 'src/app/models/acciones-solicitud-aprobacion';
-import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
+import { PreviousStudiesListModel, PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { Viajes } from 'src/app/models/viajes';
@@ -28,18 +28,20 @@ export class EstudiosPreviosService {
     return this.http.get<PreviousStudiesModel>(`${this.apiUrl}/${id}`);
   }
 
-  saveEstPrevios(evCap: PreviousStudiesModel): Observable<ResponseRequest> {
+  saveEstPrevios(est_prev: PreviousStudiesModel): Observable<ResponseRequest> {
+    const previous_studies_states_id = 1;
+    est_prev = { ...est_prev, previous_studies_states_id };
+    console.log('estado', est_prev);
     try {
-      console.log('evaluacion', evCap);
-      return this.http.post<ResponseRequest>(this.apiUrl, evCap);
+      return this.http.post<ResponseRequest>(this.apiUrl, est_prev);
     } catch (error) {
       console.log('Error en saveTipoDocAcuerdos', error);
-      return this.http.post<ResponseRequest>(this.apiUrl, evCap);
+      return this.http.post<ResponseRequest>(this.apiUrl, est_prev);
     }
   }
 
-  updateEstPrevios(evCap: PreviousStudiesModel): Observable<ResponseRequest> {
-    return this.http.put<ResponseRequest>(`${this.apiUrl}/${evCap.id}`, evCap);
+  updateEstPrevios(est_prev: PreviousStudiesModel): Observable<ResponseRequest> {
+    return this.http.put<ResponseRequest>(`${this.apiUrl}/${est_prev.id}`, est_prev);
   }
 
   getEstudiosPreviosFiltro(
@@ -65,12 +67,19 @@ export class EstudiosPreviosService {
   }
 
   getPorGuid(guid: string): Observable<PreviousStudiesModel> {
-    return this.http.get<PreviousStudiesModel>(`${this.apiUrl}/${guid}/detalle`);
+    console.log('URLLL', `${this.apiUrl}/${guid}/detalle`);
+
+    return this.http.get(`${this.apiUrl}/${guid}/detalle`).pipe(
+      catchError(err => {
+        console.error('Error en getPorGuid', err);
+        return throwError(() => err);
+      })
+    );
   }
 
-  getHistorialAprobacion(idEvaluacion: number): Observable<SolicitudAprobacionHistorial[]> {
+  getHistorialAprobacion(idEstudio: number): Observable<SolicitudAprobacionHistorial[]> {
     const params = new HttpParams()
-      .set('guid', String(idEvaluacion))
+      .set('guid', String(idEstudio))
       .set('tipo_solicitud', this.tipoSolicitud);
     return this.http.get<SolicitudAprobacionHistorial[]>(
       `${environment.apiUrl2}/solicitudes-aprobacion/historial_aprobacion`,
@@ -90,5 +99,21 @@ export class EstudiosPreviosService {
       `${this.apiUrl}/${guid}/accion_solicitud_aprobacion`,
       accion
     );
+  }
+
+  getListado(
+    page = 1,
+    idEstado: number[] = [-1],
+    filtro = '',
+    programa: number | null = null
+  ): Observable<PreviousStudiesListModel[]> {
+    let params = new HttpParams().set('page', page.toString()).set('filtro', filtro ?? '');
+    (idEstado.length ? idEstado : [-1]).forEach(id => {
+      params = params.append('estado', id.toString());
+    });
+    if (programa !== null) {
+      params = params.set('programa', programa.toString());
+    }
+    return this.http.get<PreviousStudiesListModel[]>(`${this.apiUrl}/filtro`, { params });
   }
 }

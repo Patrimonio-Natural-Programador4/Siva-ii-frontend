@@ -26,6 +26,7 @@ export class EvaluacionCapacidadesService {
   }
 
   saveEvaCapacidades(evCap: EvaluacionCapacidadesModel): Observable<ResponseRequest> {
+    console.log('evcapacidades', evCap);
     try {
       return this.http.post<ResponseRequest>(this.apiUrl, evCap);
     } catch (error) {
