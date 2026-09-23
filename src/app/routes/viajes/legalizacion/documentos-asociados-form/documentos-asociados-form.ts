@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { ViajesService } from 'src/app/services/viajes.service';
   ],
   templateUrl: './documentos-asociados-form.html',
 })
-export class DocumentosAsociadosForm {
+export class DocumentosAsociadosForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(ViajesService);
   private readonly snackBar = inject(MatSnackBar);
@@ -35,10 +35,18 @@ export class DocumentosAsociadosForm {
   fileName = '';
   base64File = '';
 
-  tiposDocumento = [
-    { id: 1, name: 'Facturas' },
-    { id: 2, name: 'Documentos Relacionados' },
-  ];
+  tiposDocumento: any[] = [];
+
+  ngOnInit(): void {
+    this.service.getTiposDocumentos().subscribe({
+      next: tipos => {
+        this.tiposDocumento = tipos;
+      },
+      error: () => {
+        this.snackBar.open('Error al cargar tipos de documento', '', { duration: 3000 });
+      },
+    });
+  }
 
   form: FormGroup = this.fb.group({
     document_type_id: [null, [Validators.required]],

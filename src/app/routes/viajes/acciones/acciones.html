@@ -105,7 +105,7 @@
                     required [(ngModel)]="viajeData.id_supervisor_aprueba"
                     name="id_supervisor_aprueba">
                     <option [ngValue]="null" [disabled]="true">Seleccione el supervisor</option>
-                    @for (data of listados[5]?.lista_generica ?? []; track data.identity) {
+                    @for (data of listados[5]?.lista_generica ?? []; track data.idrelacion) {
                     <option [ngValue]="data.idrelacion">{{ data.valor }}</option>
                     }
                   </select>
@@ -184,7 +184,7 @@
                   <select id="id_funcionario_responsable" class="form-select"
                     #funcionario_responsable="ngModel" required
                     [(ngModel)]="viajeData.id_funcionario_responsable"
-                    name="id_funcionario_responsable">
+                    (ngModelChange)="autocompletarDatosViajero()" name="id_funcionario_responsable">
                     <option [ngValue]="null" [disabled]="true">Seleccione el funcionario</option>
                     @for (data of listados[9]?.lista_generica ?? []; track data.identity) {
                     <option [ngValue]="data.identity">{{ data.valor }}</option>
@@ -266,7 +266,7 @@
                     id="persona_invitada" name="persona_invitada"
                     placeholder="Nombre de la persona invitada"
                     [(ngModel)]="viajeData.persona_invitada" #persona_invitada="ngModel"
-                    [class.is-invalid]="
+                    (blur)="autocompletarDatosViajero()" [class.is-invalid]="
                       persona_invitada.invalid &&
                       (persona_invitada.dirty || persona_invitada.touched)
                     " />

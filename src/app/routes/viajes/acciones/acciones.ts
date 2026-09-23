@@ -46,6 +46,7 @@ import {
 import { HotelForm } from '../hotel/hotel-form';
 import { ItinerarioForm } from '../itinerario/itinerario-form';
 import { numeroALetrasEspanol } from 'src/app/shared/utils';
+import { AuthService } from '@core/authentication/auth.service';
 // import { ToastrService } from 'ngx-toastr';
 
 export const MY_FORMATS = {
@@ -172,6 +173,7 @@ export class AccionesViajes implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly drawer = inject(MtxDrawer);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly authService = inject(AuthService);
 
   get rubroOptions(): ListaGenerica[] {
     return this.listados[8]?.lista_generica ?? [];
@@ -223,11 +225,85 @@ export class AccionesViajes implements OnInit {
 
   validarFecha() {}
 
+  limpiarCamposContacto() {
+    this.fechaNacimiento = null!;
+    this.viajeData.telefono_persona_invitada = '';
+    this.viajeData.correo_persona_invitada = '';
+    this.viajeData.contacto_emergencia = '';
+    this.viajeData.telefono_emergencia = '';
+    this.viajeData.parentesco_emergencia = '';
+    this.cdr.markForCheck();
+  }
+
+  autocompletarDatosViajero() {
+    let tipo = '';
+    let identificador = '';
+
+    if (this.viajeData.es_para_funcionario === true) {
+      if (!this.viajeData.id_funcionario_responsable) {
+        this.limpiarCamposContacto();
+        return;
+      }
+      tipo = 'FUNCIONARIO';
+      identificador = String(this.viajeData.id_funcionario_responsable);
+    } else if (this.viajeData.es_invitado === true) {
+      if (!this.viajeData.persona_invitada) {
+        this.limpiarCamposContacto();
+        return;
+      }
+      tipo = 'INVITADO';
+      identificador = this.viajeData.persona_invitada;
+    } else if (
+      this.viajeData.es_para_funcionario === false &&
+      this.viajeData.es_invitado === false
+    ) {
+      tipo = 'USUARIO_ACTUAL';
+      const user = this.authService.check() ? 'CURRENT' : null;
+      if (!user) {
+        this.limpiarCamposContacto();
+        return;
+      }
+      identificador = 'CURRENT'; // Handled in backend by user_oid
+    } else {
+      // The user hasn't completed the flow (some option is still undefined/null)
+      return;
+    }
+
+    this.service.getDatosContactoViajero(identificador, tipo).subscribe({
+      next: datos => {
+        if (datos && Object.keys(datos).length > 0) {
+          if (datos.fecha_nacimiento) {
+            this.fechaNacimiento = new Date(datos.fecha_nacimiento);
+            this.fechaNacimiento.setMinutes(
+              this.fechaNacimiento.getMinutes() + this.fechaNacimiento.getTimezoneOffset()
+            );
+          } else {
+            this.fechaNacimiento = null!;
+          }
+          this.viajeData.telefono_persona_invitada = datos.celular || '';
+          this.viajeData.correo_persona_invitada = datos.correo || '';
+          this.viajeData.contacto_emergencia = datos.contacto_emergencia || '';
+          this.viajeData.telefono_emergencia = datos.celular_emergencia || '';
+          this.viajeData.parentesco_emergencia = datos.parentesco_emergencia || '';
+          this.cdr.markForCheck();
+        } else {
+          this.limpiarCamposContacto();
+        }
+      },
+      error: () => {
+        // Fallback: clear the fields
+        this.limpiarCamposContacto();
+        console.log('No se pudieron obtener los datos automáticos o no existen.');
+      },
+    });
+  }
+
   onEsInvitadoChange(valor: boolean): void {
     this.viajeData.es_invitado = valor;
     if (valor) {
       this.viajeData.es_para_funcionario = false;
       this.viajeData.id_funcionario_responsable = null!;
+      this.autocompletarDatosViajero();
     }
     if (!valor) {
       this.viajeData.dos_o_mas_personas = false;
@@ -235,6 +311,7 @@ export class AccionesViajes implements OnInit {
       this.viajeData.documento_persona_invitada = '';
       this.viajeData.persona_invitada = '';
       this.viajeData.correo_persona_invitada = '';
+      this.autocompletarDatosViajero();
     }
   }
 
@@ -243,8 +320,10 @@ export class AccionesViajes implements OnInit {
     if (valor) {
       this.viajeData.es_invitado = false;
       this.onEsInvitadoChange(false);
+      this.autocompletarDatosViajero();
     } else {
       this.viajeData.id_funcionario_responsable = null!;
+      this.autocompletarDatosViajero();
     }
   }
 
