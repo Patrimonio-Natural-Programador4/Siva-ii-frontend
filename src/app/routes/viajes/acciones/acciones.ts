@@ -194,6 +194,7 @@ export class AccionesViajes implements OnInit {
   listados: Listados[] = [];
   listaRoles: ListaGenerica[] = [];
   numeroRolesAsignados: number | null = null;
+  documentTypes: any[] = [];
   fecha_solicitud: Date = new Date();
   rubroSearch = '';
   showRubroDropdown = false;
@@ -232,6 +233,7 @@ export class AccionesViajes implements OnInit {
     this.viajeData.contacto_emergencia = '';
     this.viajeData.telefono_emergencia = '';
     this.viajeData.parentesco_emergencia = '';
+    this.viajeData.persona_invitada = '';
     this.cdr.markForCheck();
   }
 
@@ -247,12 +249,12 @@ export class AccionesViajes implements OnInit {
       tipo = 'FUNCIONARIO';
       identificador = String(this.viajeData.id_funcionario_responsable);
     } else if (this.viajeData.es_invitado === true) {
-      if (!this.viajeData.persona_invitada) {
+      if (!this.viajeData.invited_traveler_document) {
         this.limpiarCamposContacto();
         return;
       }
       tipo = 'INVITADO';
-      identificador = this.viajeData.persona_invitada;
+      identificador = this.viajeData.invited_traveler_document;
     } else if (
       this.viajeData.es_para_funcionario === false &&
       this.viajeData.es_invitado === false
@@ -285,6 +287,9 @@ export class AccionesViajes implements OnInit {
           this.viajeData.contacto_emergencia = datos.contacto_emergencia || '';
           this.viajeData.telefono_emergencia = datos.celular_emergencia || '';
           this.viajeData.parentesco_emergencia = datos.parentesco_emergencia || '';
+          if (datos.persona_invitada && this.viajeData.es_invitado) {
+            this.viajeData.persona_invitada = datos.persona_invitada;
+          }
           this.cdr.markForCheck();
         } else {
           this.limpiarCamposContacto();
@@ -548,6 +553,14 @@ export class AccionesViajes implements OnInit {
       },
       error: () => {
         this.snackBar.open('No se pudieron cargar los listados', '', { duration: 3000 });
+      },
+    });
+    this.service.getTiposDocumentos().subscribe({
+      next: data => {
+        this.documentTypes = data;
+      },
+      error: () => {
+        this.snackBar.open('No se pudieron cargar los tipos de documentos', '', { duration: 3000 });
       },
     });
   }

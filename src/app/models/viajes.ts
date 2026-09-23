@@ -50,6 +50,8 @@ export class Viajes {
   nombre_archivo_dos_o_mas_personas?: string;
   persona_invitada?: string;
   documento_persona_invitada?: string;
+  invited_traveler_document?: string;
+  invited_traveler_document_type_id?: number;
   telefono_persona_invitada?: string;
   correo_persona_invitada?: string;
   informe_lugar?: string;
