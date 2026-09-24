@@ -145,12 +145,14 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
       enviar_aprobacion: enviarAprobacion,
     };
 
-    if (!payload.policy_approval_date) payload.policy_approval_date = null;
-    if (!payload.document_signature_date) payload.document_signature_date = null;
-    if (!payload.start_date) payload.start_date = null;
-    if (!payload.end_date) payload.end_date = null;
+    const p = payload as any;
+    // Fechas vacías → null
+    if (!p.policy_approval_date) p.policy_approval_date = null;
+    if (!p.document_signature_date) p.document_signature_date = null;
+    if (!p.start_date) p.start_date = null;
+    if (!p.end_date) p.end_date = null;
 
-    delete (payload as any).codigo;
+    delete p.codigo;
 
     const request$ = this.guidEvaCapacidades
       ? this.EvaluacionCapacidadesService.updateEvaCapacidades(this.guidEvaCapacidades, payload)
