@@ -188,14 +188,26 @@
 
       <mat-card-actions align="end" class="p-3">
         <button mat-stroked-button type="button" class="me-2" (click)="volver()">Cancelar</button>
-        <button mat-flat-button color="primary" type="button"
-          (click)="guardarEvaluacionCapacidades()" [disabled]="isLoading || !fPrograma.valid">
+
+        <button mat-flat-button color="primary" type="button" class="me-2"
+          (click)="guardarEvaluacionCapacidades(false)" [disabled]="isLoading || !fPrograma.valid">
           @if (isLoading) {
           <mat-spinner diameter="18" />
           } @else {
           Guardar
           }
         </button>
+
+        @if (guidEvaCapacidades) {
+        <button mat-flat-button color="accent" type="button"
+          (click)="guardarEvaluacionCapacidades(true)" [disabled]="isLoading || !fPrograma.valid">
+          @if (isLoading) {
+          <mat-spinner diameter="18" />
+          } @else {
+          Enviar a aprobación
+          }
+        </button>
+        }
       </mat-card-actions>
     </mat-card>
   </div>
