@@ -26,6 +26,7 @@ export class EvaluacionCapacidadesService {
   }
 
   saveEvaCapacidades(evCap: EvaluacionCapacidadesModel): Observable<ResponseRequest> {
+    console.log('evcapacidades', evCap);
     try {
       return this.http.post<ResponseRequest>(this.apiUrl, evCap);
     } catch (error) {
@@ -115,6 +116,12 @@ export class EvaluacionCapacidadesService {
 
     return this.http.get<EvaluacionCapacidadesModel[]>(`${this.apiUrl}/filtro-test`, {
       params,
+    });
+  }
+
+  actualizarUrlSharepoint(guid: string, url: string | null): Observable<ResponseRequest> {
+    return this.http.patch<ResponseRequest>(`${this.apiUrl}/${guid}/url-sharepoint`, {
+      url_sharepoint_ec: url,
     });
   }
 }

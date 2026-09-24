@@ -19,6 +19,9 @@ import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capacidades/evaluacion-capacidades.service';
 import { MatStepperModule } from '@angular/material/stepper';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-evaluacion-capacidades-flujo-aprobacion',
@@ -32,6 +35,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatStepperModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './evaluacion-capacidades-flujo-aprobacion.html',
   styleUrl: './evaluacion-capacidades-flujo-aprobacion.scss',
@@ -49,6 +55,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   isSavingAprobacion = false;
   guidEvaluacion = '';
   isLoading = false;
+  urlSharepoint = '';
+  isSavingUrl = false;
   habilitarAcciones = false;
   evaluacion: EvaluacionCapacidadesModel = {};
   historialAprobacion: SolicitudAprobacionHistorial[] = [];
@@ -83,24 +91,6 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   get hasHistorialAprobacion(): boolean {
     return this.historialAprobacion.length > 0;
   }
-  /*
-  private getEvaluacion(): void {
-    this.isLoading = true;
-    this.service.getPorGuid(this.guidEvaluacion).subscribe({
-      next: data => {
-        this.evaluacion = data;
-        if (this.evaluacion.id) {
-          this.getHistorialAprobacion(this.evaluacion.id);
-        }
-        this.getValidacionAccionesAprobacion();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.snackBar.open('Error al cargar la evaluación', '', { duration: 3000 });
-        this.isLoading = false;
-      },
-    });
-  } */
 
   private getEvaluacion(): void {
     this.isLoading = true;
@@ -108,6 +98,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
       next: data => {
         console.log('1. DATA RECIBIDA:', data);
         this.evaluacion = data;
+        this.urlSharepoint = data.url_sharepoint_ec ?? '';
         console.log('2. EVALUACION ASIGNADA:', this.evaluacion, 'guid:', this.evaluacion.guid);
         if (this.evaluacion.id) {
           this.getHistorialAprobacion(this.evaluacion.id);
@@ -189,11 +180,19 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
     this.accionesAprobacion.evaluacion_capacidades = this.evaluacion;
 
+    if (tipoAccion !== 'AJUSTAR') {
+      this.accionesAprobacion.id_usuario_ajuste = undefined;
+      this.accionesAprobacion.id_rol_aprobacion_ajuste = undefined;
+    }
+
     this.service.accionSolicitudAprobacion(this.guidEvaluacion, this.accionesAprobacion).subscribe({
       next: (response: ResponseRequest) => {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.accionesAprobacion = {};
+          this.getHistorialAprobacion(this.evaluacion.id!);
+          this.getValidacionAccionesAprobacion();
           this.router.navigateByUrl(this.urlActual);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
@@ -204,6 +203,32 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
       error: () => {
         this.isLoading = false;
         this.snackBar.open('Error al procesar la solicitud', '', { duration: 3000 });
+      },
+    });
+  }
+
+  guardarUrlSharepoint(): void {
+    const url = this.urlSharepoint.trim();
+    if (url && !/^https?:\/\/.+/i.test(url)) {
+      this.snackBar.open('La URL debe empezar por http:// o https://', '', { duration: 3000 });
+      return;
+    }
+    this.isSavingUrl = true;
+    this.service.actualizarUrlSharepoint(this.guidEvaluacion, url || null).subscribe({
+      next: (response: ResponseRequest) => {
+        this.isSavingUrl = false;
+        if (response.solicitud_exitosa) {
+          this.evaluacion.url_sharepoint_ec = url || null;
+          this.snackBar.open('URL guardada correctamente', '', { duration: 3000 });
+        } else {
+          this.snackBar.open(response.mensaje || 'No se pudo guardar la URL', '', {
+            duration: 3000,
+          });
+        }
+      },
+      error: () => {
+        this.isSavingUrl = false;
+        this.snackBar.open('Error al guardar la URL', '', { duration: 3000 });
       },
     });
   }

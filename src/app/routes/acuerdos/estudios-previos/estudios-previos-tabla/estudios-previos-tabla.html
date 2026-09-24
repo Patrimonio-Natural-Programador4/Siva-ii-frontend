@@ -9,15 +9,6 @@
 
       <mat-card-content class="app-data-card__content">
 
-
-        <div class="app-data-card__toolbar">
-          <button mat-flat-button color="primary" type="button"
-            style="background-color: #1976d2; color: #fff;" (click)="crearEstudiosPreviosAcuerdo()">
-            <mat-icon>add</mat-icon>
-            Crear estudios previos
-          </button>
-        </div>
-
         <div style="width: 100%">
           <div class="form-row">
             <div class="row">
@@ -62,7 +53,7 @@
         </div>
 
         <div class="app-data-table-wrapper" style="height: 500px; overflow: auto">
-          <table mat-table [dataSource]="estPreviosTable" class="app-data-table mat-elevation-z1">
+          <table mat-table [dataSource]="estudios" class="app-data-table mat-elevation-z1">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
@@ -122,7 +113,7 @@
             <ng-container matColumnDef="supervisor">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Supervisor
+                Funciones supervisor
               </th>
               <td mat-cell *matCellDef="let row">{{ row.supervisor | uppercase }}</td>
             </ng-container>
@@ -164,16 +155,17 @@
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
                 Implementadora
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.implementers }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.implementer }}</td>
             </ng-container>
 
+            <!---
             <ng-container matColumnDef="cap_assessments_state">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
                 Estado evaluación de capacidades
               </th>
               <td mat-cell *matCellDef="let row">{{ row.cap_assessments_state }}</td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="app_request">
               <th mat-header-cell *matHeaderCellDef
@@ -204,8 +196,9 @@
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
                 Programa
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.programs }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.program_name }}</td>
             </ng-container>
+
 
             <ng-container matColumnDef="contributions_fpn">
               <th mat-header-cell *matHeaderCellDef
@@ -223,19 +216,30 @@
               <td mat-cell *matCellDef="let row">{{ row.estimated_term | uppercase }}</td>
             </ng-container>
 
+
+            <ng-container matColumnDef="prev_studies_state">
+              <th mat-header-cell *matHeaderCellDef
+                style="position: sticky; top: 0; background: #fff; z-index: 2">
+                Estado estudios previos
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.prev_studies_state }}</td>
+            </ng-container>
+
+
             <ng-container matColumnDef="acciones" stickyEnd>
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
                 Acciones
               </th>
               <td mat-cell *matCellDef="let element">
-                <a href="javascript:void(0)" style="text-decoration: none">
+                <a href="javascript:void(0)" style="text-decoration: none" title="Editar"
+                  (click)="editarEstudioPrevio(element.guid)">
                   <mat-icon>edit</mat-icon>
                 </a>
 
                 <a href="javascript:void(0)" style="text-decoration: none"
                   title="Continuar flujo de aprobación" alt="Continuar flujo de aprobación"
-                  (click)="continuarFlujo(element.id)">
+                  (click)="continuarFlujo(element.guid)">
                   <mat-icon title="Continuar flujo de aprobación"
                     alt="Continuar flujo de aprobación">clear_all</mat-icon>
                 </a>
@@ -243,7 +247,8 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+              [ngClass]="getRowClass(row)"></tr>
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell app-data-table__empty" [attr.colspan]="displayedColumns.length">
                 No se encontraron evaluaciones con ese criterio.

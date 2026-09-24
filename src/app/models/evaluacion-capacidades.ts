@@ -27,6 +27,7 @@ export class EvaluacionCapacidadesModel {
   modality_id?: number;
   approval_request_id?: number;
   total_registros?: number;
+  url_sharepoint_ec?: string | null;
 
   constructor(data?: Partial<EvaluacionCapacidadesModel>) {
     Object.assign(this, data);

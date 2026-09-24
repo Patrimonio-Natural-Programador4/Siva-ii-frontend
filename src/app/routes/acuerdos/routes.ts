@@ -58,6 +58,16 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'estudios-previos/editar/:guid',
+        loadComponent: () =>
+          import('./estudios-previos/estudios-previos-formulario/estudios-previos-formulario').then(
+            m => m.EstudiosPreviosFormulario
+          ),
+        data: {
+          title: 'Editar estudios previos',
+        },
+      },
+      {
         path: 'evaluacion-capacidades',
         loadComponent: () =>
           import('./evaluacion-capacidades/evaluacion-capacidades-tabla/evaluacion-capacidades-tabla').then(
@@ -78,6 +88,7 @@ export const routes: Routes = [
           title: 'Crear evaluación de capacidades',
         },
       },
+
       {
         path: 'evaluacion-capacidades/detalle/:guid',
         loadComponent: () =>
