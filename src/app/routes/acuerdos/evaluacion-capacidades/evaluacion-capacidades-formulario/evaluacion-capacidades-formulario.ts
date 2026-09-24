@@ -110,7 +110,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
 
     this.guidEvaCapacidades = this.activatedRoute.snapshot.params['guid'] ?? null;
     this.accion = this.guidEvaCapacidades ? 'Editar' : 'Nuevo';
-    //this.listarProgramas();
+
     this.listarPids();
     this.listarImplementers();
     this.listarPersons();
@@ -132,7 +132,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     }
   }
 
-  guardarEvaluacionCapacidades(): void {
+  guardarEvaluacionCapacidades(enviarAprobacion = false): void {
     if (this.isLoading) {
       return;
     }
@@ -142,7 +142,14 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     const payload = {
       ...this.evaCapacidadesData,
       code: this.evaCapacidadesData.codigo,
+      enviar_aprobacion: enviarAprobacion,
     };
+
+    if (!payload.policy_approval_date) payload.policy_approval_date = null;
+    if (!payload.document_signature_date) payload.document_signature_date = null;
+    if (!payload.start_date) payload.start_date = null;
+    if (!payload.end_date) payload.end_date = null;
+
     delete (payload as any).codigo;
 
     const request$ = this.guidEvaCapacidades
@@ -171,15 +178,6 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.router.navigate(['/acuerdos/evaluacion-capacidades']);
   }
 
-  /*  listarProgramas() {
-    this.ProgramsService.getProgramsByUser().subscribe({
-      next: r => {
-        this.programs = r;
-        this.cdr.detectChanges();
-      },
-      error: e => console.error(e),
-    });
-  }*/
   listarPids() {
     this.PidsService.getPids().subscribe({
       next: r => {
