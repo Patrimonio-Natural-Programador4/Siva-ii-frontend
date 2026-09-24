@@ -86,6 +86,32 @@
                 <div class="cell_a info_a" style="flex: 3">{{ evaluacion.capacity_assessments_state
                   || '--' }}</div>
               </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">URL SharePoint</div>
+                <div class="cell_a info_a" style="flex: 3">
+                  <div class="sp-url">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic"
+                      class="sp-url__field">
+                      <input matInput name="urlSharepoint" [(ngModel)]="urlSharepoint"
+                        placeholder="https://..." />
+                    </mat-form-field>
+
+                    <button mat-raised-button color="primary" type="button" class="sp-url__btn"
+                      (click)="guardarUrlSharepoint()" [disabled]="isSavingUrl">
+                      <mat-spinner *ngIf="isSavingUrl" diameter="18"></mat-spinner>
+                      <span *ngIf="!isSavingUrl">Guardar</span>
+                    </button>
+
+                    <a *ngIf="evaluacion.url_sharepoint_ec" mat-stroked-button color="primary"
+                      class="sp-url__btn" [href]="evaluacion.url_sharepoint_ec" target="_blank"
+                      rel="noopener noreferrer">
+                      Abrir
+                    </a>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             <div class="step-actions">

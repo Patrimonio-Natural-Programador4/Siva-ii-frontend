@@ -118,4 +118,10 @@ export class EvaluacionCapacidadesService {
       params,
     });
   }
+
+  actualizarUrlSharepoint(guid: string, url: string | null): Observable<ResponseRequest> {
+    return this.http.patch<ResponseRequest>(`${this.apiUrl}/${guid}/url-sharepoint`, {
+      url_sharepoint_ec: url,
+    });
+  }
 }
