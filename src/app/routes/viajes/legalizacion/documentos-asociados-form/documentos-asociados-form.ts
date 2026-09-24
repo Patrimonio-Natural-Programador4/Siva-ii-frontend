@@ -38,6 +38,7 @@ export class DocumentosAsociadosForm {
   tiposDocumento = [
     { id: 1, name: 'Facturas' },
     { id: 2, name: 'Documentos Relacionados' },
+    { id: 2, name: 'Documentos Relacionados' },
   ];
 
   form: FormGroup = this.fb.group({
