@@ -11,13 +11,13 @@
 
       <mat-card-content>
 
-        <div class="loading-box" *ngIf="isLoading">
+        <div class="loading-box" *ngIf="isLoadingDetail">
           <mat-spinner diameter="36"></mat-spinner>
           <span>Cargando información de estudios previos...</span>
         </div>
 
 
-        <mat-vertical-stepper *ngIf="!isLoading" orientation="vertical" [linear]="isLinear">
+        <mat-vertical-stepper *ngIf="!isLoadingDetail" orientation="vertical" [linear]="isLinear">
 
           <!-- información General -->
           <mat-step>
@@ -31,108 +31,129 @@
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Antecedentes</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData.precedents || '--'}}
+                <div class="cell_a info_a" style="flex: 3">{{estudio.precedents || '--'}}
                 </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Justificación</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.justification || '--' }}
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.justification || '--' }}
                 </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Alcance</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.scope || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.scope || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Objetivo general</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.overall_objective || '--'
-                  }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.overall_objective || '--' }}
+                </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Plazo</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.term || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.term || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Plazo estimado</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.estimated_term || '--' }}
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.estimated_term || '--' }}
                 </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Obligaciones</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.obligations || '--' }}
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.obligations || '--' }}
                 </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Supervisor</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.supervisor || '--' }}
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.supervisor || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Estado</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.prev_studies_state || '--' }}
                 </div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Valor total</div>
-                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value | number) ||
-                  '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudio.total_value | number) || '--'
+                  }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Aportes EI</div>
-                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.contributions_ei |
-                  number) || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudio.contributions_ei | number) ||
+                  '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Aportes FPN</div>
-                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.contributions_fpn |
-                  number) || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudio.contributions_fpn | number)
+                  || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Valor total que ejecuta FPN</div>
-                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value_executes_fpn
-                  | number) || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudio.total_value_executes_fpn |
+                  number) || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Valor total que ejecuta EI</div>
-                <div class="cell_a info_a" style="flex: 3">{{ (estudioData?.total_value_executes_ei
-                  | number) || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ (estudio.total_value_executes_ei |
+                  number) || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Implementadora</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.implementers ||
-                  estudioData?.implementer_id || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.implementers ||
+                  estudio.implementer_id || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Solicitud de aprobación</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.app_request ||
-                  estudioData?.approval_request_id || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.app_request ||
+                  estudio.approval_request_id || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Líder del pilar</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.persons ||
-                  estudioData?.persons_id || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.persons || estudio.persons_id
+                  || '--' }}</div>
               </div>
 
               <div class="row_a">
                 <div class="cell_a info_b" style="flex: 1">Programa</div>
-                <div class="cell_a info_a" style="flex: 3">{{ estudioData?.programs ||
-                  estudioData?.program_id || '--' }}</div>
+                <div class="cell_a info_a" style="flex: 3">{{ estudio.programs || estudio.program_id
+                  || '--' }}</div>
               </div>
             </div>
 
-            <div class="step-actions mt-3">
-              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
-            </div>
+            <mat-card-actions align="end" class="p-3  border-top mt-3">
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                  matTooltip="Continuar al paso 2"
+                  matTooltipPosition="above"><mat-icon>directions_alt</mat-icon>Continuar</button>
+              </div>
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext [disabled]="!estudio.guid"
+                  (click)="verPDF(estudio.guid!)" matTooltip="Ver PDF del estudio previo"
+                  matTooltipPosition="above">
+                  <mat-icon>picture_as_pdf</mat-icon> Generar PDF
+                </button>
+              </div>
+
+            </mat-card-actions>
+
           </mat-step>
 
           <!-- flujo de Aprobación -->

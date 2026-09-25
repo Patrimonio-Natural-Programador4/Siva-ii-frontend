@@ -1,6 +1,7 @@
+import { Login } from './../../../sessions/login/login';
 import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core'; // 👈 Importado OnInit
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +21,7 @@ import {
   DialogResult,
 } from '@shared/components/accion-aprobacion/accion-aprobacion';
 import { ResponseRequest } from 'src/app/models/response-request';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-estudios-previos-flujo',
@@ -44,8 +46,11 @@ export class EstudiosPreviosFlujo implements OnInit {
   private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly urlActual = this.router.url;
 
+  estudio_Previo_Id = 0;
+  isLoadingDetail = false;
   isLoading = false;
   isLinear = false;
   isLoadingAprobacion = false;
@@ -67,15 +72,22 @@ export class EstudiosPreviosFlujo implements OnInit {
     'observaciones',
   ];
 
-  ngOnInit(): void {
-    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+  userId: string | undefined | null;
+  private route = inject(ActivatedRoute);
 
-    if (idParam) {
-      this.cargarDetalle(+idParam);
+  //constructor(private cdr: ChangeDetectorRef) {}
+  ngOnInit(): void {
+    const guid = this.route.snapshot.paramMap.get('guid');
+    if (guid) {
+      this.guidEstudio = guid;
+      this.getEstudioPrevio();
     } else {
-      console.warn('No se encontró el parámetro ID en la URL');
+      console.warn('No se encontró el parámetro guid');
+      this.snackBar.open('No se recibió el identificador de la estudio previo', '', {
+        duration: 3000,
+      });
+      this.volver();
     }
-    console.log('DAta', this.estudioData);
   }
 
   cargarDetalle(id: number): void {
@@ -100,12 +112,16 @@ export class EstudiosPreviosFlujo implements OnInit {
 
   private getEstudioPrevio(): void {
     this.isLoading = true;
+    console.log('guidest', this.guidEstudio);
+
     this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
       next: data => {
         console.log('1. DATA RECIBIDA:', data);
         this.estudio = data;
         console.log('2. EVALUACION ASIGNADA:', this.estudio, 'guid:', this.estudio.guid);
         if (this.estudio.id) {
+          this.estudio_Previo_Id = this.estudio.id;
+          this.isLoading = false;
           this.getHistorialAprobacion(this.estudio.id);
         }
         this.getValidacionAccionesAprobacion();
@@ -114,22 +130,31 @@ export class EstudiosPreviosFlujo implements OnInit {
       },
       error: err => {
         console.error('ERROR COMPLETO:', err);
+        console.dir(err);
+        console.log('JSON:', JSON.stringify(err));
         console.log('status:', err?.status);
         console.log('statusText:', err?.statusText);
         console.log('message:', err?.message);
         console.log('name:', err?.name);
         console.log('error.error (body):', err?.error);
         console.log('url:', err?.url);
-        this.snackBar.open('Error al cargar la evaluación', '', { duration: 3000 });
+        this.snackBar.open('Error al cargar la estudio previo', '', { duration: 3000 });
         this.isLoading = false;
       },
     });
   }
 
-  private getHistorialAprobacion(idEvaluacion: number): void {
-    this.EstudiosPreviosService.getHistorialAprobacion(idEvaluacion).subscribe({
-      next: data => (this.historialAprobacion = data ?? []),
-      error: () => (this.historialAprobacion = []),
+  private getHistorialAprobacion(idEstudio: number): void {
+    this.EstudiosPreviosService.getHistorialAprobacion(idEstudio).subscribe({
+      next: data => {
+        this.historialAprobacion = data ?? [];
+        this.cdr.detectChanges();
+        console.log('HISTORIAL APROBACION', this.historialAprobacion);
+      },
+      error: () => {
+        this.historialAprobacion = [];
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -181,22 +206,35 @@ export class EstudiosPreviosFlujo implements OnInit {
   }
 
   private ejecutarAccion(tipoAccion: string): void {
-    this.isLoading = true;
+    this.isLoadingDetail = true;
+    console.log('>>> isLoadingDetail = true');
     console.log('ejecutar', this.urlActual);
 
     this.accionesAprobacion.tipo_accion = tipoAccion;
     this.accionesAprobacion.tipo_solicitud = this.tipoSolicitudAprobacion;
     this.accionesAprobacion.evaluacion_capacidades = this.estudio;
 
+    if (tipoAccion !== 'AJUSTAR') {
+      this.accionesAprobacion.id_usuario_ajuste = undefined;
+      this.accionesAprobacion.id_rol_aprobacion_ajuste = undefined;
+    }
+
     this.EstudiosPreviosService.accionSolicitudAprobacion(
       this.guidEstudio,
       this.accionesAprobacion
     ).subscribe({
       next: (response: ResponseRequest) => {
-        this.isLoading = false;
+        this.isLoadingDetail = false;
+        console.log('>>> isLoadingDetail = false');
         if (response.solicitud_exitosa) {
           this.snackBar.open('Información guardada correctamente', '', { duration: 3000 });
+          this.accionesAprobacion = {};
+          this.getHistorialAprobacion(this.estudio_Previo_Id);
+          this.getValidacionAccionesAprobacion();
+          console.log('ESTUDIO PREVIO ID----', this.estudio_Previo_Id);
+
           this.router.navigateByUrl(this.urlActual);
+          //this.router.navigate([this.urlActual]);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
             duration: 3000,
@@ -204,9 +242,15 @@ export class EstudiosPreviosFlujo implements OnInit {
         }
       },
       error: () => {
-        this.isLoading = false;
+        this.isLoadingDetail = false;
         this.snackBar.open('Error al procesar la solicitud', '', { duration: 3000 });
       },
     });
+  }
+
+  verPDF(guid: string): void {
+    const url = `${environment.apiUrl2}/estudios-previos/${guid}/pdf_solicitud/documento`;
+    window.open(url, '_blank');
+    console.log('URL', url);
   }
 }

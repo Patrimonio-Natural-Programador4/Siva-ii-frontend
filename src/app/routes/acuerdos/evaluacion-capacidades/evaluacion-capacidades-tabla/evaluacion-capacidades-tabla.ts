@@ -26,6 +26,7 @@ import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capaci
 import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { Programs } from 'src/app/models/programs';
+import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
 
 @Component({
   selector: 'app-evaluaciones-capacidad-listar',
@@ -57,6 +58,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   private readonly ProgramsService = inject(ProgramsService);
   readonly paginator = viewChild(MatPaginator);
   readonly evCapacidadesTable = new MatTableDataSource<EvaluacionCapacidadesModel>([]);
+  private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
   columnas = [
     'posicion',
     'nombre',
@@ -78,6 +80,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   readonly pageSizeOptions = [20];
   evaluaciones: EvaluacionCapacidadListSP[] = [];
   total = 0;
+  evaluacionesConEstudio = new Set<number>();
   currentPage = 0;
   statesEvaCap: CapacityAssessmentStateModel[] = [];
   programs: Programs[] = [];
@@ -89,6 +92,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
     this.getEvaluaciones();
     this.listarEstados();
     this.listarProgramas();
+    this.listarEstudiosPrevios();
   }
   ngAfterViewInit(): void {}
   getEvaluaciones(): void {
@@ -188,9 +192,24 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
 
   crearEstudioPrevio(guid: string): void {
     const estudio = this.evaluaciones.find(e => e.guid === guid);
-    if (!estudio) {
+    if (!estudio || this.tieneEstudioPrevio(estudio)) {
       return;
     }
     this.router.navigate(['/acuerdos/estudios-previos', guid]);
+  }
+
+  listarEstudiosPrevios() {
+    this.EstudiosPreviosService.getEstPrevios().subscribe({
+      next: (estudios: any[]) => {
+        this.evaluacionesConEstudio = new Set(
+          estudios.map(e => e.capacity_assessment_id).filter((id: number | null) => id != null)
+        );
+        this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
+    });
+  }
+  tieneEstudioPrevio(row: EvaluacionCapacidadListSP): boolean {
+    return this.evaluacionesConEstudio.has(row.capacity_assessments_id!);
   }
 }

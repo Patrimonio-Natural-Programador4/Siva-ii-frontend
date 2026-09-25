@@ -7,10 +7,10 @@ export class EvaluacionCapacidadesModel {
   approximate_value?: number;
   create_date?: Date | string;
   //create_date?: string;
-  policy_approval_date?: Date | string;
-  document_signature_date?: Date | string;
-  start_date?: Date | string;
-  end_date?: Date | string;
+  policy_approval_date?: Date | string | null;
+  document_signature_date?: Date | string | null;
+  start_date?: Date | string | null;
+  end_date?: Date | string | null;
   codigo?: string;
   programa?: string;
   program_id?: number;
@@ -27,6 +27,8 @@ export class EvaluacionCapacidadesModel {
   modality_id?: number;
   approval_request_id?: number;
   total_registros?: number;
+  url_sharepoint_ec?: string | null;
+  enviar_aprobacion?: boolean;
 
   constructor(data?: Partial<EvaluacionCapacidadesModel>) {
     Object.assign(this, data);
@@ -41,10 +43,10 @@ export interface EvaluacionCapacidadListSP {
   approximate_value?: number;
   implementer_id?: number;
   implementer_name?: string;
-  policy_approval_date?: Date | string;
-  document_signature_date?: Date | string;
-  start_date?: Date | string;
-  end_date?: Date | string;
+  policy_approval_date?: Date | string | null;
+  document_signature_date?: Date | string | null;
+  start_date?: Date | string | null;
+  end_date?: Date | string | null;
   program_id?: number;
   program_name?: string;
   pid_id?: number;

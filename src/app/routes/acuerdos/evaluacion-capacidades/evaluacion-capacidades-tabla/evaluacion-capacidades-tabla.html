@@ -146,8 +146,8 @@
             <ng-container matColumnDef="acciones" stickyEnd>
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let element">
-                <a href="javascript:void(0)" style="text-decoration: none;"
-                  (click)="editEvaluacion(element.guid)">
+                <a *ngIf="element.capacity_assessments_states_id === 3" href="javascript:void(0)"
+                  style="text-decoration: none;" (click)="editEvaluacion(element.guid)">
                   <mat-icon>edit</mat-icon>
                 </a>
                 <a href="javascript:void(0)" style="text-decoration: none;"
@@ -157,9 +157,10 @@
                     alt="Continuar flujo de aprobación">clear_all</mat-icon>
                 </a>
 
-                <a *ngIf="element.capacity_assessments_states_id === 7" href="javascript:void(0)"
-                  style="text-decoration: none;" title="Crear estudio previo"
-                  alt="Crear estudio previo" (click)="crearEstudioPrevio(element.guid)">
+                <a *ngIf="element.capacity_assessments_states_id === 7 && !tieneEstudioPrevio(element)"
+                  href="javascript:void(0)" style="text-decoration: none;"
+                  title="Crear estudio previo" alt="Crear estudio previo"
+                  (click)="crearEstudioPrevio(element.guid)">
                   <mat-icon title="Crear estudio previo"
                     alt="Crear estudio previo">add_circle</mat-icon>
                 </a>

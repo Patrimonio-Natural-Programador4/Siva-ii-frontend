@@ -280,14 +280,25 @@
         <button mat-stroked-button type="button" class="me-2" (click)="volver()">
           Cancelar
         </button>
-        <button mat-flat-button color="primary" type="button" (click)="guardarEstudiosPrevios()"
-          [disabled]="isLoading || !fEvaluacion.valid">
+        <button mat-flat-button color="primary" type="button"
+          (click)="guardarEstudiosPrevios(false)" [disabled]="isLoading || !fEvaluacion.valid">
           @if (isLoading) {
           <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
           } @else {
           Guardar
           }
         </button>
+
+        @if (accion === 'Editar') {
+        <button mat-flat-button color="primary" type="button" (click)="guardarEstudiosPrevios(true)"
+          [disabled]="isLoading || !fEvaluacion.valid">
+          @if (isLoading) {
+          <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
+          } @else {
+          Enviar por aprobación
+          }
+        </button>
+        }
       </mat-card-actions>
     </mat-card>
   </div>
