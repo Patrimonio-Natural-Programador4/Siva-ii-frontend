@@ -57,6 +57,10 @@ export class ViajesService {
 
       fecha_fin_viaje: viaje.fecha_fin_viaje ? format(viaje.fecha_fin_viaje, 'yyyy-MM-dd') : null,
 
+      fecha_nacimiento_viajero: viaje.fecha_nacimiento_viajero
+        ? format(viaje.fecha_nacimiento_viajero, 'yyyy-MM-dd')
+        : null,
+
       itinerario: viaje.itinerario?.map(i => ({
         ...i,
         fecha: i.fecha ? format(new Date(i.fecha), 'yyyy-MM-dd') : null,
@@ -138,6 +142,11 @@ export class ViajesService {
     );
   }
 
+  getDatosContactoViajero(identificador: string, tipo: string): Observable<any> {
+    const params = new HttpParams().set('identificador', identificador).set('tipo', tipo);
+    return this.http.get<any>(`${this.apiUrl}/contacto-viajero`, { params });
+  }
+
   accionSolicitudAprobacion(
     guid: string,
     accion: AccionesSolicitudAprobacion
@@ -161,7 +170,7 @@ export class ViajesService {
   }
 
   actualizarLegalizacion(legalizationId: number, payload: any): Observable<ResponseRequest> {
-    console.log(legalizationId)
+    console.log(legalizationId);
     return this.http.patch<ResponseRequest>(
       `${this.apiUrl}/legalizaciones/${legalizationId}`,
       payload
@@ -170,6 +179,10 @@ export class ViajesService {
 
   getDocumentosAsociados(guid: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${guid}/documentos_asociados`);
+  }
+
+  getTiposDocumentos(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl2}/tipo-documentos`);
   }
 
   subirDocumentoAsociado(guid: string, payload: any): Observable<ResponseRequest> {
