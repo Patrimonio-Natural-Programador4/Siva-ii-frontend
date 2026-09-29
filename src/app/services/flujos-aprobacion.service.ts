@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '@env/environment';
@@ -8,6 +8,10 @@ import { FlujosAprobacion } from '../models/flujos-aprobacion';
 import { Listados } from '../models/listados';
 import { ResponseRequest } from '../models/response-request';
 import { RolesAprobacion } from '../models/roles-aprobacion';
+import {
+  AsignacionResponsableAprobacion,
+  AsignarResponsableAprobacionRequest,
+} from '../models/asignacion-responsable-aprobacion';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +59,22 @@ export class FlujosAprobacionService {
 
   updateFlujo(flujo: FlujosAprobacion): Observable<ResponseRequest> {
     return this.http.put<ResponseRequest>(`${this.apiUrl}/${flujo.id_flujo_aprobacion}`, flujo);
+  }
+
+  getAsignacionesResponsable(
+    approvalRequestId: number
+  ): Observable<AsignacionResponsableAprobacion[]> {
+    const params = new HttpParams().set('approval_request_id', approvalRequestId.toString());
+    return this.http.get<AsignacionResponsableAprobacion[]>(
+      `${this.apiUrl}/asignar-responsable/usuarios`,
+      { params }
+    );
+  }
+
+  asignarResponsable(
+    asignacion: AsignarResponsableAprobacionRequest
+  ): Observable<ResponseRequest> {
+    return this.http.post<ResponseRequest>(`${this.apiUrl}/asignar-responsable`, asignacion);
   }
 
   getDelegaciones(): Observable<DelegacionRolesUsuarios[]> {
