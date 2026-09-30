@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
-import { PageHeader } from '@shared';
+import { AsignarResponsable, AsignarResponsableDialogResult, PageHeader } from '@shared';
 import {
   AccionAprobacion,
   DialogResult,
@@ -22,6 +22,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AsignacionResponsableAprobacion } from 'src/app/models/asignacion-responsable-aprobacion';
+import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
 
 @Component({
   selector: 'app-evaluacion-capacidades-flujo-aprobacion',
@@ -46,6 +48,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly service = inject(EvaluacionCapacidadesService);
+  private readonly flujosAprobacionService = inject(FlujosAprobacionService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
@@ -60,6 +63,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   habilitarAcciones = false;
   evaluacion: EvaluacionCapacidadesModel = {};
   historialAprobacion: SolicitudAprobacionHistorial[] = [];
+  asignacionesResponsable: AsignacionResponsableAprobacion[] = [];
   accionesAprobacion: AccionesSolicitudAprobacion = {};
   displayedColumnsAprobacion = [
     'rol',
@@ -90,6 +94,52 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   }
   get hasHistorialAprobacion(): boolean {
     return this.historialAprobacion.length > 0;
+  }
+
+  get habilitarAccionesAprobacion(): boolean {
+    return !!this.accionesAprobacion.id_solicitud_aprobacion;
+  }
+
+  get puedeAsignarResponsable(): boolean {
+    return this.asignacionesResponsable.length > 0;
+  }
+
+  abrirModalAsignarResponsable(): void {
+    if (!this.puedeAsignarResponsable) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AsignarResponsable, {
+      width: '520px',
+      disableClose: true,
+      data: { asignaciones: this.asignacionesResponsable },
+    });
+
+    dialogRef.afterClosed().subscribe((result: AsignarResponsableDialogResult | undefined) => {
+      if (!result) {
+        return;
+      }
+
+      this.isSavingAprobacion = true;
+      this.flujosAprobacionService.asignarResponsable(result).subscribe({
+        next: response => {
+          this.isSavingAprobacion = false;
+          if (!response.solicitud_exitosa) {
+            this.snackBar.open(response.mensaje || 'No se pudo asignar el responsable', '', {
+              duration: 3000,
+            });
+            return;
+          }
+
+          this.snackBar.open(response.mensaje || 'Responsable asignado', '', { duration: 3000 });
+          this.router.navigate(['/acuerdos/evaluacion-capacidades']);
+        },
+        error: () => {
+          this.isSavingAprobacion = false;
+          this.snackBar.open('Error al asignar el responsable', '', { duration: 3000 });
+        },
+      });
+    });
   }
 
   private getEvaluacion(): void {
@@ -129,20 +179,47 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   private getValidacionAccionesAprobacion(): void {
     this.service.getValidacionAccionesAprobacion(this.guidEvaluacion).subscribe({
       next: response => {
+        //console.log('A. validación:', response);
         if (!response.solicitud_exitosa || !response.mensaje) {
           this.accionesAprobacion = {};
+          this.asignacionesResponsable = [];
           return;
         }
         this.habilitarAcciones = response.solicitud_exitosa;
         const acciones = JSON.parse(response.mensaje);
+        //console.log('B. approval_request_id:', this.evaluacion.approval_request_id);
         this.accionesAprobacion = {
           ...acciones,
           id_solicitud_aprobacion: this.evaluacion.approval_request_id,
         };
+        this.cargarAsignacionesResponsable(this.evaluacion.approval_request_id);
       },
-      error: () => (this.accionesAprobacion = {}),
+      error: err => {
+        //console.error('A. error validación:', err);
+        this.accionesAprobacion = {};
+        this.asignacionesResponsable = [];
+      },
     });
   }
+
+  private cargarAsignacionesResponsable(approvalRequestId: number | undefined): void {
+    if (!approvalRequestId) {
+      //console.warn('C. sin approvalRequestId, no se consultan asignaciones');
+      this.asignacionesResponsable = [];
+      return;
+    }
+    this.flujosAprobacionService.getAsignacionesResponsable(approvalRequestId).subscribe({
+      next: asignaciones => {
+        // console.log('D. asignaciones:', asignaciones);
+        this.asignacionesResponsable = asignaciones ?? [];
+      },
+      error: err => {
+        console.error('D. error asignaciones:', err);
+        this.asignacionesResponsable = [];
+      },
+    });
+  }
+
   abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
     const titulo = tipoAccion === 'APROBAR' ? 'Aprobar evaluación' : 'Solicitar ajustes';
 
