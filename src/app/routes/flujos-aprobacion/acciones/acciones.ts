@@ -126,7 +126,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     const usados = new Set(
       (this.flujoData.rutas ?? []).map(item => Number(item.id_rol_aprobacion))
     );
-    this.listaRoles = roles.filter(item => !usados.has(Number(item.identity)));
+    this.listaRoles = roles;
     this.numeroRolesAsignados = (this.flujoData.rutas ?? []).length || null;
   }
 
