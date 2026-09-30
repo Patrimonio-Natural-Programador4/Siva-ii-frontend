@@ -16,13 +16,19 @@ import {
   DialogResult,
 } from '@shared/components/accion-aprobacion/accion-aprobacion';
 import {
+  AsignarResponsable,
+  AsignarResponsableDialogResult,
+} from '@shared/components/asignar-responsable/asignar-responsable';
+import {
   AccionesSolicitudAprobacion,
   UsuarioDisponibleAjuste,
 } from 'src/app/models/acciones-solicitud-aprobacion';
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
+import { AsignacionResponsableAprobacion } from 'src/app/models/asignacion-responsable-aprobacion';
 import { Viajes } from 'src/app/models/viajes';
 import { UsuarioAjusteForm } from 'src/app/routes/flujos-aprobacion/usuario-ajuste-form';
+import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { environment } from '@env/environment';
 
@@ -48,6 +54,7 @@ export class Detalle implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly service = inject(ViajesService);
+  private readonly flujosAprobacionService = inject(FlujosAprobacionService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 
@@ -86,6 +93,7 @@ export class Detalle implements OnInit {
     'observaciones',
   ];
   historialAprobacion: SolicitudAprobacionHistorial[] = [];
+  asignacionesResponsable: AsignacionResponsableAprobacion[] = [];
   accionesAprobacion: AccionesSolicitudAprobacion = {};
 
   public responseRequest: ResponseRequest = {
@@ -136,6 +144,48 @@ export class Detalle implements OnInit {
 
   get habilitarAccionesAprobacion(): boolean {
     return !!this.accionesAprobacion.id_solicitud_aprobacion;
+  }
+
+  get puedeAsignarResponsable(): boolean {
+    return this.asignacionesResponsable.length > 0;
+  }
+
+  abrirModalAsignarResponsable(): void {
+    if (!this.puedeAsignarResponsable) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AsignarResponsable, {
+      width: '520px',
+      disableClose: true,
+      data: { asignaciones: this.asignacionesResponsable },
+    });
+
+    dialogRef.afterClosed().subscribe((result: AsignarResponsableDialogResult | undefined) => {
+      if (!result) {
+        return;
+      }
+
+      this.isSavingAprobacion = true;
+      this.flujosAprobacionService.asignarResponsable(result).subscribe({
+        next: response => {
+          this.isSavingAprobacion = false;
+          if (!response.solicitud_exitosa) {
+            this.snackBar.open(response.mensaje || 'No se pudo asignar el responsable', '', {
+              duration: 3000,
+            });
+            return;
+          }
+
+          this.snackBar.open(response.mensaje || 'Responsable asignado', '', { duration: 3000 });
+          this.router.navigate(['/viajes/listar']);
+        },
+        error: () => {
+          this.isSavingAprobacion = false;
+          this.snackBar.open('Error al asignar el responsable', '', { duration: 3000 });
+        },
+      });
+    });
   }
 
   abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
@@ -245,11 +295,12 @@ export class Detalle implements OnInit {
           console.log('response', response);
           if (!response.solicitud_exitosa || !response.mensaje) {
             this.accionesAprobacion = {};
+            this.asignacionesResponsable = [];
             return;
           }
 
           this.habilitarAcciones = response.solicitud_exitosa;
-
+          console.log(this.habilitarAcciones);
           const acciones = JSON.parse(response.mensaje) as AccionesSolicitudAprobacion;
           if (acciones.usuario_solicito && this.habilitarAcciones) {
             this.router.navigate(['/viajes/editar', this.guidViaje]);
@@ -258,11 +309,24 @@ export class Detalle implements OnInit {
             ...acciones,
             id_solicitud_aprobacion: this.viajeData.id_solicitud_aprobacion,
           };
+          this.cargarAsignacionesResponsable(this.viajeData.id_solicitud_aprobacion);
         },
         error: () => {
           this.accionesAprobacion = {};
+          this.asignacionesResponsable = [];
         },
       });
+  }
+
+  private cargarAsignacionesResponsable(approvalRequestId: number | undefined): void {
+    if (!approvalRequestId) {
+      this.asignacionesResponsable = [];
+      return;
+    }
+    this.flujosAprobacionService.getAsignacionesResponsable(approvalRequestId).subscribe({
+      next: asignaciones => (this.asignacionesResponsable = asignaciones ?? []),
+      error: () => (this.asignacionesResponsable = []),
+    });
   }
 
   private ejecutarAccionAprobacion(

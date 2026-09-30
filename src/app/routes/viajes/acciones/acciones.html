@@ -105,7 +105,7 @@
                     required [(ngModel)]="viajeData.id_supervisor_aprueba"
                     name="id_supervisor_aprueba">
                     <option [ngValue]="null" [disabled]="true">Seleccione el supervisor</option>
-                    @for (data of listados[5]?.lista_generica ?? []; track data.identity) {
+                    @for (data of listados[5]?.lista_generica ?? []; track data.idrelacion) {
                     <option [ngValue]="data.idrelacion">{{ data.valor }}</option>
                     }
                   </select>
@@ -184,7 +184,7 @@
                   <select id="id_funcionario_responsable" class="form-select"
                     #funcionario_responsable="ngModel" required
                     [(ngModel)]="viajeData.id_funcionario_responsable"
-                    name="id_funcionario_responsable">
+                    (ngModelChange)="autocompletarDatosViajero()" name="id_funcionario_responsable">
                     <option [ngValue]="null" [disabled]="true">Seleccione el funcionario</option>
                     @for (data of listados[9]?.lista_generica ?? []; track data.identity) {
                     <option [ngValue]="data.identity">{{ data.valor }}</option>
@@ -259,6 +259,53 @@
                 }
                 <div class="col-md-4"
                   *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado && !viajeData.dos_o_mas_personas">
+                  <label for="invited_traveler_document_type_id" class="form-label">
+                    Tipo de Documento*
+                  </label>
+                  <select cFormControl sizing="sm" required class="form-select"
+                    id="invited_traveler_document_type_id" name="invited_traveler_document_type_id"
+                    [(ngModel)]="viajeData.invited_traveler_document_type_id"
+                    #invited_traveler_document_type_id="ngModel"
+                    [class.is-invalid]="invited_traveler_document_type_id.invalid && (invited_traveler_document_type_id.dirty || invited_traveler_document_type_id.touched)">
+                    <option [ngValue]="null" disabled>Seleccione un tipo</option>
+                    <option *ngFor="let docType of documentTypes" [value]="docType.id">
+                      {{ docType.name }}
+                    </option>
+                  </select>
+                  @if (invited_traveler_document_type_id.invalid &&
+                  (invited_traveler_document_type_id.dirty ||
+                  invited_traveler_document_type_id.touched)) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4"
+                  *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado && !viajeData.dos_o_mas_personas">
+                  <label for="invited_traveler_document" class="form-label">
+                    Número de Documento*
+                  </label>
+                  <input type="text" cFormControl sizing="sm" required class="form-control"
+                    id="invited_traveler_document" name="invited_traveler_document"
+                    pattern="^[0-9]+$" placeholder="Número de documento (solo números)"
+                    [(ngModel)]="viajeData.invited_traveler_document"
+                    #invited_traveler_document="ngModel" (blur)="autocompletarDatosViajero()"
+                    [class.is-invalid]="
+                      invited_traveler_document.invalid &&
+                      (invited_traveler_document.dirty || invited_traveler_document.touched)
+                    " />
+                  @if (
+                  invited_traveler_document.invalid && (invited_traveler_document.dirty ||
+                  invited_traveler_document.touched)
+                  ) {
+                  <div class="invalid-feedback d-block">
+                    <span class="text-danger">Este campo es requerido y debe contener solo
+                      números.</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-md-4"
+                  *ngIf="!viajeData.es_para_funcionario && viajeData.es_invitado && !viajeData.dos_o_mas_personas">
                   <label for="persona_invitada" class="form-label">
                     Nombre de la persona invitada*
                   </label>
@@ -329,7 +376,7 @@
                 </div>
                 <div class="col-md-4">
                   <label for="contacto_emergencia" class="form-label">
-                    Contacto de emergencia*
+                    Nombre del contacto de emergencia*
                   </label>
                   <input type="text" id="contacto_emergencia" class="form-control"
                     name="contacto_emergencia" [(ngModel)]="viajeData.contacto_emergencia" required
@@ -401,6 +448,18 @@
                     <mat-datepicker #picker2></mat-datepicker>
                     <div class="invalid-feedback">Este campo es requerido.</div>
                   </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <label for="includes_food" class="form-label">Incluye alimentación?</label>
+                  <div>
+                    <input type="radio" [value]="true" id="includes_food_s" name="includes_food"
+                      [(ngModel)]="viajeData.includes_food" />
+                    <label class="" for="includes_food_s">&nbsp;Si</label>
+                    &nbsp;
+                    <input type="radio" [value]="false" id="includes_food_n" name="includes_food"
+                      [(ngModel)]="viajeData.includes_food" />
+                    <label class="" for="includes_food_n">&nbsp;No</label>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <label for="requiere_anticipo" class="form-label">Requiere anticipo?*</label>

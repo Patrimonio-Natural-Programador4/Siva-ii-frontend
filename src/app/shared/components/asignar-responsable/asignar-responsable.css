@@ -1,0 +1,16 @@
+.assign-reviewer-form {
+  display: grid;
+  gap: 1rem;
+  min-width: min(28rem, 75vw);
+  padding-top: 0.25rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.form-select {
+  width: 100%;
+}
