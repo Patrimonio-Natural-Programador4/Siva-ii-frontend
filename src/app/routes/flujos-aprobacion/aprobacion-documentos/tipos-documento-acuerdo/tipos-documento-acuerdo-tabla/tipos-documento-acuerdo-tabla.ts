@@ -4,6 +4,7 @@ import {
   Component,
   OnInit,
   inject,
+  input,
   viewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
+
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { TipoDocumentoAcuerdoModel } from 'src/app/models/tipos-documento-acuerdos';
 import { TiposDocumentoAcuerdosService as tipodocacuser } from 'src/app/services/aprobacion-documentos/tipos-documento-acuerdos.service';
@@ -35,9 +37,11 @@ import { TiposDocumentoAcuerdosService as tipodocacuser } from 'src/app/services
 })
 export class TiposDocumentoAcuerdoTabla implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly tiposDocAcuService = inject(tipodocacuser);
 
   readonly paginator = viewChild(MatPaginator);
+  readonly documentsApprovalId = input<number | null>(null);
 
   readonly displayedColumns = [
     'id',
@@ -70,8 +74,24 @@ export class TiposDocumentoAcuerdoTabla implements OnInit, AfterViewInit {
     }
   }
 
+  /*
   getTiposDocAcuerdo(): void {
     this.tiposDocAcuService.getTipoDocAcuerdos().subscribe(data => {
+      this.tipoDocAcuTable.data = data;
+    });
+  }  */
+
+  getTiposDocAcuerdo(): void {
+    // id de la aprobación que viene en la URL: /editar/5
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (!idParam) {
+      // /crear → no hay id → tabla vacía
+      this.tipoDocAcuTable.data = [];
+      return;
+    }
+
+    this.tiposDocAcuService.getTipoDocAcuerdos(Number(idParam)).subscribe(data => {
       this.tipoDocAcuTable.data = data;
     });
   }

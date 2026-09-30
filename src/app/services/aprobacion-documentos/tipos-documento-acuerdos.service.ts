@@ -17,8 +17,10 @@ export class TiposDocumentoAcuerdosService {
   refrescarTabla$ = new Subject<void>();
 
   // Lista tipos documentos acuerdos
-  getTipoDocAcuerdos(): Observable<TipoDocumentoAcuerdoModel[]> {
-    return this.http.get<TipoDocumentoAcuerdoModel[]>(this.apiUrl);
+  getTipoDocAcuerdos(documentsApprovalId?: number | null): Observable<TipoDocumentoAcuerdoModel[]> {
+    const params =
+      documentsApprovalId != null ? { documents_approval_id: documentsApprovalId } : undefined;
+    return this.http.get<TipoDocumentoAcuerdoModel[]>(this.apiUrl, { params });
   }
 
   //Tipo documento acuerdo por id
