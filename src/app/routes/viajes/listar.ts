@@ -251,10 +251,12 @@ export class ListarViajes implements OnInit, AfterViewInit {
     this.router.navigate(['/viajes/legalizacion', guid]);
   }
 
+  exportarExcel(): void {
+    const url = `${environment.apiUrl2}/viajes/exportar-excel`;
+    window.open(url, '_blank');
+  }
+
   aplicaLegalizacion(element: any): boolean {
-    return (
-      element?.id_estado === 4 ||
-      element?.id_estado === 6 
-    );
+    return element?.id_estado === 4 || element?.id_estado === 6;
   }
 }

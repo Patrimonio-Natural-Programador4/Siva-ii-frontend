@@ -38,7 +38,7 @@ export class DocumentosAsociadosForm implements OnInit {
   tiposDocumento: any[] = [];
 
   ngOnInit(): void {
-    this.service.getTiposDocumentos().subscribe({
+    this.service.getTiposDocumentosViaje().subscribe({
       next: tipos => {
         this.tiposDocumento = tipos;
       },

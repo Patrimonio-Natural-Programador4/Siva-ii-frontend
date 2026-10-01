@@ -243,11 +243,20 @@ export class Legalizacion implements OnInit {
 
   // --- GESTIÓN DE DOCUMENTOS ASOCIADOS (STEP 5) ---
 
+  tiposDocumentoViaje: any[] = [];
   displayedColumnsDocumentos: string[] = ['tipo_documento', 'nombre_archivo', 'observaciones'];
 
   cargarDocumentosAsociados(): void {
     if (!this.guidViaje) return;
     this.isLoadingDocumentos = true;
+    if (this.tiposDocumentoViaje.length === 0) {
+      this.service.getTiposDocumentosViaje().subscribe({
+        next: tipos => {
+          this.tiposDocumentoViaje = tipos;
+          this.cdr.markForCheck();
+        },
+      });
+    }
     this.service.getDocumentosAsociados(this.guidViaje).subscribe({
       next: docs => {
         this.isLoadingDocumentos = false;
@@ -281,9 +290,11 @@ export class Legalizacion implements OnInit {
   }
 
   getNombreTipoDocumento(id?: number): string {
-    if (id === 1) return 'Factura';
-    if (id === 2) return 'Documento Relacionado';
-    return 'Otro';
+    const tipo = this.tiposDocumentoViaje.find(t => t.id === id || t.document_type_id === id);
+    if (tipo) return tipo.name || tipo.document_category;
+    if (id === 1) return 'Facturas';
+    if (id === 2) return 'Documentos Relacionados';
+    return '-';
   }
 
   // --- GESTIÓN DE APROBACIÓN (STEP 6) ---
@@ -405,14 +416,14 @@ export class Legalizacion implements OnInit {
         },
       });
   }
-  guardarViaje(anviar_aprobacion: boolean = false) {
+  guardarViaje(anviar_aprobacion = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
 
     this.viajeData.enviar_aprobacion = anviar_aprobacion; // Asignar el valor del botón
     const request$ = this.service.guardarLegalizacion(this.viajeData);
 
     request$.subscribe({
-      next: (response) => {
+      next: response => {
         this.isLoading = false; // Resetear el estado de carga
         this.responseRequest = response;
         if (this.responseRequest.solicitud_exitosa) {
@@ -433,7 +444,7 @@ export class Legalizacion implements OnInit {
         // this.toastr.error(mensajeError, 'Error', {
         //   timeOut: 3000, positionClass: 'toast-top-center',
         // });
-      }
+      },
     });
   }
 }
