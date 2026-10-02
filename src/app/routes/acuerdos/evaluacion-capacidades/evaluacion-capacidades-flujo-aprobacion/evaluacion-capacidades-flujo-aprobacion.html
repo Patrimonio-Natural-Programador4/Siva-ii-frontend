@@ -6,8 +6,8 @@
       <mat-card-header
         class="app-data-card__header d-flex justify-content-between align-items-center"
         style="flex-direction: row;">
-        <mat-card-title><strong> Evaluación de capacidades : {{ evaluacion.name
-            }}</strong></mat-card-title>
+        <mat-card-title> Evaluación de capacidades : {{ evaluacion.name
+          }}</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -24,7 +24,7 @@
         <mat-vertical-stepper *ngIf="!isLoading && evaluacion.guid" orientation="vertical"
           [linear]="isLinear">
 
-          // info generak
+          <!-- INFO GENERAK   -->
 
           <mat-step>
             <ng-template matStepLabel>Información general</ng-template>
@@ -97,16 +97,18 @@
                         placeholder="https://..." />
                     </mat-form-field>
 
-                    <button mat-raised-button color="primary" type="button" class="sp-url__btn"
-                      (click)="guardarUrlSharepoint()" [disabled]="isSavingUrl">
+                    <button mat-stroked-button color="primary" type="button"
+                      class="sp-url__btn sp-url__btn--icon" (click)="guardarUrlSharepoint()"
+                      [disabled]="isSavingUrl" title="Guardar" aria-label="Guardar URL">
                       <mat-spinner *ngIf="isSavingUrl" diameter="18"></mat-spinner>
-                      <span *ngIf="!isSavingUrl">Guardar</span>
+                      <mat-icon *ngIf="!isSavingUrl">save</mat-icon>
                     </button>
 
                     <a *ngIf="evaluacion.url_sharepoint_ec" mat-stroked-button color="primary"
-                      class="sp-url__btn" [href]="evaluacion.url_sharepoint_ec" target="_blank"
-                      rel="noopener noreferrer">
-                      Abrir
+                      class="sp-url__btn sp-url__btn--icon" [href]="evaluacion.url_sharepoint_ec"
+                      target="_blank" rel="noopener noreferrer" title="Abrir en SharePoint"
+                      aria-label="Abrir en SharePoint">
+                      <mat-icon>open_in_new</mat-icon>
                     </a>
                   </div>
                 </div>
@@ -117,9 +119,86 @@
             <div class="step-actions">
               <button mat-raised-button color="primary" matStepperNext>Continuar</button>
             </div>
+
           </mat-step>
 
-          // flujo aprobación
+
+          <!-- DOCS ASOCIADOS   -->
+          <mat-step>
+            <ng-template matStepLabel>Documentos asociados</ng-template>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+              <h4 class="mb-0 fw-bold">Documentos adjuntos</h4>
+              <button mat-flat-button color="primary" type="button"
+                (click)="abrirModalDocumentos()">
+                <mat-icon>add</mat-icon>
+                Agregar documento
+              </button>
+            </div>
+
+            <div class="table-wrap"
+              *ngIf="!isLoadingDocumentos && hasDocumentos; else noDocumentos">
+              <table mat-table [dataSource]="documentosAsociados"
+                class="mat-elevation-z2 full-width-table">
+
+                <ng-container matColumnDef="tipo_documento">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Tipo de
+                    documento</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.document_type_description || '--' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre_archivo">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Documento</th>
+                  <td mat-cell *matCellDef="let element">
+                    <a href="javascript:void(0)"
+                      class="d-flex align-items-center text-decoration-none"
+                      title="Descargar documento" (click)="descargarDocumento(element.id)">
+                      <mat-icon class="me-1">download</mat-icon>
+                      {{ element.attachment_name }}
+                    </a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Observaciones
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.observations || '--' }}
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Acciones</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center;">
+                    <button mat-icon-button type="button" title="Editar documento"
+                      (click)="editarDocumento(element)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDocumentos"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsDocumentos"></tr>
+              </table>
+            </div>
+
+            <ng-template #noDocumentos>
+              <div class="empty-step" *ngIf="isLoadingDocumentos">Cargando documentos...</div>
+              <div class="empty-step" *ngIf="!isLoadingDocumentos">No hay documentos asociados.
+              </div>
+            </ng-template>
+
+            <div class="step-actions between">
+              <button mat-stroked-button matStepperPrevious>Atrás</button>
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
+
+          <!-- FLUJOS APROBACION   -->
 
           <mat-step>
             <ng-template matStepLabel>Flujo de aprobación</ng-template>
@@ -132,8 +211,6 @@
               </button>
             </div>
 
-
-
             <div class="table-wrap mt-3"
               *ngIf="!isLoadingAprobacion && hasHistorialAprobacion; else flujoAprobacionEstado">
 
@@ -141,23 +218,25 @@
                 class="mat-elevation-z2 full-width-table">
 
                 <ng-container matColumnDef="rol">
-                  <th mat-header-cell *matHeaderCellDef>Rol</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Rol</th>
                   <td mat-cell *matCellDef="let item">{{ item.rol || '--' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="usuario">
-                  <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Usuario</th>
                   <td mat-cell *matCellDef="let item">{{ item.usuario || '--' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="fecha_requerimiento">
-                  <th mat-header-cell *matHeaderCellDef>Fecha requerimiento</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Fecha
+                    requerimiento</th>
                   <td mat-cell *matCellDef="let item">{{ item.fecha_crea | date: 'yyyy-MM-dd HH:mm'
                     }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="fecha_aprobacion">
-                  <th mat-header-cell *matHeaderCellDef>Fecha aprobación</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Fecha aprobación
+                  </th>
                   <td mat-cell *matCellDef="let item">
                     {{ item.fecha_aprobacion ? (item.fecha_aprobacion | date: 'yyyy-MM-dd HH:mm') :
                     '--' }}
@@ -165,12 +244,13 @@
                 </ng-container>
 
                 <ng-container matColumnDef="estado">
-                  <th mat-header-cell *matHeaderCellDef>Estado</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Estado</th>
                   <td mat-cell *matCellDef="let item">{{ item.estado_aprobacion_ruta || '--' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="observaciones">
-                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center;">Observaciones
+                  </th>
                   <td mat-cell *matCellDef="let item">{{ item.observaciones || '--' }}</td>
                 </ng-container>
 

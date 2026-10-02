@@ -174,4 +174,43 @@ export class AccionesAprobacionDocumentos implements OnInit {
   volver(): void {
     this.router.navigate(['/flujos-aprobacion/aprobacion-documentos']);
   }
+
+  crear_documento_aprobacion(): void {
+    console.log('1. aqui entro a guardar');
+
+    if (this.isLoading) {
+      return;
+    }
+    this.isLoading = true;
+    const request$ = this.id
+      ? this.AprobacionDocumentosService.updateDoc(this.documentapprovalData)
+      : this.AprobacionDocumentosService.saveDocument(this.documentapprovalData);
+    console.log('log', request$);
+
+    request$.subscribe({
+      next: response => {
+        this.isLoading = false;
+        if (response.solicitud_exitosa) {
+          this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
+
+          const prueba = {
+            ...this.typedocagreData,
+            documents_approval_id: response.identity,
+          };
+          console.log('2. prueba', prueba);
+
+          this.router.navigate([
+            '/flujos-aprobacion/aprobacion-documentos/editar',
+            response.identity,
+          ]);
+        } else {
+          this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.snackBar.open('Error al guardar el documento de aprobación', '', { duration: 4000 });
+      },
+    });
+  }
 }

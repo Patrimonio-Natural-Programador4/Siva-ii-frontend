@@ -1,3 +1,4 @@
+import { DocumentoAsociadoEvaluacionCapacidadesCreate } from './../../models/documento-asociado-evaluacion-capacidades';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,6 +12,7 @@ import {
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { AccionesSolicitudAprobacion } from 'src/app/models/acciones-solicitud-aprobacion';
+import { DocumentoAsociadoEvaluacionCapacidades } from 'src/app/models/documento-asociado-evaluacion-capacidades';
 
 @Injectable({ providedIn: 'root' })
 export class EvaluacionCapacidadesService {
@@ -58,6 +60,26 @@ export class EvaluacionCapacidadesService {
     return this.http.get<EvaluacionCapacidadesModel>(`${this.apiUrl}/${guid}/detalle`);
   }
 
+  getDocumentosAsociados(guid: string): Observable<any[]> {
+    return this.http.get<DocumentoAsociadoEvaluacionCapacidades[]>(
+      `${this.apiUrl}/${guid}/documentos_asociados`
+    );
+  }
+
+  subirDocumentoAsociado(guid: string, payload: any): Observable<ResponseRequest> {
+    return this.http.post<ResponseRequest>(`${this.apiUrl}/${guid}/documento_asociado`, payload);
+  }
+
+  editarDocumentoAsociado(guid: string, id: number, payload: any): Observable<ResponseRequest> {
+    ///{guid}/documentos/{id_documento}
+    console.log('Editar archivvooo ', guid, '  ', id);
+    return this.http.put<ResponseRequest>(`${this.apiUrl}/${guid}/documentos/${id}`, payload);
+  }
+  descargarArchivoAsociado(guid: string, attachmentId: number): void {
+    const url = `${this.apiUrl}/${guid}/archivo/${attachmentId}?t=${Date.now()}`;
+    window.open(url, '_blank');
+  }
+
   getHistorialAprobacion(idEvaluacion: number): Observable<SolicitudAprobacionHistorial[]> {
     const params = new HttpParams()
       .set('guid', String(idEvaluacion))
@@ -71,16 +93,6 @@ export class EvaluacionCapacidadesService {
   getValidacionAccionesAprobacion(guid: string): Observable<ResponseRequest> {
     return this.http.get<ResponseRequest>(`${this.apiUrl}/${guid}/validar_acciones_aprobacion`);
   }
-
-  // accionSolicitudAprobacion2(
-  //   guid: string,
-  //   accion: AccionSolicitudAprobacionCapacidad
-  // ): Observable<ResponseRequest> {
-  //   return this.http.post<ResponseRequest>(
-  //     `${this.apiUrl}/${guid}/accion_solicitud_aprobacion`,
-  //     accion
-  //   );
-  // }
 
   accionSolicitudAprobacion(
     guid: string,
@@ -123,5 +135,12 @@ export class EvaluacionCapacidadesService {
     return this.http.patch<ResponseRequest>(`${this.apiUrl}/${guid}/url-sharepoint`, {
       url_sharepoint_ec: url,
     });
+  }
+
+  actualizarDocumento(guid: string, idDocumento: number, payload: any) {
+    return this.http.put<any>(
+      `${this.apiUrl}/evaluaciones-de-capacidades/${guid}/documentos/${idDocumento}`,
+      payload
+    );
   }
 }

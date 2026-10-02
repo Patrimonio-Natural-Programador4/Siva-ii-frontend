@@ -50,11 +50,16 @@
             </div>
 
             <div class="roles-step-actions d-flex justify-content-end">
-              <button mat-flat-button color="primary" type="button" matStepperNext
-                [disabled]="!formAprobacionDoc.valid">
+
+              <button mat-flat-button color="primary" type="button"
+                (click)="crear_documento_aprobacion()">
+
                 Continuar
+
               </button>
             </div>
+
+
           </form>
         </mat-step>
 
@@ -72,13 +77,10 @@
       </mat-vertical-stepper>
       <mat-card-actions align="end">
         <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
-        <button mat-flat-button color="primary" type="button" (click)="guardarDocumento()"
-          [disabled]="isLoading || !formAprobacionDoc.valid">
-          @if (isLoading) {
-          <mat-spinner diameter="18" />
-          } @else {
+        <button mat-flat-button color="primary" type="button" (click)="guardarDocumento()">
+
           Guardar
-          }
+
         </button>
 
 

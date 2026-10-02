@@ -42,14 +42,13 @@
               }
             </div>
 
-            <!-- Estado de Evaluación -->
 
 
-            <!-- Modalidad -->
+            <!-- Modalidad   -->
             <div class="col-md-6 mb-3">
-              <label for="modalities" class="form-label font-weight-bold">Modalidad</label>
-              <select id="modalities" name="modality_id" class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.modality_id">
+              <!--  <label for="modalities" class="form-label font-weight-bold">Modalidad</label> -->
+              <select style="display: none;" id="modalities" name="modality_id"
+                class="form-select text-capitalize" [(ngModel)]="evaCapacidadesData.modality_id">
                 <option value="" disabled selected>Seleccione una modalidad</option>
                 @for (item of modalities; track item.id || $index) {
                 <option [value]="item.id" class="text-capitalize">
@@ -84,7 +83,7 @@
               <label for="programa" class="form-label font-weight-bold">Programa</label>
               <select id="programa" name="program_id" class="form-select"
                 [(ngModel)]="evaCapacidadesData.program_id">
-                <option value="" disabled selected>Seleccione un programa</option>
+                <option ngValue="2" disabled selected>Seleccione un programa</option>
                 @for (prog of programsByMtf; track prog.id_programa || $index) {
                 <option [value]="prog.id_programa">
                   {{ prog.name }}
@@ -155,14 +154,14 @@
             </div>
 
             <!-- Fechas -->
-            <div class="col-md-6 mb-3">
+            <div style="display:none" class="col-md-6 mb-3">
               <label for="policy_approval_date" class="form-label font-weight-bold">Fecha aprobación
                 de política</label>
               <input id="policy_approval_date" type="date" class="form-control"
                 [(ngModel)]="evaCapacidadesData.policy_approval_date" name="policy_approval_date" />
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div style="display:none" class="col-md-6 mb-3">
               <label for="document_signature_date" class="form-label font-weight-bold">Fecha firma
                 de documento</label>
               <input id="document_signature_date" type="date" class="form-control"
@@ -170,13 +169,13 @@
                 name="document_signature_date" />
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div style="display:none" class="col-md-6 mb-3">
               <label for="start_date" class="form-label font-weight-bold">Fecha inicio</label>
               <input id="start_date" type="date" class="form-control"
                 [(ngModel)]="evaCapacidadesData.start_date" name="start_date" />
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div style="display:none" class="col-md-6 mb-3">
               <label for="end_date" class="form-label font-weight-bold">Fecha terminación</label>
               <input id="end_date" type="date" class="form-control"
                 [(ngModel)]="evaCapacidadesData.end_date" name="end_date" />

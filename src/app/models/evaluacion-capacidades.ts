@@ -23,8 +23,8 @@ export class EvaluacionCapacidadesModel {
   persons_id?: number;
   capacity_assessments_state?: string;
   capacity_assessments_states_id?: number;
-  modalitie?: string;
-  modality_id?: number;
+  modalitie?: string | null;
+  modality_id?: number | null;
   approval_request_id?: number;
   total_registros?: number;
   url_sharepoint_ec?: string | null;
@@ -54,8 +54,8 @@ export interface EvaluacionCapacidadListSP {
   persons_id?: number;
   persons_name?: string;
   capacity_assessments_states_id?: number;
-  modality_id?: number;
-  modality_name?: string;
+  modality_id?: number | null;
+  modality_name?: string | null;
   pending_my_approval?: boolean;
   capacity_assessments_id?: number;
   approval_request_id?: number;
