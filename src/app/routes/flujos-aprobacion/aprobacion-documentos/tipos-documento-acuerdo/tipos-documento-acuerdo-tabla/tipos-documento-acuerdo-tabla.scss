@@ -1,0 +1,39 @@
+
+.app-data-table-wrapper {
+	width: 100%;
+	max-height: 500px;
+	overflow: auto;
+}
+
+.app-data-card__toolbar {
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.app-data-table {
+	:is(.mat-mdc-header-cell, .mat-mdc-cell) {
+		white-space: nowrap;
+	}
+
+
+	.mat-mdc-header-cell {
+		position: sticky;
+		top: 0;
+		z-index: 2;
+		font-weight: 500 !important;
+		background: #fff;
+	}
+
+
+	.mat-mdc-row {
+		transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.mat-mdc-row:hover {
+		background-color: var(--mat-sys-surface-container-highest, #f5f5f5);
+
+		.mat-mdc-cell {
+			background-color: var(--mat-sys-surface-container-highest, #f5f5f5) !important;
+		}
+	}
+}
