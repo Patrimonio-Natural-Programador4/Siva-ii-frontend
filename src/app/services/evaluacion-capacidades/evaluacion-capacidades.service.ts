@@ -75,9 +75,12 @@ export class EvaluacionCapacidadesService {
     console.log('Editar archivvooo ', guid, '  ', id);
     return this.http.put<ResponseRequest>(`${this.apiUrl}/${guid}/documentos/${id}`, payload);
   }
-  descargarArchivoAsociado(guid: string, attachmentId: number): void {
-    const url = `${this.apiUrl}/${guid}/archivo/${attachmentId}?t=${Date.now()}`;
-    window.open(url, '_blank');
+  obtenerArchivoAsociado(guid: string, attachmentId: number, descargar = false): Observable<Blob> {
+    const params = new HttpParams().set('descargar', String(descargar)).set('t', Date.now());
+    return this.http.get(`${this.apiUrl}/${guid}/archivo/${attachmentId}`, {
+      params,
+      responseType: 'blob',
+    });
   }
 
   getHistorialAprobacion(idEvaluacion: number): Observable<SolicitudAprobacionHistorial[]> {
