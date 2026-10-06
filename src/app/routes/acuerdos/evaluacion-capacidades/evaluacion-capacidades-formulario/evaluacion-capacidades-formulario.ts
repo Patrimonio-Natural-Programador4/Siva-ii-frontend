@@ -74,6 +74,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   modalities: ModalidadModel[] = [];
   userFound: Usuarios = {};
   programsByMtf: Programs[] = [];
+  tipoImplementadora: string | null = null;
 
   evaCapacidadesData: EvaluacionCapacidadesModel = new EvaluacionCapacidadesModel({
     name: '',
@@ -122,6 +123,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
       this.EvaluacionCapacidadesService.getPorGuid(this.guidEvaCapacidades).subscribe({
         next: data => {
           this.evaCapacidadesData = new EvaluacionCapacidadesModel(data);
+          this.onImplementerChange(this.evaCapacidadesData.implementer_id ?? null);
           this.cdr.detectChanges();
         },
         error: () => {
@@ -195,6 +197,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
         this.implementers = r;
+        this.onImplementerChange(this.evaCapacidadesData.implementer_id ?? null);
         this.cdr.detectChanges();
       },
       error: e => console.error(e),
@@ -258,5 +261,10 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
       },
       error: e => console.error(e),
     });
+  }
+
+  onImplementerChange(implementerId: number | null): void {
+    const implementadora = this.implementers.find(i => i.id === Number(implementerId));
+    this.tipoImplementadora = implementadora?.implementer_type_name ?? null;
   }
 }
