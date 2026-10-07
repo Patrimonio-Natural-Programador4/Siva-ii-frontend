@@ -69,11 +69,11 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
     'pid',
     'implementador',
     'persona',
-    'fecha_aprobacion_politica',
+    /*'fecha_aprobacion_politica',
     'fecha_firma_documento',
     'fecha_inicio',
     'fecha_fin',
-    'modalidad',
+    'modalidad',  */
     'estado',
     'acciones',
   ];
