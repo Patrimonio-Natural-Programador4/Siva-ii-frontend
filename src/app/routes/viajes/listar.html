@@ -8,6 +8,10 @@
 
       <mat-card-content class="app-data-card__content">
         <div class="app-data-card__toolbar">
+          <button mat-flat-button color="primary" type="button" (click)="exportarExcel()">
+            <mat-icon>file_download</mat-icon>
+            Exportar a excel
+          </button>
           <button mat-flat-button color="primary" type="button" (click)="abrirCalendario()">
             <mat-icon>calendar_today</mat-icon>
             Calendario
@@ -24,20 +28,12 @@
               <div class="col-md-4">
                 <label for="id_estado">Filtrar por estado</label>
                 <mat-form-field class="small" appearance="outline">
-                  <mat-select
-                    aria-label="Filtrar por estado"
-                    id="id_estado"
-                    name="id_estado"
-                    multiple
-                    [(ngModel)]="id_estado"
-                    (selectionChange)="filtrarDatos(true)"
-                    placeholder="Seleccione el estado"
-                  >
+                  <mat-select aria-label="Filtrar por estado" id="id_estado" name="id_estado"
+                    multiple [(ngModel)]="id_estado" (selectionChange)="filtrarDatos(true)"
+                    placeholder="Seleccione el estado">
                     <mat-option [value]="null" disabled>Seleccione el estado</mat-option>
-                    <mat-option
-                      *ngFor="let data of listados[0]?.lista_generica"
-                      [value]="data.identity"
-                    >
+                    <mat-option *ngFor="let data of listados[0]?.lista_generica"
+                      [value]="data.identity">
                       {{ data.valor | uppercase }}
                     </mat-option>
                   </mat-select>
@@ -46,15 +42,9 @@
               <div class="col-md-4">
                 <label for="fecha_superior">Fecha de viaje igual o posterior a</label>
                 <mat-form-field class="small" appearance="outline">
-                  <input
-                    matInput
-                    [matDatepicker]="picker1"
-                    (click)="picker1.open()"
-                    (dateChange)="filtrarDatos(true)"
-                    [(ngModel)]="fechaInicio"
-                    name="fecha_inicio_viaje"
-                    id="fecha_inicio_viaje"
-                  />
+                  <input matInput [matDatepicker]="picker1" (click)="picker1.open()"
+                    (dateChange)="filtrarDatos(true)" [(ngModel)]="fechaInicio"
+                    name="fecha_inicio_viaje" id="fecha_inicio_viaje" />
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                   <div class="invalid-feedback">Este campo es requerido.</div>
@@ -63,16 +53,9 @@
               <div class="col-md-4">
                 <label for="fecha_anterior">Fecha de viaje igual o anterior a</label>
                 <mat-form-field class="small" appearance="outline">
-                  <input
-                    matInput
-                    [matDatepicker]="picker2"
-                    [min]="fechaInicio"
-                    (click)="picker2.open()"
-                    (dateChange)="filtrarDatos(true)"
-                    [(ngModel)]="fechaFin"
-                    name="fecha_fin_viaje"
-                    id="fecha_fin_viaje"
-                  />
+                  <input matInput [matDatepicker]="picker2" [min]="fechaInicio"
+                    (click)="picker2.open()" (dateChange)="filtrarDatos(true)"
+                    [(ngModel)]="fechaFin" name="fecha_fin_viaje" id="fecha_fin_viaje" />
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
                   <div class="invalid-feedback">Este campo es requerido.</div>
@@ -83,15 +66,9 @@
               <div class="col-md-4">
                 <label for="id_programa">Filtrar por programa</label>
                 <br />
-                <select
-                  aria-label="Small select example"
-                  class="form-select"
-                  (change)="filtrarDatos(true)"
-                  sizing="sm"
-                  name="id_programa"
-                  id="id_programa"
-                  [(ngModel)]="id_programa"
-                >
+                <select aria-label="Small select example" class="form-select"
+                  (change)="filtrarDatos(true)" sizing="sm" name="id_programa" id="id_programa"
+                  [(ngModel)]="id_programa">
                   <option [ngValue]="-1">Seleccione la programa</option>
                   <option *ngFor="let data of listados[1]?.lista_generica" [value]="data.identity">
                     {{ data.valor | uppercase }}
@@ -100,23 +77,13 @@
               </div>
               <div class="col-md-6">
                 <label for="ruc">Filtrar por nombre del viajero o código del viaje</label>
-                <input
-                  type="text"
-                  (ngModelChange)="filtroText($event)"
-                  class="form-control"
-                  id="filtrobusqueda"
-                  name="filtrobusqueda"
-                  placeholder="Nombre de viajero o código de viaje"
-                  [(ngModel)]="filtrobusqueda"
-                />
+                <input type="text" (ngModelChange)="filtroText($event)" class="form-control"
+                  id="filtrobusqueda" name="filtrobusqueda"
+                  placeholder="Nombre de viajero o código de viaje" [(ngModel)]="filtrobusqueda" />
               </div>
               <div class="col-md-2 mt-4">
-                <button
-                  mat-stroked-button
-                  type="button"
-                  (click)="limpiarFiltros()"
-                  aria-label="Limpiar filtros"
-                >
+                <button mat-stroked-button type="button" (click)="limpiarFiltros()"
+                  aria-label="Limpiar filtros">
                   <mat-icon>clear_all</mat-icon>
                   Limpiar filtros
                 </button>
@@ -136,12 +103,8 @@
         </div>
 
         <div class="app-data-table-wrapper viajes-table-wrapper">
-          <table
-            mat-table
-            [dataSource]="viajes"
-            multiTemplateDataRows
-            class="mat-elevation-z8 viajes-table"
-          >
+          <table mat-table [dataSource]="viajes" multiTemplateDataRows
+            class="mat-elevation-z8 viajes-table">
             <ng-container matColumnDef="posicion">
               <th mat-header-cell *matHeaderCellDef>Código</th>
               <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
@@ -213,36 +176,22 @@
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let element">
                 <div class="acciones-cell">
-                  <a
-                    href="javascript:void(0)"
-                    class="btn-accion"
-                    *ngIf="habilitarEdicion(element.guid)"
-                    title="Editar viaje"
-                    (click)="editViaje(element.guid)"
-                  >
+                  <a href="javascript:void(0)" class="btn-accion"
+                    *ngIf="habilitarEdicion(element.guid)" title="Editar viaje"
+                    (click)="editViaje(element.guid)">
                     <mat-icon>edit</mat-icon>
                   </a>
 
-                  <a
-                    href="javascript:void(0)"
-                    class="btn-accion"
-                    title="Continuar flujo de aprobación"
-                    (click)="continuarFlujo(element.guid)"
-                  >
-                    <mat-icon
-                      title="Continuar flujo de aprobación"
-                      alt="Continuar flujo de aprobación"
-                    >
+                  <a href="javascript:void(0)" class="btn-accion"
+                    title="Continuar flujo de aprobación" (click)="continuarFlujo(element.guid)">
+                    <mat-icon title="Continuar flujo de aprobación"
+                      alt="Continuar flujo de aprobación">
                       clear_all
                     </mat-icon>
                   </a>
 
-                  <button
-                    mat-icon-button
-                    class="btn-accion"
-                    [matMenuTriggerFor]="menuDetalle"
-                    title="Detalles"
-                  >
+                  <button mat-icon-button class="btn-accion" [matMenuTriggerFor]="menuDetalle"
+                    title="Detalles">
                     <mat-icon>visibility</mat-icon>
                   </button>
                   <mat-menu #menuDetalle="matMenu">
@@ -267,10 +216,11 @@
                       <span>Descargar excel facturas</span>
                     </button>
                   </mat-menu>
-                   <a href="javascript:void(0)" *ngIf="aplicaLegalizacion(element)"
-                    class="btn-accion" title="Legalización de viaje"
-                    alt="Legalización de viaje" (click)="verDetallesLegalizacion(element.guid)">
-                    <mat-icon title="Legalización de viaje" alt="Legalización de viaje">attach_money</mat-icon>
+                  <a href="javascript:void(0)" *ngIf="aplicaLegalizacion(element)"
+                    class="btn-accion" title="Legalización de viaje" alt="Legalización de viaje"
+                    (click)="verDetallesLegalizacion(element.guid)">
+                    <mat-icon title="Legalización de viaje"
+                      alt="Legalización de viaje">attach_money</mat-icon>
                   </a>
 
                 </div>
@@ -278,11 +228,8 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnasViaje"></tr>
-            <tr
-              mat-row
-              *matRowDef="let row; columns: columnasViaje"
-              [ngClass]="getRowClass(row)"
-            ></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasViaje" [ngClass]="getRowClass(row)">
+            </tr>
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell text-center" [attr.colspan]="columnasViaje.length">
                 No se encontraron registros
@@ -291,13 +238,8 @@
           </table>
         </div>
 
-        <mat-paginator
-          [length]="total"
-          [pageSize]="pageSizeOptions[0]"
-          [pageSizeOptions]="pageSizeOptions"
-          showFirstLastButtons
-          (page)="pageChange($event)"
-        />
+        <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="pageChange($event)" />
       </mat-card-content>
     </mat-card>
   </div>

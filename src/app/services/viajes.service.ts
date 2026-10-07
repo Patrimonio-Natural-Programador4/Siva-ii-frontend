@@ -185,6 +185,10 @@ export class ViajesService {
     return this.http.get<any[]>(`${environment.apiUrl2}/tipo-documentos`);
   }
 
+  getTiposDocumentosViaje(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-documentos`);
+  }
+
   subirDocumentoAsociado(guid: string, payload: any): Observable<ResponseRequest> {
     return this.http.post<ResponseRequest>(`${this.apiUrl}/${guid}/documento_asociado`, payload);
   }
