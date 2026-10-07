@@ -6,6 +6,7 @@ export class ImplementerModel {
   name?: string;
   identification_type?: number;
   type_id?: number;
+  implementer_type_name?: string | null;
   created_at?: Date | string;
   updated_at?: Date | string;
   constructor(data?: Partial<ImplementerModel>) {

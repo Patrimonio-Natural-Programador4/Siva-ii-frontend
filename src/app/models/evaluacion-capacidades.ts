@@ -17,6 +17,7 @@ export class EvaluacionCapacidadesModel {
   pid?: string;
   pid_id?: number;
   implementer?: string;
+  implementer_type?: string | null;
   implementer_id?: number;
   aproval_request?: string;
   person?: string;

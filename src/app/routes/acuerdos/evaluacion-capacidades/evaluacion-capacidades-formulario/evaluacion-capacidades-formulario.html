@@ -106,7 +106,7 @@
               </select>
             </div>
 
-            <!-- Implementadora -->
+            <!-- Implementadora
             <div class="col-md-6 mb-3">
               <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
               <select id="implementer" name="implementer_id" class="form-select"
@@ -118,11 +118,36 @@
                 </option>
                 }
               </select>
+            </div>-->
+
+            <!-- Implementadora -->
+            <div class="col-md-6 mb-3">
+              <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
+              <select id="implementer" name="implementer_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.implementer_id"
+                (ngModelChange)="onImplementerChange($event)">
+                <option [ngValue]="0" disabled>Seleccione una implementadora</option>
+                @for (implementer of implementers; track implementer.id || $index) {
+                <option [ngValue]="implementer.id">
+                  {{ implementer.name || implementer.acronym }}
+                </option>
+                }
+              </select>
             </div>
+
+            <!-- Tipo de implementadora -->
+            <div class="col-md-6 mb-3">
+              <label for="implementerType" class="form-label font-weight-bold">Tipo de
+                entidad </label>
+              <input id="implementerType" name="implementerType" class="form-control"
+                [value]="tipoImplementadora || ''" placeholder="Tipo entidad " disabled />
+            </div>
+
 
             <!-- Persona -->
             <div class="col-md-6 mb-3">
-              <label for="person" class="form-label font-weight-bold">Persona Responsable</label>
+              <label for="person" class="form-label font-weight-bold">Nombre punto de contacto de la
+                entidad </label>
               <select id="person" name="persons_id" class="form-select text-capitalize"
                 [(ngModel)]="evaCapacidadesData.persons_id">
                 <option value="" disabled selected>Seleccione una persona</option>
@@ -139,7 +164,7 @@
           <!-- SECCIÓN 3: FECHAS Y VALORES -->
           <div class="row">
             <div class="col-12 mt-2">
-              <h6 class="text-primary font-weight-bold border-bottom pb-2">Fechas y Presupuesto</h6>
+              <h6 class="text-primary font-weight-bold border-bottom pb-2">Presupuesto</h6>
             </div>
 
             <!-- Valor aproximado -->

@@ -342,8 +342,45 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     });
   }
 
-  descargarDocumento(idDocumento: number): void {
-    this.service.descargarArchivoAsociado(this.guidEvaluacion, idDocumento);
+  esPdf(nombreArchivo?: string | null): boolean {
+    return /\.pdf$/i.test(nombreArchivo ?? '');
+  }
+
+  verDocumento(documento: DocumentoAsociadoEvaluacionCapacidades): void {
+    if (!documento.id) return;
+
+    const ventana = window.open('', '_blank');
+    this.service.obtenerArchivoAsociado(this.guidEvaluacion, documento.id).subscribe({
+      next: blob => {
+        const pdf = new Blob([blob], { type: 'application/pdf' });
+        const url = URL.createObjectURL(pdf);
+
+        if (ventana) {
+          ventana.location.href = url;
+        } else {
+          window.open(url, '_blank');
+        }
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      },
+      error: () => {
+        ventana?.close();
+        this.snackBar.open('No se pudo abrir el PDF', '', { duration: 3000 });
+      },
+    });
+  }
+
+  descargarDocumento(documento: DocumentoAsociadoEvaluacionCapacidades): void {
+    this.service.obtenerArchivoAsociado(this.guidEvaluacion, documento.id!, true).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = documento.attachment_name || 'documento';
+        enlace.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.snackBar.open('No se pudo descargar el documento', '', { duration: 3000 }),
+    });
   }
 
   abrirModalDocumentos(): void {
