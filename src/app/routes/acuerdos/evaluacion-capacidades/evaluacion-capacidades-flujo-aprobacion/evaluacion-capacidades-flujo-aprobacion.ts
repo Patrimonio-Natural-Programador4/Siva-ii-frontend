@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MtxDrawer } from '@ng-matero/extensions/drawer';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { AsignarResponsable, AsignarResponsableDialogResult, PageHeader } from '@shared';
 import {
   AccionAprobacion,
@@ -24,7 +25,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AsignacionResponsableAprobacion } from 'src/app/models/asignacion-responsable-aprobacion';
 import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
+import { DocumentoAsociadoEvaluacionCapacidades } from 'src/app/models/documento-asociado-evaluacion-capacidades';
 
+import { EvaluacionCapacidadesDocumentoAsociado } from 'src/app/routes/acuerdos/evaluacion-capacidades/evaluacion-capacidades-documento-asociado/evaluacion-capacidades-documento-asociado';
 @Component({
   selector: 'app-evaluacion-capacidades-flujo-aprobacion',
   imports: [
@@ -51,6 +54,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   private readonly flujosAprobacionService = inject(FlujosAprobacionService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly drawer = inject(MtxDrawer);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
   private readonly urlActual = this.router.url;
   isLinear = false;
@@ -73,6 +78,11 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     'estado',
     'observaciones',
   ];
+
+  documentosAsociados: DocumentoAsociadoEvaluacionCapacidades[] = [];
+  isLoadingDocumentos = false;
+
+  displayedColumnsDocumentos = ['tipo_documento', 'nombre_archivo', 'observaciones', 'acciones'];
 
   userId: string | undefined | null;
   private route = inject(ActivatedRoute);
@@ -102,6 +112,10 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
 
   get puedeAsignarResponsable(): boolean {
     return this.asignacionesResponsable.length > 0;
+  }
+
+  get hasDocumentos(): boolean {
+    return this.documentosAsociados.length > 0;
   }
 
   abrirModalAsignarResponsable(): void {
@@ -154,6 +168,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
           this.getHistorialAprobacion(this.evaluacion.id);
         }
         this.getValidacionAccionesAprobacion();
+        this.getDocumentosAsociados();
         this.isLoading = false;
         console.log('3. isLoading:', this.isLoading);
       },
@@ -302,11 +317,59 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
             duration: 3000,
           });
         }
+        this.cdr.markForCheck();
       },
       error: () => {
         this.isSavingUrl = false;
         this.snackBar.open('Error al guardar la URL', '', { duration: 3000 });
       },
+    });
+  }
+
+  private getDocumentosAsociados() {
+    this.isLoadingDocumentos = true;
+    this.service.getDocumentosAsociados(this.guidEvaluacion).subscribe({
+      next: data => {
+        this.documentosAsociados = data ?? [];
+        this.isLoadingDocumentos = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.documentosAsociados = [];
+        this.isLoadingDocumentos = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  descargarDocumento(idDocumento: number): void {
+    this.service.descargarArchivoAsociado(this.guidEvaluacion, idDocumento);
+  }
+
+  abrirModalDocumentos(): void {
+    if (!this.guidEvaluacion) return;
+    const drawerRef = this.drawer.open(EvaluacionCapacidadesDocumentoAsociado, {
+      position: 'right',
+      width: '45%',
+    });
+    drawerRef.instance.guidEvaluacion = this.guidEvaluacion;
+    drawerRef.instance.documentoAgregado$.subscribe(() => {
+      this.getDocumentosAsociados();
+    });
+  }
+
+  editarDocumento(documento: DocumentoAsociadoEvaluacionCapacidades): void {
+    console.log('DOC', documento);
+
+    if (!this.guidEvaluacion) return;
+    const drawerRef = this.drawer.open(EvaluacionCapacidadesDocumentoAsociado, {
+      position: 'right',
+      width: '45%',
+    });
+    drawerRef.instance.guidEvaluacion = this.guidEvaluacion;
+    drawerRef.instance.documentoEditar = documento;
+    drawerRef.instance.documentoAgregado$.subscribe(() => {
+      this.getDocumentosAsociados();
     });
   }
 }

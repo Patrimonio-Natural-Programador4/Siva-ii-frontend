@@ -96,7 +96,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     capacity_assessments_state: '',
     capacity_assessments_states_id: 1,
     modalitie: '',
-    modality_id: 0,
+    //modality_id: 0,
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -116,6 +116,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.listarPersons();
     this.listarStates();
     this.listarModalities();
+    this.evaCapacidadesData.program_id = 2;
 
     if (this.guidEvaCapacidades) {
       this.EvaluacionCapacidadesService.getPorGuid(this.guidEvaCapacidades).subscribe({
