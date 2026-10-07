@@ -10,6 +10,7 @@ export class FlujosAprobacionRuta {
   label_ajuste?: string;
   asigna_revisor?: boolean;
   label_pendiente?: string;
+  days_for_approval?: number;
 
   constructor(data?: Partial<FlujosAprobacionRuta>) {
     Object.assign(this, data);

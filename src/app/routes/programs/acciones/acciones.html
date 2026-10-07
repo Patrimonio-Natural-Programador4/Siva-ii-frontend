@@ -54,6 +54,38 @@
                 maxlength="255"
               ></textarea>
             </div>
+
+            <div class="col-12 mb-2">
+              <h3 class="h6 mb-0">Porcentaje de días para notificaciones de aprobaciones</h3>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="first_alert_approval" class="form-label">Primer notificación</label>
+              <input
+                id="first_alert_approval"
+                type="number"
+                class="form-control"
+                min="0"
+                max="100"
+                step="1"
+                [(ngModel)]="programaData.first_alert_approval"
+                name="first_alert_approval"
+              />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="secod_alert_approval" class="form-label">Segunda notificación</label>
+              <input
+                id="secod_alert_approval"
+                type="number"
+                class="form-control"
+                min="0"
+                max="100"
+                step="1"
+                [(ngModel)]="programaData.secod_alert_approval"
+                name="secod_alert_approval"
+              />
+            </div>
           </div>
         </form>
       </mat-card-content>

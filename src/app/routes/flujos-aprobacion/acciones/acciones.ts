@@ -46,6 +46,7 @@ export class AccionesFlujosAprobacion implements OnInit {
   isLinear = true;
   columnas = [
     'posicion',
+    'diasAprobacion',
     'rol',
     'descripcion',
     'labelPendiente',
@@ -150,6 +151,7 @@ export class AccionesFlujosAprobacion implements OnInit {
       label_aprobacion: '',
       label_ajuste: '',
       asigna_revisor: false,
+      days_for_approval: 0,
     });
 
     this.flujoData.rutas = [...(this.flujoData.rutas ?? []), nuevaRuta];

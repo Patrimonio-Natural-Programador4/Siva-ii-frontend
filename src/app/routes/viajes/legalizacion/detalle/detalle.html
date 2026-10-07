@@ -427,7 +427,7 @@
 						<ng-template matStepLabel>Anticipo</ng-template>
 
 						<div class="table-wrap mt-3" *ngIf="hasAnticipo; else noAnticipo">
-							<table mat-table [dataSource]="viajeData.anticipo?.detalle ?? []" class="mat-elevation-z2 full-width-table">
+              <table mat-table [dataSource]="viajeData.anticipo ?? []" class="mat-elevation-z2 full-width-table">
 								<ng-container matColumnDef="concepto">
 									<th mat-header-cell *matHeaderCellDef>Concepto</th>
 									<td mat-cell *matCellDef="let item">{{ item.concepto || '--' }}</td>
@@ -435,7 +435,7 @@
 
 								<ng-container matColumnDef="valor">
 									<th mat-header-cell *matHeaderCellDef>Valor</th>
-									<td mat-cell *matCellDef="let item">{{ item.valor_anticipo || 0 | currency: 'COP':'symbol':'1.0-0' }}</td>
+                  <td mat-cell *matCellDef="let item">{{ item.amount || 0 | currency: 'COP':'symbol':'1.0-0' }}</td>
 								</ng-container>
 
 								<ng-container matColumnDef="observaciones">

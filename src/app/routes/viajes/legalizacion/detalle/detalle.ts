@@ -62,9 +62,7 @@ export class Detalle implements OnInit {
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
-    anticipo: {
-      detalle: [],
-    },
+    anticipo: [],
   };
 
   displayedColumnsItinerario: string[] = [
@@ -115,7 +113,7 @@ export class Detalle implements OnInit {
   }
 
   get hasAnticipo(): boolean {
-    return (this.viajeData.anticipo?.detalle?.length ?? 0) > 0;
+    return (this.viajeData.anticipo?.length ?? 0) > 0;
   }
 
   volver(): void {

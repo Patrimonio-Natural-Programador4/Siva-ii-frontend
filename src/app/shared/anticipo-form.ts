@@ -11,6 +11,7 @@ import { Listados } from 'src/app/models/listados';
 import { MtxDrawerRef } from '@ng-matero/extensions/drawer';
 import { Subject } from 'rxjs';
 import { AnticiposDetalle } from '../models/anticipos-detalle';
+import { TravelAdvance } from '../models/travel-adavance';
 
 @Component({
   selector: 'app-anticipo-form',
@@ -30,8 +31,8 @@ import { AnticiposDetalle } from '../models/anticipos-detalle';
 export class AnticipoForm implements OnInit {
   @ViewChild('f') form!: NgForm;
   private readonly drawerRef = inject(MtxDrawerRef<AnticipoForm>);
-  anticipoChanged$!: Subject<AnticiposDetalle>;
-  anticipo: AnticiposDetalle = {};
+  anticipoChanged$!: Subject<TravelAdvance>;
+  anticipo: TravelAdvance = {};
   listados: Listados[] = [];
   ngOnInit(): void {
 
@@ -42,9 +43,9 @@ export class AnticipoForm implements OnInit {
     this.anticipo = {};
     if (this.form) {
       this.form.resetForm({
-        id_concepto: null,
-        valor_anticipo: null,
-        observaciones: null
+        expense_advance_concept_id: null,
+        amount: null,
+        observations: null
       });
     }
   }

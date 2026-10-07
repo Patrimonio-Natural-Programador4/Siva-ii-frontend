@@ -11,11 +11,11 @@
     <form novalidate #f="ngForm">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
-                <label for="id_concepto" class="form-label">Concepto*</label>
-                <select id="id_concepto" class="form-select" 
+                <label for="expense_advance_concept_id" class="form-label">Concepto*</label>
+                <select id="expense_advance_concept_id" class="form-select"
                     #concepto="ngModel" required 
-                    [(ngModel)]="anticipo.id_concepto"
-                    name="id_concepto">
+                  [(ngModel)]="anticipo.expense_advance_concept_id"
+                  name="expense_advance_concept_id">
                     <option [ngValue]="null" [disabled]="true">Seleccione el concepto</option>
                     @for (data of listados[4]?.lista_generica ?? []; track data.identity) {
                         <option [ngValue]="data.identity">{{ data.valor }}
@@ -30,22 +30,30 @@
 
             </div>
             <div class="col-12 col-md-12 col-lg-12">
-                <label for="valor_anticipo" class="form-label">Valor del anticipo</label>
+                <label for="amount" class="form-label">Valor del anticipo</label>
                 <br>
-                <input type="number" class="form-control" id="valor_anticipo"
-                    name="valor_anticipo" placeholder="Valor del anticipo"
-                    [(ngModel)]="anticipo.valor_anticipo"
-                    #valor_anticipo="ngModel"
-                    [class.is-invalid]="valor_anticipo.invalid && (valor_anticipo.dirty || valor_anticipo.touched)"/>
+                <input type="number" class="form-control" id="amount"
+                    name="amount" placeholder="Valor del anticipo"
+                    [(ngModel)]="anticipo.amount"
+                    #amount="ngModel"
+                    [class.is-invalid]="amount.invalid && (amount.dirty || amount.touched)"/>
             </div>
             <div class="col-12 col-md-12 col-lg-12">
-                <label for="observaciones" class="form-label">Observaciones</label>
+                <label for="observations" class="form-label">
+                  Observaciones{{ anticipo.expense_advance_concept_id === 4 ? '*' : '' }}
+                </label>
                 <br>
-                <textarea id="observaciones" class="form-control" rows="2" required
-                                        #observaciones="ngModel" placeholder="Observaciones"
-                                        [(ngModel)]="anticipo.observaciones" name="observaciones"
-                                        [class.is-invalid]="observaciones.invalid && (observaciones.dirty || observaciones.touched)"
+                <textarea id="observations" class="form-control" rows="2"
+                                        #observations="ngModel" placeholder="Observaciones"
+                                        [(ngModel)]="anticipo.observations" name="observations"
+                                        [required]="anticipo.expense_advance_concept_id === 4"
+                                        [class.is-invalid]="observations.invalid && (observations.dirty || observations.touched)"
                                         maxlength="255"></textarea>
+                            @if (observations.invalid && (observations.dirty || observations.touched)) {
+                              <div class="invalid-feedback d-block">
+                                <span class="text-danger">Este campo es requerido para el concepto seleccionado.</span>
+                              </div>
+                            }
             </div>
             <div class="col-12 col-md-6 col-lg-6">
                 <!-- <span class="text-danger ng-star-inserted" *ngIf="errorEnanticipo" [innerHTML]="error_anticipo"></span> -->
