@@ -285,7 +285,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
           this.accionesAprobacion = {};
           this.getHistorialAprobacion(this.evaluacion.id!);
           this.getValidacionAccionesAprobacion();
-          this.router.navigateByUrl(this.urlActual);
+          // this.router.navigateByUrl(this.urlActual);
+          this.router.navigate(['/acuerdos/evaluacion-capacidades']);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
             duration: 3000,
