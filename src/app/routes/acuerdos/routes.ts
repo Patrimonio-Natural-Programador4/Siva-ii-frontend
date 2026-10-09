@@ -12,6 +12,14 @@ export const routes: Routes = [
         redirectTo: 'listar',
         pathMatch: 'full',
       },
+      {
+        path: 'listar',
+        loadComponent: () =>
+          import('./listado-acuerdos/listado-acuerdos.component').then(m => m.ListarAcuerdos),
+        data: {
+          title: 'Listado de acuerdos',
+        },
+      },
 
       //sacar esto aparte
       {

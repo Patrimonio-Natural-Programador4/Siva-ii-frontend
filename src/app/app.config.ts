@@ -1,4 +1,10 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -36,7 +42,13 @@ import { environment } from '@env/environment';
 import { formlyConfigFactory, PaginatorI18nService } from '@shared';
 import { InMemDataService } from '@shared/in-mem/in-mem-data.service';
 import { routes } from './app.routes';
-import { BrowserCacheLocation, InteractionType, IPublicClientApplication, LogLevel, PublicClientApplication } from '@azure/msal-browser';
+import {
+  BrowserCacheLocation,
+  InteractionType,
+  IPublicClientApplication,
+  LogLevel,
+  PublicClientApplication,
+} from '@azure/msal-browser';
 import {
   MsalInterceptor,
   MSAL_INSTANCE,
@@ -106,9 +118,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   };
 }
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimationsAsync(),
     {
       provide: LOCALE_ID,
       useValue: 'es-CO',
@@ -121,10 +133,10 @@ export const appConfig: ApplicationConfig = {
       provide: MSAL_INSTANCE,
       useFactory: MSALInstanceFactory,
     },
-     {
+    {
       provide: APP_INITIALIZER,
       useFactory: initializeMsalInstance,
-      multi: true
+      multi: true,
     },
     // Ahora sí, el resto de providers relacionados con MSAL
     {
