@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { ViajesService } from 'src/app/services/viajes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TravelLegalization } from 'src/app/models/travel-legalization';
+import { Listados } from 'src/app/models/listados';
 
 @Component({
   selector: 'app-legalizacion-form',
@@ -58,6 +59,7 @@ export class LegalizacionForm implements OnInit {
   isLoading = false;
   isSaving = false;
   isEdit = false;
+  listados: Listados[] = [];
 
   regimenTypes = [
     { id: 1, name: 'Responsable de IVA' },
@@ -67,6 +69,7 @@ export class LegalizacionForm implements OnInit {
   ];
 
   legalizacion: any = {
+    concept_id: null,
     check_date: null,
     check_number: null,
     beneficiary: null,
@@ -87,6 +90,14 @@ export class LegalizacionForm implements OnInit {
     } else if (this.travelRequestId && this.legalizacionId) {
       this.cargarLegalizacionExistente();
     }
+    this.viajesService.getListados().subscribe({
+      next: listados => {
+        this.listados = listados ?? [];
+        this.cdr.markForCheck();
+      },
+      error: () =>
+        this.snackBar.open('Error al cargar los conceptos', 'Cerrar', { duration: 3000 }),
+    });
   }
 
   inicializarEdicion(data: TravelLegalization, travelRequestId?: number): void {
@@ -116,6 +127,7 @@ export class LegalizacionForm implements OnInit {
     }
 
     this.legalizacion = {
+      concept_id: data.concept_id ?? null,
       check_date: parsedDate,
       check_number: data.check_number ?? null,
       beneficiary: data.beneficiary ?? null,

@@ -141,6 +141,19 @@
                     </td>
                   </ng-container>
 
+                  <ng-container matColumnDef="diasAprobacion">
+                    <th mat-header-cell *matHeaderCellDef>Días para aprobación</th>
+                    <td mat-cell *matCellDef="let element">
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control route-order-input"
+                        [name]="'dias-aprobacion-' + element.id_ruta"
+                        [(ngModel)]="element.days_for_approval"
+                      />
+                    </td>
+                  </ng-container>
+
                   <ng-container matColumnDef="rol">
                     <th mat-header-cell *matHeaderCellDef>Rol</th>
                     <td mat-cell *matCellDef="let element">{{ element.rol }}</td>

@@ -69,9 +69,6 @@ export class Detalle implements OnInit {
   viajeData: Viajes = {
     itinerario: [],
     hotel: [],
-    anticipo: {
-      detalle: [],
-    },
   };
 
   displayedColumnsItinerario: string[] = [
@@ -123,7 +120,14 @@ export class Detalle implements OnInit {
   }
 
   get hasAnticipo(): boolean {
-    return (this.viajeData.anticipo?.detalle?.length ?? 0) > 0;
+    return (this.viajeData.anticipo?.length ?? 0) > 0;
+  }
+
+  get totalAnticipos(): number {
+    return (this.viajeData.anticipo ?? []).reduce((total, anticipo) => {
+      const amount = Number(anticipo.amount ?? 0);
+      return total + (Number.isFinite(amount) ? amount : 0);
+    }, 0);
   }
 
   volver(): void {

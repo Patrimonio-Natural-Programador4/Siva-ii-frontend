@@ -80,6 +80,16 @@
           <div class="invalid-feedback">Este campo es requerido.</div>
         </div>
 
+        <div class="col-12 col-md-6 mb-3">
+          <label for="concept_id" class="form-label">Concepto</label>
+          <select id="concept_id" class="form-select" name="concept_id" [(ngModel)]="legalizacion.concept_id">
+            <option [ngValue]="null">Seleccione un concepto</option>
+            @for (concepto of listados[4]?.lista_generica ?? []; track concepto.identity) {
+              <option [ngValue]="concepto.identity">{{ concepto.valor }}</option>
+            }
+          </select>
+        </div>
+
         <div class="col-12 col-md-12 mb-3">
           <label for="observations_outlay" class="form-label">Descripción del gasto</label>
           <textarea

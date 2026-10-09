@@ -34,7 +34,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
 import { ViajesItinerario } from 'src/app/models/viajes-itinerario';
 import { ViajesHotel } from 'src/app/models/viajes-hotel';
-import { AnticiposDetalle } from 'src/app/models/anticipos-detalle';
 import { AnticipoForm } from 'src/app/shared/anticipo-form';
 import { ChoiceWithIndices, NgxMentionsModule } from 'ngx-mentions';
 import { format } from 'date-fns';
@@ -47,6 +46,7 @@ import { HotelForm } from '../hotel/hotel-form';
 import { ItinerarioForm } from '../itinerario/itinerario-form';
 import { numeroALetrasEspanol } from 'src/app/shared/utils';
 import { AuthService } from '@core/authentication/auth.service';
+import { TravelAdvance } from 'src/app/models/travel-adavance';
 // import { ToastrService } from 'ngx-toastr';
 
 export const MY_FORMATS = {
@@ -96,10 +96,10 @@ export class AccionesViajes implements OnInit {
   itinerarioChanged$ = new Subject<ViajesItinerario>();
   regresoChanged$ = new Subject<ViajesItinerario>();
   hotelChanged$ = new Subject<ViajesHotel>();
-  anticipoChanged$ = new Subject<AnticiposDetalle>();
+  anticipoChanged$ = new Subject<TravelAdvance>();
   dataSourceItinerario = new MatTableDataSource<ViajesItinerario>([]);
   dataSourceHotel = new MatTableDataSource<ViajesHotel>([]);
-  dataSourceAnticipo = new MatTableDataSource<AnticiposDetalle>([]);
+  dataSourceAnticipo = new MatTableDataSource<TravelAdvance>([]);
   fechaInicio?: any = null;
   fechaFin?: any = null;
   fechaNacimiento?: any = null;
@@ -134,18 +134,13 @@ export class AccionesViajes implements OnInit {
     id_rol_aprobacion_supervisor: null!,
     guid: null!,
     id_supervisor_aprueba: null!,
-    id_programa: null!,
+    id_programa: 2,
     id_tipo_cuenta: null!,
     id_entidad_bancaria: null!,
     guid_soporte_pasaporte: '',
     es_para_funcionario: false,
     id_funcionario_responsable: null!,
-    anticipo: {
-      id_anticipo: null!,
-      id_relacion: null!,
-      id_tipo_anticipo: null!,
-      detalle: [],
-    },
+    anticipo: [],
   };
   displayedColumns: string[] = [
     'origen',
@@ -165,6 +160,13 @@ export class AccionesViajes implements OnInit {
     'acciones',
   ];
   displayedColumnsAnticipo: string[] = ['concepto', 'valor', 'observaciones', 'acciones'];
+
+  get totalAnticipos(): number {
+    return (this.viajeData.anticipo ?? []).reduce((total, anticipo) => {
+      const amount = Number(anticipo.amount ?? 0);
+      return total + (Number.isFinite(amount) ? amount : 0);
+    }, 0);
+  }
   private readonly service = inject(ViajesService);
   private readonly snackBar = inject(MatSnackBar);
   private sanitizer: DomSanitizer = inject(DomSanitizer);
@@ -221,7 +223,7 @@ export class AccionesViajes implements OnInit {
       this.getViaje();
     }
 
-    this.dataSourceAnticipo.data = this.viajeData.anticipo?.detalle ?? [];
+    this.dataSourceAnticipo.data = this.viajeData.anticipo ?? [];
   }
 
   validarFecha() {}
@@ -427,6 +429,7 @@ export class AccionesViajes implements OnInit {
         this.viajeData = data;
         this.dataSourceItinerario.data = this.viajeData.itinerario ?? [];
         this.dataSourceHotel.data = this.viajeData.hotel ?? [];
+        this.dataSourceAnticipo.data = this.viajeData.anticipo ?? [];
         this.fechaInicio = this.viajeData.fecha_inicio_viaje;
         this.fechaFin = this.viajeData.fecha_fin_viaje;
         this.fechaNacimiento = this.viajeData.fecha_nacimiento_viajero;
@@ -666,18 +669,17 @@ export class AccionesViajes implements OnInit {
 
     const sub = this.anticipoChanged$.subscribe(result => {
       if (!this.viajeData.anticipo) {
-        this.viajeData.anticipo = {
-          detalle: [],
-        };
+        this.viajeData.anticipo = [];
       }
       const concepto = this.listados[4]?.lista_generica?.find(
-        p => p.identity === result.id_concepto
+        p => p.identity === result.expense_advance_concept_id
       )?.valor;
 
-      result.concepto = concepto;
-      this.viajeData.anticipo.detalle = [...(this.viajeData.anticipo.detalle ?? []), { ...result }];
+      result.concept = concepto;
+      this.viajeData.anticipo = [...(this.viajeData.anticipo ?? []), { ...result }];
 
-      this.dataSourceAnticipo.data = this.viajeData.anticipo.detalle;
+      this.dataSourceAnticipo.data = this.viajeData.anticipo;
+      this.viajeData.valor_anticipo = this.totalAnticipos;
       this.snackBar.open('Anticipo agregado correctamente', '', { duration: 3000 });
     });
 
@@ -810,10 +812,11 @@ export class AccionesViajes implements OnInit {
   }
   editarHotel(index: number) {}
   eliminarAnticipo(index: number) {
-    // if (this.viajeData.anticipo?.detalle) {
-    //   this.viajeData.anticipo.detalle.splice(index, 1);
-    //   this.dataSourceAnticipo.data = [...this.viajeData.anticipo.detalle];
-    // }
+    this.viajeData.anticipo = (this.viajeData.anticipo ?? []).filter(
+      (_, itemIndex) => itemIndex !== index
+    );
+    this.dataSourceAnticipo.data = this.viajeData.anticipo;
+    this.viajeData.valor_anticipo = this.totalAnticipos;
   }
   editarAnticipo(index: number) {}
 
@@ -844,6 +847,7 @@ export class AccionesViajes implements OnInit {
   accionSolicitud(tipo_accion: string) {}
   guardarViaje(anviar_aprobacion = false) {
     this.isLoading = true; //  Mostrar spinner o deshabilitar botón
+    this.viajeData.valor_anticipo = this.totalAnticipos;
     // this.viajeData.anticipo!.id_entidad_bancaria = this.viajeData.id_entidad_bancaria;
     // this.viajeData.anticipo!.numero_cuenta = this.viajeData.numero_cuenta;
     const esNuevo = !this.viajeData.id_viaje || this.viajeData.id_viaje == 0;

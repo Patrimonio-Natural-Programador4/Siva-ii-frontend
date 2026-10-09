@@ -88,6 +88,15 @@
 	color: #fff;
 }
 
+:host ::ng-deep .table-wrap .mat-mdc-footer-row {
+	font-weight: 500;
+	background-color: #cecece;
+}
+
+:host ::ng-deep .table-wrap .mat-mdc-footer-cell {
+	color: #000;
+}
+
 .empty-step {
 	padding: 12px;
 	margin-top: 1rem;

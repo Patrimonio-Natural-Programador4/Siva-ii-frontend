@@ -46,7 +46,7 @@ import { DocumentoAsociado } from 'src/app/models/documento-asociado';
   styleUrl: './legalizacion.scss',
 })
 export class Legalizacion implements OnInit {
-  private readonly tipoSolicitudAprobacion = 'SOL_VIA_ANT';
+  private readonly tipoSolicitudAprobacion = 'LEG_VIA_ANT';
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly service = inject(ViajesService);
@@ -79,11 +79,13 @@ export class Legalizacion implements OnInit {
     'observaciones',
   ];
   displayedColumnsHotel: string[] = ['ciudad', 'fecha_llegada', 'fecha_salida', 'observaciones'];
+  displayedColumnsAnticipo: string[] = ['concepto', 'valor', 'observaciones'];
   displayedColumnsLegalizacion: string[] = [
     'check_date',
     'check_number',
     'beneficiary',
     'nit_beneficiary',
+    'concept_name',
     'observations_outlay',
     'regimen_name',
     'subtotal',
@@ -132,6 +134,22 @@ export class Legalizacion implements OnInit {
 
   get hasHotel(): boolean {
     return (this.viajeData.hotel?.length ?? 0) > 0;
+  }
+
+  get hasAnticipo(): boolean {
+    return (this.viajeData.anticipo?.length ?? 0) > 0;
+  }
+
+  get totalAnticipos(): number {
+    return (this.viajeData.anticipo ?? []).reduce((total, anticipo) => {
+      const amount = Number(anticipo.amount ?? 0);
+      return total + (Number.isFinite(amount) ? amount : 0);
+    }, 0);
+  }
+
+  get totalAnticipoSolicitado(): number {
+    const solicitado = Number(this.viajeData.valor_anticipo);
+    return Number.isFinite(solicitado) ? solicitado : this.totalAnticipos;
   }
 
   get hasHistorialAprobacion(): boolean {

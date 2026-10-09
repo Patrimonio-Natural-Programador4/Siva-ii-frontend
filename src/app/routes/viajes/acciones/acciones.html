@@ -475,7 +475,7 @@
                 </div>
 
                 @if (viajeData.requiere_anticipo) {
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <label for="tipo_cuenta" class="form-label">Valor del anticipo*</label>
                   <div>
                     <input type="number" cFormControl sizing="sm" required class="form-control"
@@ -500,7 +500,7 @@
                     placeholder="Lectura automatica" cdkTextareaAutosize [cdkAutosizeMinRows]="1"
                     [cdkAutosizeMaxRows]="6"
                     style="resize: none; overflow: hidden; line-height: 1.4; min-height: 38px;"></textarea>
-                </div>
+                </div> -->
                 <div class="col-md-4">
                   <label for="tipo_cuenta" class="form-label">Tipo de cuenta*</label>
                   <div>
@@ -723,7 +723,7 @@
               </div>
             </form>
           </mat-step>
-          <!-- <mat-step [stepControl]="fAnticipo.control" *ngIf="viajeData.requiere_anticipo">
+          <mat-step [stepControl]="fAnticipo.control" *ngIf="viajeData.requiere_anticipo">
                         <form novalidate #fAnticipo="ngForm" class="roles-step-form">
                             <ng-template matStepLabel>Requerimiento de anticipo</ng-template>
 
@@ -735,28 +735,31 @@
                                 </button>
                             </div>
 
-                            <div class="app-data-table-wrapper">
+                            <div class="table-wrap mt-3">
                                 <table mat-table [dataSource]="dataSourceAnticipo"
-                                    class="mat-elevation-z8">
+                                class="mat-elevation-z2 full-width-table">
 
 
                                     <ng-container matColumnDef="concepto">
                                         <th mat-header-cell *matHeaderCellDef> Concepto </th>
                                         <td mat-cell *matCellDef="let element">
-                                            {{element.concepto}} </td>
+                                            {{element.concept}} </td>
+                                      <td mat-footer-cell *matFooterCellDef><strong>Total anticipos</strong></td>
                                     </ng-container>
 
                                     <ng-container matColumnDef="valor">
                                         <th mat-header-cell *matHeaderCellDef> Valor del anticipo
                                         </th>
                                         <td mat-cell *matCellDef="let element">
-                                            {{element.valor_anticipo | currency}} </td>
+                                          {{element.amount | currency}} </td>
+                                        <td mat-footer-cell *matFooterCellDef><strong>{{totalAnticipos | currency}}</strong></td>
                                     </ng-container>
 
                                     <ng-container matColumnDef="observaciones">
                                         <th mat-header-cell *matHeaderCellDef> Observaciones</th>
                                         <td mat-cell *matCellDef="let element">
-                                            {{element.observaciones}} </td>
+                                            {{element.observations}} </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
                                     </ng-container>
 
                                     <ng-container matColumnDef="acciones">
@@ -769,11 +772,13 @@
                                                 <mat-icon>edit</mat-icon>
                                             </a>
                                         </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
                                     </ng-container>
 
                                     <tr mat-header-row *matHeaderRowDef="displayedColumnsAnticipo">
                                     </tr>
                                     <tr mat-row *matRowDef="let row; columns: displayedColumnsAnticipo;"></tr>
+                                    <tr mat-footer-row *matFooterRowDef="displayedColumnsAnticipo"></tr>
                                 </table>
                             </div>
 
@@ -782,7 +787,7 @@
                                     matStepperPrevious>Volver</button>
                             </div>
                         </form>
-                    </mat-step> -->
+                    </mat-step>
         </mat-vertical-stepper>
       </mat-card-content>
 

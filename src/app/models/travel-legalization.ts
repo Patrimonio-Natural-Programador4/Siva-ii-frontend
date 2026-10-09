@@ -5,6 +5,8 @@ export interface TravelLegalization {
   check_number?: string | null;
   beneficiary: string;
   nit_beneficiary: string;
+  concept_id?: number | null;
+  concept_name?: string | null;
   observations_outlay?: string | null;
   regimen_type_id: number;
   regimen_name?: string | null;

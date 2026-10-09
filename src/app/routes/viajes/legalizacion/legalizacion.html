@@ -273,6 +273,54 @@
             </div>
           </mat-step>
 
+          <!-- STEP: Requerimiento de anticipo -->
+          <mat-step *ngIf="viajeData.requiere_anticipo === true">
+            <ng-template matStepLabel>Requerimiento de anticipo</ng-template>
+
+            <div class="table-wrap mt-3" *ngIf="hasAnticipo; else noAnticipo">
+              <table
+                mat-table
+                [dataSource]="viajeData.anticipo ?? []"
+                class="mat-elevation-z2 full-width-table"
+              >
+                <ng-container matColumnDef="concepto">
+                  <th mat-header-cell *matHeaderCellDef>Concepto</th>
+                  <td mat-cell *matCellDef="let item">{{ item.concept || '--' }}</td>
+                  <td mat-footer-cell *matFooterCellDef><strong>Total anticipos</strong></td>
+                </ng-container>
+
+                <ng-container matColumnDef="valor">
+                  <th mat-header-cell *matHeaderCellDef>Valor del anticipo</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.amount || 0 | currency: 'COP':'symbol':'1.0-0' }}
+                  </td>
+                  <td mat-footer-cell *matFooterCellDef>
+                    <strong>{{ totalAnticipos | currency: 'COP':'symbol':'1.0-0' }}</strong>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observaciones">
+                  <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                  <td mat-cell *matCellDef="let item">{{ item.observations || '--' }}</td>
+                  <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAnticipo"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAnticipo"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumnsAnticipo"></tr>
+              </table>
+            </div>
+
+            <ng-template #noAnticipo>
+              <div class="empty-step">No hay conceptos de anticipo registrados.</div>
+            </ng-template>
+
+            <div class="step-actions between">
+              <button mat-stroked-button matStepperPrevious>Atrás</button>
+              <button mat-raised-button color="primary" matStepperNext>Continuar</button>
+            </div>
+          </mat-step>
+
           <!-- STEP 4: Legalización y Facturas (NUEVO STEP #4) -->
           <mat-step>
             <ng-template matStepLabel>Legalización y Facturas</ng-template>
@@ -331,6 +379,14 @@
                   <th mat-header-cell *matHeaderCellDef>Descripción del gasto</th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.observations_outlay || '--' }}
+                  </td>
+                  <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="concept_name">
+                  <th mat-header-cell *matHeaderCellDef>Concepto</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.concept_name || '--' }}
                   </td>
                   <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
@@ -428,6 +484,17 @@
                 Cargando registros de legalización...
               </div>
             </ng-template>
+
+            <div class="alert alert-info mt-3 mb-0" role="status">
+              <div>
+                <strong>Valor total solicitado del anticipo:</strong>
+                {{ totalAnticipoSolicitado | currency: 'COP':'symbol':'1.0-0' }}
+              </div>
+              <div>
+                <strong>Valor total asociado a facturas:</strong>
+                {{ totalValorCanceladoLegalizaciones | currency: 'COP':'symbol':'1.0-0' }}
+              </div>
+            </div>
 
             <div class="step-actions between">
               <button mat-stroked-button matStepperPrevious>Atrás</button>

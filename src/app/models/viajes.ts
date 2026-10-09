@@ -1,6 +1,7 @@
 import { AnticiposReintegros } from './anticipos-reintegros';
 import { ViajesHotel } from './viajes-hotel';
 import { ViajesItinerario } from './viajes-itinerario';
+import { TravelAdvance } from './travel-adavance';
 
 export class Viajes {
   id_viaje?: number;
@@ -23,7 +24,7 @@ export class Viajes {
   requiere_anticipo?: boolean;
   itinerario?: ViajesItinerario[];
   hotel?: ViajesHotel[];
-  anticipo?: AnticiposReintegros;
+  anticipo?: TravelAdvance[];
   // reintegro?: AnticiposReintegros;
   valor_anticipo?: number;
   asociado_taller?: boolean;
