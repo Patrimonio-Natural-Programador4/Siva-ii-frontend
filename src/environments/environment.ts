@@ -22,7 +22,7 @@ export const environment: EnvironmentConfiguration = {
     userProfile:'user-profiles'
   },
   adConfig: {
-    redirectUri: 'http://localhost:4201/auth/login',
+    redirectUri: 'http://localhost:4200/auth/login',
     clientId: '6334ea41-2b5c-42b8-9d4f-15c64895d812',
     readScopeUrl: 'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
     writeScopeUrl: 'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
