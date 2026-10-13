@@ -1,0 +1,24 @@
+export interface AgreementsListSP {
+  id: number | null;
+  codigo_siva: string | null;
+  nombre_convenio: string | null;
+  objeto_acuerdo: string | null;
+  prioridad_acuerdo: string | null;
+  ano_ejecucion: number | null;
+  estado_name: string | null;
+  estado_stage: string | null;
+  estado_status: string | null;
+  estado_color: string | null;
+  tipo_name: string | null;
+  tipo_color: string | null;
+  modalidad_name: string | null;
+  pilar_name: string | null;
+  pilar_color: string | null;
+  nucleos: string | null;
+  implementadoras: string | null;
+  monto_apropiado: number | null;
+  monto_total_apropiado: number | null;
+  total_paa: number | null;
+  total_records?: number | null;
+  total_registros: number | null;
+}

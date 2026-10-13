@@ -16,15 +16,16 @@ import { TravelAdvance } from '../models/travel-adavance';
 @Component({
   selector: 'app-anticipo-form',
   imports: [
-    CommonModule, 
-    MatSidenavModule, 
-    MatButtonModule, 
+    CommonModule,
+    MatSidenavModule,
+    MatButtonModule,
     MatDialogModule,
-    MatIconModule, 
-    MatInputModule, 
-    ReactiveFormsModule, 
-    FormsModule, 
-    MatSelectModule],
+    MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatSelectModule,
+  ],
   templateUrl: './anticipo-form.html',
   styleUrl: './anticipo-form.scss',
 })
@@ -34,9 +35,7 @@ export class AnticipoForm implements OnInit {
   anticipoChanged$!: Subject<TravelAdvance>;
   anticipo: TravelAdvance = {};
   listados: Listados[] = [];
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   guardar(): void {
     this.anticipoChanged$.next({ ...this.anticipo });
@@ -45,7 +44,7 @@ export class AnticipoForm implements OnInit {
       this.form.resetForm({
         expense_advance_concept_id: null,
         amount: null,
-        observations: null
+        observations: null,
       });
     }
   }

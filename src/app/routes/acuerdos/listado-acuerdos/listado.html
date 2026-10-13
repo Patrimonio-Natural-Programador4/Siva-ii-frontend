@@ -1,0 +1,276 @@
+<page-header />
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Acuerdos</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="app-data-card__content">
+        <div class="filtros-container mb-3" style="width: 100%">
+          <!-- Fila principal de búsqueda y botón limpiar -->
+          <div class="row g-3 align-items-end mb-2">
+            <div class="col-md-9 col-lg-10">
+              <label for="filtrobusqueda" class="form-label small fw-semibold">Filtrar por nombre o código del acuerdo</label>
+              <input type="text" (ngModelChange)="filtroText($event)" class="form-control"
+                id="filtrobusqueda" name="filtrobusqueda" placeholder="Buscar por nombre, código o descripción..."
+                [(ngModel)]="filtrobusqueda" />
+            </div>
+            <div class="col-md-3 col-lg-2 text-md-end">
+              <button mat-stroked-button class="w-100" type="button" (click)="limpiarFiltros()"
+                aria-label="Limpiar filtros">
+                <mat-icon>clear_all</mat-icon>
+                Limpiar filtros
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtros de catálogos -->
+          <div class="row g-2">
+            <div class="col-12 col-sm-6 col-md-3">
+              <label for="id_tipos" class="form-label small fw-semibold">Tipo</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="id_tipos" [(ngModel)]="id_tipos" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todos los tipos">
+                  @for (tipo of listadosFiltros?.[0]?.lista_generica; track tipo.identity) {
+                  <mat-option [value]="tipo.identity">{{ tipo.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <label for="id_modalidades" class="form-label small fw-semibold">Modalidad</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="id_modalidades" [(ngModel)]="id_modalidades" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todas las modalidades">
+                  @for (modalidad of listadosFiltros?.[1]?.lista_generica; track modalidad.identity) {
+                  <mat-option [value]="modalidad.identity">{{ modalidad.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <label for="id_pilares" class="form-label small fw-semibold">Pilar</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="id_pilares" [(ngModel)]="id_pilares" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todos los pilares">
+                  @for (pilar of listadosFiltros?.[2]?.lista_generica; track pilar.identity) {
+                  <mat-option [value]="pilar.identity">{{ pilar.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <label for="id_etapas" class="form-label small fw-semibold">Fases</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="id_etapas" [(ngModel)]="id_etapas" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todas las fases">
+                  @for (etapa of listadosFiltros?.[3]?.lista_generica; track etapa.identity) {
+                  <mat-option [value]="etapa.identity">{{ etapa.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-4 col-md-4">
+              <label for="anios" class="form-label small fw-semibold">Año de ejecución</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="anios" [(ngModel)]="anios" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todos los años">
+                  @for (anio of listadosFiltros?.[4]?.lista_generica; track anio.identity) {
+                  <mat-option [value]="anio.identity">{{ anio.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-4 col-md-4">
+              <label for="prioridades" class="form-label small fw-semibold">Prioridad</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="prioridades" [(ngModel)]="prioridades" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todas las prioridades">
+                  @for (p of listadosFiltros?.[5]?.lista_generica; track p.identity) {
+                  <mat-option [value]="p.valor">{{ p.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-4 col-md-4">
+              <label for="alertas" class="form-label small fw-semibold">Alerta vigencia</label>
+              <mat-form-field class="small" appearance="outline">
+                <mat-select id="alertas" [(ngModel)]="alertas" multiple (selectionChange)="aplicarFiltro()"
+                  placeholder="Todas las alertas">
+                  @for (a of listadosFiltros?.[6]?.lista_generica; track a.identity) {
+                  <mat-option [value]="a.valor">{{ a.valor }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%">
+          <hr class="my-2" />
+        </div>
+        <div style="width: 100%">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+            <small>
+            </small>
+          </div>
+        </div>
+
+        <div class="app-data-table-wrapper acuerdos-table-wrapper">
+          <table mat-table [dataSource]="acuerdos" multiTemplateDataRows
+            class="mat-elevation-z8 acuerdos-table">
+            <ng-container matColumnDef="codigo_siva">
+              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <td mat-cell *matCellDef="let element">{{ element.codigo_siva }}</td>
+            </ng-container>
+            <ng-container matColumnDef="ano_ejecucion">
+              <th mat-header-cell *matHeaderCellDef>Año</th>
+              <td mat-cell *matCellDef="let element">{{ element.ano_ejecucion }}</td>
+            </ng-container>
+            <ng-container matColumnDef="estado_name">
+              <th mat-header-cell *matHeaderCellDef>Fase</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="white-space: normal; font-size: 12px; min-width: 180px;">
+                  <div class="fase-extra-wrapper" [class.fase-expandida]="estaExpandido(element)">
+                    <div class="fase-extra-inner">
+                      <div>{{ element.estado_stage }}</div>
+                      <div>{{ element.estado_name }}</div>
+                    </div>
+                  </div>
+                  <div>{{ element.estado_status }}</div>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="tipo_modalidad_implementadora">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                Tipo | Modalidad | Implementadora</th>
+              <td mat-cell *matCellDef="let element">
+                <div
+                  style="max-width: 260px; margin: 0 auto; text-align: center; white-space: normal; font-size: 12px;">
+                  <div class="tipo-extra-wrapper" [class.tipo-expandido]="estaExpandido(element)">
+                    <div class="tipo-extra-inner">
+                      <div>{{ element.tipo_name }}</div>
+                    </div>
+                  </div>
+                  <div>{{ element.modalidad_name }}</div>
+                  <div class="tipo-extra-wrapper" [class.tipo-expandido]="estaExpandido(element)">
+                    <div class="tipo-extra-inner">
+                      <div>{{ element.implementadoras?.replaceAll(' (líder)', '') }}</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="pilar_name">
+              <th mat-header-cell *matHeaderCellDef>Pilar</th>
+              <td mat-cell *matCellDef="let element">
+                <span>{{ element.pilar_name }}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="objeto_acuerdo">
+              <th mat-header-cell *matHeaderCellDef>Objeto</th>
+              <td mat-cell *matCellDef="let element">
+                <div
+                  style="max-width: 250px; white-space: normal; font-size: 12px; max-height: 80px; overflow: auto;">
+                  {{ element.objeto_acuerdo }}
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nucleos">
+              <th mat-header-cell *matHeaderCellDef>Núcleos</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="max-width: 150px; white-space: normal; font-size: 12px;">
+                  {{ element.nucleos }}
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="monto_apropiado">
+              <th mat-header-cell *matHeaderCellDef>Monto apropiado</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.monto_apropiado | currency }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="monto_total_apropiado">
+              <th mat-header-cell *matHeaderCellDef>Monto total apropiado</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.monto_total_apropiado | currency }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="total_paa">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;">PAA</th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                {{ element.total_paa | currency }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="acciones-cell">
+                  <button mat-icon-button class="btn-accion"
+                    (click)="verDetalle(element.id); $event.stopPropagation()" title="Detalles">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button class="btn-accion" aria-label="Expandir fila"
+                    (click)="toggleFila(element); $event.stopPropagation()" title="Expandir/Colapsar">
+                    <mat-icon>{{ estaExpandido(element) ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="detalleExpandido">
+              <td mat-cell *matCellDef="let element" [attr.colspan]="columnasAcuerdo.length"
+                style="padding: 0; border-bottom-width: 0;">
+                <div class="detalle-panel-wrapper"
+                     [@detailExpand]="estaExpandido(element) ? 'expanded' : 'collapsed'">
+                  <div class="detalle-sticky">
+                    <div class="detalle-panel">
+                      <div class="detalle-seccion detalle-objeto">
+                        <div class="detalle-titulo">Objeto del acuerdo</div>
+                        <div class="detalle-texto">{{ element.objeto_acuerdo || 'Sin información' }}
+                        </div>
+                      </div>
+                      <div class="detalle-seccion detalle-nucleos">
+                        <div class="detalle-titulo">Núcleos</div>
+                        @if (element.nucleos) {
+                        <ul class="detalle-lista">
+                          @for (n of listaNucleos(element.nucleos); track n) {
+                          <li>{{ n }}</li>
+                          }
+                        </ul>
+                        } @else {
+                        <div class="detalle-texto">Sin información</div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasAcuerdo"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnasAcuerdo" style="cursor: pointer;"
+              [class.fila-expandida]="estaExpandido(element)" (click)="toggleFila(element)"></tr>
+            <tr mat-row *matRowDef="let element; columns: ['detalleExpandido']" class="detalle-row"
+              [class.detalle-row-expandida]="estaExpandido(element)"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center" [attr.colspan]="columnasAcuerdo.length">
+                No se encontraron registros
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+          hidePageSize="true" showFirstLastButtons (page)="pageChange($event)" />
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

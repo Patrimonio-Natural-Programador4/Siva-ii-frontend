@@ -68,7 +68,7 @@ export class Detalle implements OnInit {
 
   viajeData: Viajes = {
     itinerario: [],
-    hotel: []
+    hotel: [],
   };
 
   displayedColumnsItinerario: string[] = [

@@ -140,7 +140,7 @@ export class AccionesViajes implements OnInit {
     guid_soporte_pasaporte: '',
     es_para_funcionario: false,
     id_funcionario_responsable: null!,
-    anticipo: []
+    anticipo: [],
   };
   displayedColumns: string[] = [
     'origen',
@@ -812,7 +812,9 @@ export class AccionesViajes implements OnInit {
   }
   editarHotel(index: number) {}
   eliminarAnticipo(index: number) {
-    this.viajeData.anticipo = (this.viajeData.anticipo ?? []).filter((_, itemIndex) => itemIndex !== index);
+    this.viajeData.anticipo = (this.viajeData.anticipo ?? []).filter(
+      (_, itemIndex) => itemIndex !== index
+    );
     this.dataSourceAnticipo.data = this.viajeData.anticipo;
     this.viajeData.valor_anticipo = this.totalAnticipos;
   }

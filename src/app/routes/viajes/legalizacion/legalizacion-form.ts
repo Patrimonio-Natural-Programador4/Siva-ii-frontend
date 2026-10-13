@@ -95,7 +95,8 @@ export class LegalizacionForm implements OnInit {
         this.listados = listados ?? [];
         this.cdr.markForCheck();
       },
-      error: () => this.snackBar.open('Error al cargar los conceptos', 'Cerrar', { duration: 3000 }),
+      error: () =>
+        this.snackBar.open('Error al cargar los conceptos', 'Cerrar', { duration: 3000 }),
     });
   }
 

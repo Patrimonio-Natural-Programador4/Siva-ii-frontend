@@ -200,12 +200,10 @@ export class AccionesFlujosAprobacion implements OnInit {
       return false;
     }
 
-    return ordenes.every(
-      (orden, indice) => {
-        const ordenAnterior = ordenes[indice - 1];
-        return indice === 0 || orden === ordenAnterior || orden === (ordenAnterior ?? 0) + 1;
-      }
-    );
+    return ordenes.every((orden, indice) => {
+      const ordenAnterior = ordenes[indice - 1];
+      return indice === 0 || orden === ordenAnterior || orden === (ordenAnterior ?? 0) + 1;
+    });
   }
 
   guardarFlujo(): void {
