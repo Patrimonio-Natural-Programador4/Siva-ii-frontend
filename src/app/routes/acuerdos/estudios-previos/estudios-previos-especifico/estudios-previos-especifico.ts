@@ -25,10 +25,12 @@ import { PersonsService } from 'src/app/services/personas.service';
 import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
 import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
 import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
+import { AcuerdoModel } from 'src/app/models/acuerdos';
 import { ImplementerModel } from 'src/app/models/implementers';
 import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
+import { AgreementsService } from 'src/app/services/agreements/agreements';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { environment } from '@env/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -65,6 +67,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
   private readonly urlActual = this.router.url;
+  private readonly AgreementsService = inject(AgreementsService);
 
   // Formulario
   accion = 'Nuevo';
@@ -410,6 +413,52 @@ export class EstudiosPreviosEspecifico implements OnInit {
         this.isLoading = false;
         if (response.solicitud_exitosa) {
           this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
+
+          const acuerdoo: AcuerdoModel = {
+            precedents: this.estuPreviosData.precedents,
+            justification: this.estuPreviosData.justification,
+            scope: this.estuPreviosData.scope,
+            value_executes_fpn: this.estuPreviosData.total_value_executes_fpn,
+            value_executes_entity: this.estuPreviosData.total_value_executes_ei,
+            description: this.estuPreviosData.overall_objective,
+            time_limit: this.estuPreviosData.term,
+            total_value: this.estuPreviosData.total_value,
+            program_id,
+            //capacity_assessment_id: id,
+            prevou_study_id: response.identity,
+          };
+
+          const requestAgreement = this.AgreementsService.saveAgreement(acuerdoo);
+          requestAgreement.subscribe({
+            next: respAcuerdo => {
+              this.isLoading = false;
+              if (respAcuerdo.solicitud_exitosa) {
+                this.snackBar.open(
+                  respAcuerdo.mensaje ?? 'Estudio previo y acuerdo guardados',
+                  '',
+                  { duration: 3000 }
+                );
+                this.router.navigate(['/acuerdos/estudios-previos']);
+              } else {
+                this.snackBar.open(
+                  respAcuerdo.mensaje ??
+                    'El estudio previo se guardó, pero hubo un error al guardar el acuerdo',
+                  '',
+                  { duration: 4000 }
+                );
+              }
+            },
+            error: () => {
+              this.isLoading = false;
+              this.snackBar.open(
+                'El estudio previo se guardó, pero falló el guardado del acuerdo',
+                '',
+                { duration: 4000 }
+              );
+            },
+          });
+
+          //TODO
           this.router.navigate(['/acuerdos/estudios-previos']);
         } else {
           this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });

@@ -1,0 +1,118 @@
+<page-header></page-header>
+
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+
+      <mat-card-header
+        class="app-data-card__header d-flex justify-content-between align-items-center">
+        <mat-card-title> Detalle del acuerdo</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <div class="loading-box" *ngIf="!isLoading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Cargando información de acuerdo {{guidAgreement }}</span>
+        </div>
+
+
+        <mat-vertical-stepper>
+          <mat-step>
+            <ng-template matStepLabel>Información general</ng-template>
+            <div class="table_a mt-3">
+              <div class="row_a header_a">
+                <div class="cell_a" style="flex: 1">Campo</div>
+                <div class="cell_a" style="flex: 3">Detalle</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">description</div>
+                <div class="cell_a info_a" style="flex: 3">{{acuerdo.description || '--'}}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">termino</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.time_limit || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Programa</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.program || '--' }}</div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Progreso financiero</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.financial_progress || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Valor ejecutado por FPN</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.value_executes_fpn || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1"> Valor ejecutado por la entidad
+                  implementadora </div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.value_executes_entity || '--'
+                  }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Antescedentes</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.precedents || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Justificacion</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.justification || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Alcance</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.scope || '--' }}
+                </div>
+              </div>
+
+              <div class="row_a">
+                <div class="cell_a info_b" style="flex: 1">Estudio previo</div>
+                <div class="cell_a info_a" style="flex: 3">{{ acuerdo.previous_study }}</div>
+              </div>
+            </div>
+
+            <mat-card-actions align="end" class="p-3  border-top mt-3">
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                  matTooltip="Continuar al paso 2"
+                  matTooltipPosition="above"><mat-icon>directions_alt</mat-icon>Continuar</button>
+              </div>
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                  matTooltip="Ver PDF del acuerdo" matTooltipPosition="above">
+                  <mat-icon>picture_as_pdf</mat-icon> Generar PDF
+                </button>
+              </div>
+
+            </mat-card-actions>
+
+          </mat-step>
+
+
+
+        </mat-vertical-stepper>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>

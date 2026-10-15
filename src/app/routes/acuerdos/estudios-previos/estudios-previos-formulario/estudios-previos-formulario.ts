@@ -203,7 +203,7 @@ export class EstudiosPreviosFormulario implements OnInit {
         this.snackBar.open('Error al guardar el estudios previos', '', { duration: 4000 });
       },
     });
-    console.log(this.estuPreviosData);
+    //console.log(this.estuPreviosData);
   }
 
   volver(): void {

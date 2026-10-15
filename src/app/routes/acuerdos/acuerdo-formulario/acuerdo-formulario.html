@@ -1,0 +1,98 @@
+<page-header />
+
+<div class="row">
+    <div class="col-12">
+        <mat-card class="app-data-card shadow-sm">
+            <mat-card-header class="app-data-card__header pb-2">
+                <mat-card-title>{{ accion }} Acuerdos </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content class="pt-3">
+                <form novalidate #formAgreement="ngForm" class="programs-form">
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
+                                <i class="bi bi-info-circle me-1"></i> Información General
+                            </h6>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <label for="precedents" class="form-label fw-bold">Antecedentes <span
+                                    class="text-danger">*</span></label>
+                            <textarea id="precedents" name="precedents" class="form-control"
+                                rows="2" placeholder="Ingresa los antecedentes" required
+                                [(ngModel)]="acuerdoData.precedents" #precedents="ngModel"
+                                [class.is-invalid]="precedents.invalid && (precedents.dirty || precedents.touched)"></textarea>
+                            @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
+                            <div class="invalid-feedback">Este campo es requerido.</div>
+                            }
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <label for="justification" class="form-label fw-bold">Descripcion <span
+                                    class="text-danger">*</span></label>
+                            <textarea id="justification" name="justification" class="form-control"
+                                rows="2" placeholder="Ingresa la justificación" required
+                                [(ngModel)]="acuerdoData.description" #description="ngModel"
+                                [class.is-invalid]="description.invalid && (description.dirty || description.touched)"></textarea>
+                            @if (description.invalid && (description.dirty || description.touched))
+                            {
+                            <div class="invalid-feedback">Este campo es requerido.</div>
+                            }
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label for="total_value" class="form-label fw-bold">Valor total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input id="total_value" name="total_value" type="number"
+                                    class="form-control" placeholder="0.00" min="0"
+                                    [(ngModel)]="acuerdoData.total_value" />
+                            </div>
+                        </div>
+
+
+
+
+          </div>
+
+        </form>
+      </mat-card-content>
+    
+                    
+
+      <mat-card-actions align="end" class="p-3 bg-light border-top mt-3">
+
+        <button mat-stroked-button type="button" class="me-2" >
+          Cancelar
+        </button>
+        <button mat-flat-button color="primary" type="button"
+          (click)="guardarAcuerdo()" [disabled]="isLoading || !formAgreement.valid">
+          @if (isLoading) {
+          <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
+          } @else {
+          Guardar
+          }
+        </button>
+
+        @if (accion === 'Editar') {
+        <button mat-flat-button color="primary" type="button" (click)="guardarAcuerdo()"
+          [disabled]="isLoading || !formAgreement.valid">
+          @if (isLoading) {
+          <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
+          } @else {
+          Enviar por aprobación
+          }
+        </button>
+        }
+
+      </mat-card-actions>
+      
+
+    </mat-card>
+  </div>
+</div>
