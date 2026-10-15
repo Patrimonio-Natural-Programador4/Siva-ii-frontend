@@ -143,7 +143,7 @@
             <ng-template matStepLabel>Crear estudio previo</ng-template>
 
             <mat-card-header class="app-data-card__header pb-2">
-              <mat-card-title>{{ accion }} Estudios Previos</mat-card-title>
+              <mat-card-title>{{ accion }} Estudios Previos </mat-card-title>
             </mat-card-header>
 
             <mat-card-content class="pt-3">
@@ -164,7 +164,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="precedents" name="precedents" class="form-control" rows="2"
                       placeholder="Ingresa los antecedentes" required
-                      [(ngModel)]="estuPreviosData.precedents" maxlength="500" #precedents="ngModel"
+                      [(ngModel)]="estuPreviosData.precedents" #precedents="ngModel"
                       [class.is-invalid]="precedents.invalid && (precedents.dirty || precedents.touched)"></textarea>
                     @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
@@ -177,7 +177,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="justification" name="justification" class="form-control" rows="2"
                       placeholder="Ingresa la justificación" required
-                      [(ngModel)]="estuPreviosData.justification" maxlength="500"
+                      [(ngModel)]="estuPreviosData.justification"
                       #justification="ngModel"
                       [class.is-invalid]="justification.invalid && (justification.dirty || justification.touched)"></textarea>
                     @if (justification.invalid && (justification.dirty || justification.touched)) {
@@ -191,7 +191,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="scope" name="scope" class="form-control" rows="2"
                       placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
-                      maxlength="500" #scope="ngModel"
+                       #scope="ngModel"
                       [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"></textarea>
                     @if (scope.invalid && (scope.dirty || scope.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
@@ -204,7 +204,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="overall_objective" name="overall_objective" class="form-control"
                       rows="2" placeholder="Ingresa el objetivo general" required
-                      [(ngModel)]="estuPreviosData.overall_objective" maxlength="500"
+                      [(ngModel)]="estuPreviosData.overall_objective"
                       #overall_objective="ngModel"
                       [class.is-invalid]="overall_objective.invalid && (overall_objective.dirty || overall_objective.touched)"></textarea>
                     @if (overall_objective.invalid && (overall_objective.dirty ||
@@ -216,31 +216,33 @@
 
 
                   <!-- Obligaciones -->
+                   <!-- 
                   <div class="col-md-6">
                     <label for="obligations" class="form-label fw-bold">Obligaciones <span
                         class="text-danger">*</span></label>
                     <textarea id="obligations" name="obligations" class="form-control" rows="2"
                       placeholder="Ingresa las obligaciones" required
-                      [(ngModel)]="estuPreviosData.obligations" maxlength="500"
+                      [(ngModel)]="estuPreviosData.obligations" 
                       #obligations="ngModel"
                       [class.is-invalid]="obligations.invalid && (obligations.dirty || obligations.touched)"></textarea>
                     @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
-                  </div>
+                  </div>-->
 
                   <!-- Funciones del Supervisor -->
+                    <!-- 
                   <div class="col-md-6">
                     <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
                         class="text-danger">*</span></label>
                     <textarea id="supervisor" name="supervisor" class="form-control" rows="2"
                       placeholder="Ingresa las funciones del supervisor" required
-                      [(ngModel)]="estuPreviosData.supervisor" maxlength="500" #supervisor="ngModel"
+                      [(ngModel)]="estuPreviosData.supervisor" #supervisor="ngModel"
                       [class.is-invalid]="supervisor.invalid && (supervisor.dirty || supervisor.touched)"></textarea>
                     @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
-                  </div>
+                  </div> -->
 
                   <!-- Plazo -->
                   <div class="col-md-6">
@@ -248,7 +250,7 @@
                         class="text-danger">*</span></label>
                     <input id="term" name="term" type="text" class="form-control"
                       placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
-                      maxlength="255" #term="ngModel"
+                     #term="ngModel"
                       [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
                     @if (term.invalid && (term.dirty || term.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
@@ -256,20 +258,21 @@
                   </div>
 
                   <!-- Plazo Estimado -->
+                   <!--
                   <div class="col-md-6">
                     <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
                         class="text-danger">*</span></label>
                     <input id="estimated_term" name="estimated_term" type="text"
                       class="form-control" placeholder="Ej. 60 días calendario" required
-                      [(ngModel)]="estuPreviosData.estimated_term" maxlength="255"
+                      [(ngModel)]="estuPreviosData.estimated_term"
                       #estimated_term="ngModel"
                       [class.is-invalid]="estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)" />
                     @if (estimated_term.invalid && (estimated_term.dirty || estimated_term.touched))
                     {
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
-                  </div>
-                </div>
+                  </div> -->
+                </div> 
 
                 <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
                 <div class="row g-3 mb-4 form-section">
@@ -378,7 +381,7 @@
                     Cancelar
                   </button>
                   <button mat-flat-button color="primary" type="button"
-                    (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid">
+                    (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid"> <!---|| !fEvaluacion.valid-->
                     @if (isLoading) {
                     <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>
                     Guardando...

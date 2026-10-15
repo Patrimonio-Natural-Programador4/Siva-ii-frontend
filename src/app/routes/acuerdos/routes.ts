@@ -12,7 +12,32 @@ export const routes: Routes = [
         redirectTo: 'listar',
         pathMatch: 'full',
       },
-
+      ////////////////////////////////////////////////
+      {
+        path: 'detalle/:guid',
+        loadComponent: () =>
+          import('./detalle-acuerdo/detalle-acuerdo').then(m => m.DetalleAcuerdo),
+        data: {
+          title: 'Detalle acuerdo',
+        },
+      },
+      {
+        path: 'crear',
+        loadComponent: () =>
+          import('./acuerdo-formulario/acuerdo-formulario').then(m => m.AcuerdoFormulario),
+        data: {
+          title: 'Detalle acuerdo',
+        },
+      },
+      {
+        path: 'editar/:guid',
+        loadComponent: () =>
+          import('./acuerdo-formulario/acuerdo-formulario').then(m => m.AcuerdoFormulario),
+        data: {
+          title: 'Editar acuerdo',
+        },
+      },
+      ///////////////////////////////////////////////////////////////////////
       //sacar esto aparte
       {
         path: 'estudios-previos/crear',
