@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { Subject, Observable, catchError, throwError } from 'rxjs';
@@ -21,6 +21,13 @@ export class EstudiosPreviosService {
   // Lista estudios previos
   getEstPrevios(): Observable<PreviousStudiesModel[]> {
     return this.http.get<PreviousStudiesModel[]>(this.apiUrl);
+  }
+
+  descargarFormatoEp(guid: string): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}/formato-ep/${encodeURIComponent(guid)}`, {
+      responseType: 'blob',
+      observe: 'response',
+    });
   }
 
   //Evaluacion capacidades por id

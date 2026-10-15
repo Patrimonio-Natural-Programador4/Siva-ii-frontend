@@ -232,6 +232,12 @@
                 Acciones
               </th>
               <td mat-cell *matCellDef="let element">
+                <button mat-icon-button type="button"
+                  matTooltip="Descargar formato Word" aria-label="Descargar formato Word"
+                  [disabled]="!element.guid || descargasEnCurso().has(element.guid)"
+                  (click)="descargarFormatoEp(element)">
+                  <mat-icon>download</mat-icon>
+                </button>
                 <a href="javascript:void(0)" style="text-decoration: none" title="Editar"
                   (click)="editarEstudioPrevio(element.guid)">
                   <mat-icon>edit</mat-icon>

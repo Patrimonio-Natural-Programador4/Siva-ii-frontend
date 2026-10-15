@@ -5,6 +5,7 @@ import {
   OnInit,
   AfterViewInit,
   ChangeDetectorRef,
+  signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { PageHeader } from '@shared';
 import { UpperCasePipe, CommonModule } from '@angular/common';
@@ -38,6 +42,7 @@ import { environment } from '@env/environment';
     MatIconModule,
     MatPaginatorModule,
     MatTableModule,
+    MatTooltipModule,
     FormsModule,
     PageHeader,
     UpperCasePipe,
@@ -51,6 +56,8 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly estPreviosService = inject(estpreviosser);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly snackBar = inject(MatSnackBar);
+  readonly descargasEnCurso = signal(new Set<string>());
   private readonly ProgramsService = inject(ProgramsService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
 
@@ -178,6 +185,49 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
 
   crearEstudiosPreviosAcuerdo(): void {
     this.router.navigate(['/acuerdos/estudios-previos/crear']);
+  }
+
+  descargarFormatoEp(estudio: PreviousStudiesListModel): void {
+    const guid = estudio.guid;
+    if (!guid || this.descargasEnCurso().has(guid)) {
+      return;
+    }
+    this.descargasEnCurso.update(actuales => new Set(actuales).add(guid));
+    this.estPreviosService
+      .descargarFormatoEp(guid)
+      .pipe(
+        finalize(() => {
+          this.descargasEnCurso.update(actuales => {
+            const pendientes = new Set(actuales);
+            pendientes.delete(guid);
+            return pendientes;
+          });
+        })
+      )
+      .subscribe({
+        next: respuesta => {
+          if (!respuesta.body || respuesta.body.size === 0) {
+            this.snackBar.open('No se recibio el formato del estudio previo.', 'Cerrar');
+            return;
+          }
+          const disposicion = respuesta.headers.get('Content-Disposition') ?? '';
+          const nombre = /filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i.exec(disposicion);
+          const nombreArchivo = nombre?.[1]
+            ? decodeURIComponent(nombre[1])
+            : (nombre?.[2] ?? `ep_${estudio.codde || guid}.docx`);
+          const url = URL.createObjectURL(respuesta.body);
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = nombreArchivo;
+          document.body.appendChild(enlace);
+          enlace.click();
+          enlace.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 0);
+        },
+        error: () => {
+          this.snackBar.open('No fue posible descargar el formato del estudio previo.', 'Cerrar');
+        },
+      });
   }
 
   continuarFlujo(guid: string): void {

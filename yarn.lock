@@ -235,6 +235,13 @@
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "21.1.0"
 
+"@angular/animations@^21.0.3", "@angular/animations@21.0.3":
+  version "21.0.3"
+  resolved "https://registry.npmjs.org/@angular/animations/-/animations-21.0.3.tgz"
+  integrity sha512-iuf/ss/8nabJg4QgEVBQQ0LAiyjo+XYUjxcuvvUELKLVw6xc2W+3p4gsWJsBjyGeaYUfFtIg9atArzlt/XFU7g==
+  dependencies:
+    tslib "^2.3.0"
+
 "@angular/build@21.0.2":
   version "21.0.2"
   resolved "https://registry.npmjs.org/@angular/build/-/build-21.0.2.tgz"
