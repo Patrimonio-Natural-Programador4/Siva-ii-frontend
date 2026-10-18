@@ -140,7 +140,7 @@
           <!-- Crear estudio previo -->
 
           <mat-step>
-            <ng-template matStepLabel>Crear estudio previo</ng-template>
+            <ng-template matStepLabel>Crear estudio previo </ng-template>
 
             <mat-card-header class="app-data-card__header pb-2">
               <mat-card-title>{{ accion }} Estudios Previos </mat-card-title>
@@ -177,8 +177,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="justification" name="justification" class="form-control" rows="2"
                       placeholder="Ingresa la justificación" required
-                      [(ngModel)]="estuPreviosData.justification"
-                      #justification="ngModel"
+                      [(ngModel)]="estuPreviosData.justification" #justification="ngModel"
                       [class.is-invalid]="justification.invalid && (justification.dirty || justification.touched)"></textarea>
                     @if (justification.invalid && (justification.dirty || justification.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
@@ -191,7 +190,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="scope" name="scope" class="form-control" rows="2"
                       placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
-                       #scope="ngModel"
+                      #scope="ngModel"
                       [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"></textarea>
                     @if (scope.invalid && (scope.dirty || scope.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
@@ -204,8 +203,7 @@
                         class="text-danger">*</span></label>
                     <textarea id="overall_objective" name="overall_objective" class="form-control"
                       rows="2" placeholder="Ingresa el objetivo general" required
-                      [(ngModel)]="estuPreviosData.overall_objective"
-                      #overall_objective="ngModel"
+                      [(ngModel)]="estuPreviosData.overall_objective" #overall_objective="ngModel"
                       [class.is-invalid]="overall_objective.invalid && (overall_objective.dirty || overall_objective.touched)"></textarea>
                     @if (overall_objective.invalid && (overall_objective.dirty ||
                     overall_objective.touched)) {
@@ -216,7 +214,7 @@
 
 
                   <!-- Obligaciones -->
-                   <!-- 
+                  <!-- 
                   <div class="col-md-6">
                     <label for="obligations" class="form-label fw-bold">Obligaciones <span
                         class="text-danger">*</span></label>
@@ -231,7 +229,7 @@
                   </div>-->
 
                   <!-- Funciones del Supervisor -->
-                    <!-- 
+                  <!-- 
                   <div class="col-md-6">
                     <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
                         class="text-danger">*</span></label>
@@ -245,20 +243,36 @@
                   </div> -->
 
                   <!-- Plazo -->
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <label for="term" class="form-label fw-bold">Plazo <span
                         class="text-danger">*</span></label>
                     <input id="term" name="term" type="text" class="form-control"
                       placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
-                     #term="ngModel"
+                      #term="ngModel"
                       [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
                     @if (term.invalid && (term.dirty || term.touched)) {
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div>
+                  <!-- tipos de acuerdo -->
+
+                  <div class="col-md-4">
+                    <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
+                    <select id="persons_id" name="persons_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.persons_id">
+                      <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
+                      @for (person of persons; track person.id || $index) {
+                      <option [value]="person.id" class="text-capitalize">
+                        {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
+                        }}{{
+                        person.last_name || '' }}
+                      </option>
+                      }
+                    </select>
+                  </div>
 
                   <!-- Plazo Estimado -->
-                   <!--
+                  <!--
                   <div class="col-md-6">
                     <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
                         class="text-danger">*</span></label>
@@ -272,7 +286,7 @@
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div> -->
-                </div> 
+                </div>
 
                 <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
                 <div class="row g-3 mb-4 form-section">
@@ -381,7 +395,8 @@
                     Cancelar
                   </button>
                   <button mat-flat-button color="primary" type="button"
-                    (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid"> <!---|| !fEvaluacion.valid-->
+                    (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid">
+                    <!---|| !fEvaluacion.valid-->
                     @if (isLoading) {
                     <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>
                     Guardando...

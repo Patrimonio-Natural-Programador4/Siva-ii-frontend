@@ -1,6 +1,6 @@
 import { EnvironmentConfiguration } from 'src/app/models/environment-configuration';
 
-const serverUrl2 = 'http://localhost:8112/api';
+const serverUrl2 = 'http://localhost:8111/api';
 const URLClient = '';
 
 // export const environment = {
@@ -29,7 +29,7 @@ export const environment: EnvironmentConfiguration = {
       'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
       'api://3789c93c-1e71-488f-acc5-51afb52dd9a3/access_as_user',
     ],
-    apiEndpointUrl: 'http://localhost:8112/api',
+    apiEndpointUrl: 'http://localhost:8111/api',
     tenantId: '138a1799-f2e2-4902-b2a1-0ca7278eb49b',
   },
   cacheTimeInMinutes: 30,
