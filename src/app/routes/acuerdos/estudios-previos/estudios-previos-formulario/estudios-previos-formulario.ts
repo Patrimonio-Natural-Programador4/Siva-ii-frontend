@@ -83,6 +83,8 @@ export class EstudiosPreviosFormulario implements OnInit {
     estimated_term: '',
     program_id: 0,
     enviar_aprobacion: false,
+    agreement_type_id: 0,
+    modality_id: 0,
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({

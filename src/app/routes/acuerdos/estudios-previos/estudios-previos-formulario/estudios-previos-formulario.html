@@ -5,6 +5,7 @@
     <mat-card class="app-data-card shadow-sm">
       <mat-card-header class="app-data-card__header pb-2">
         <mat-card-title>{{ accion }} Estudios Previos    </mat-card-title>
+        
       </mat-card-header>
 
       <mat-card-content class="pt-3">
@@ -191,7 +192,7 @@
           <div class="row g-3 mb-2">
             <div class="col-12">
               <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
-                <i class="bi bi-diagram-3 me-1"></i> Asignación y Clasificación
+                <i class="bi bi-diagram-3 me-1"></i> Asignación y Clasificación 
               </h6>
             </div>
 
@@ -226,7 +227,7 @@
             </div>
 
             <!-- Líder del Pilar -->
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
               <select id="persons_id" name="persons_id" class="form-select text-capitalize"
                 [(ngModel)]="estuPreviosData.persons_id">
@@ -241,7 +242,7 @@
             </div>
 
             <!-- Evaluación de Capacidades -->
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="capacity_assessment_id" class="form-label fw-bold">Evaluación de
                 capacidades</label>
               <select id="capacity_assessment_id" name="capacity_assessment_id"
@@ -257,7 +258,7 @@
               </select>
             </div>
             <!-- Programa -->
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="p" class="form-label fw-bold">Programa</label>
               <select id="program_id" name="program_id" class="form-select "
                 [(ngModel)]="estuPreviosData.program_id">

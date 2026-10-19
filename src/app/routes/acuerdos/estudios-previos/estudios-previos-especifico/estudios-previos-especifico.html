@@ -254,22 +254,33 @@
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div>
-                  <!-- tipos de acuerdo -->
+            
+          
+                  <!-- Tipo de acuerdo -->
+                <div class="col-md-4">
+                  <label for="agreement_type_id" class="form-label fw-bold">Tipo de acuerdo</label>
+                  <select id="agreement_type_id" name="agreement_type_id" class="form-select text-capitalize"
+                    [(ngModel)]="estuPreviosData.agreement_type_id">
+                    <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
+                    @for (tA of agrement_types; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                    }
+                  </select>
+                </div>
 
+                <!-- Modalidad -->
                   <div class="col-md-4">
-                    <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
-                    <select id="persons_id" name="persons_id" class="form-select text-capitalize"
-                      [(ngModel)]="estuPreviosData.persons_id">
-                      <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
-                      @for (person of persons; track person.id || $index) {
-                      <option [value]="person.id" class="text-capitalize">
-                        {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
-                        }}{{
-                        person.last_name || '' }}
-                      </option>
-                      }
-                    </select>
-                  </div>
+                  <label for="modality_id" class="form-label fw-bold">Modalidad</label>
+                  <select id="modality_id" name="modality_id" class="form-select text-capitalize"
+                    [(ngModel)]="estuPreviosData.modality_id">
+                    <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                    @for (tA of modalities; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                    }
+                  </select>
+                </div>
+
+         
 
                   <!-- Plazo Estimado -->
                   <!--
@@ -360,6 +371,7 @@
 
                   <!-- Líder del Pilar -->
                   <div class="col-md-6">
+                    <!--<span>Aquii</span>-->
                     <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
                     <select id="persons_id" name="persons_id" class="form-select text-capitalize"
                       [(ngModel)]="estuPreviosData.persons_id">
@@ -373,6 +385,9 @@
                       }
                     </select>
                   </div>
+
+
+
 
                 </div>
 
