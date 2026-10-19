@@ -33,6 +33,10 @@ export class PreviousStudiesModel {
   capacity_assessments_states_id?: number;
   enviar_aprobacion?: boolean;
   agreetment_id?: number;
+  modality_id?: number;
+  agreement_type_id?: number;
+  agreement_type?: string;
+  modality?: string;
 
   constructor(data?: Partial<PreviousStudiesModel>) {
     Object.assign(this, data);
@@ -67,6 +71,9 @@ export class PreviousStudiesCreateModel {
   estimated_term?: string;
   program_id?: number;
   guid?: string;
+
+  modality_id?: number;
+  agreement_type_id?: number;
 
   constructor(data?: Partial<PreviousStudiesCreateModel>) {
     Object.assign(this, data);
@@ -112,6 +119,11 @@ export class PreviousStudiesListModel {
   guid_msft_adjustment?: string;
   total_records?: number;
 
+  ///
+  modality_id?: number;
+  agreement_type_id?: number;
+  agreement_type?: string;
+  modality?: string;
   constructor(data?: Partial<PreviousStudiesListModel>) {
     Object.assign(this, data);
   }

@@ -34,6 +34,10 @@ import { AgreementsService } from 'src/app/services/agreements/agreements';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { environment } from '@env/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TipoAcuerdoModel } from 'src/app/models/tipos-acuerdos';
+import { AgreementTypes } from 'src/app/services/agreement-types/agreement-types';
+import { ModalitiesService } from 'src/app/services/modalidades.service';
+import { ModalidadModel } from 'src/app/models/modalidades';
 
 @Component({
   selector: 'app-estudios-previos-especifico',
@@ -67,7 +71,9 @@ export class EstudiosPreviosEspecifico implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
   private readonly urlActual = this.router.url;
-  private readonly AgreementsService = inject(AgreementsService);
+  //private readonly AgreementsService = inject(AgreementsService);
+  private readonly AgreementTypesService = inject(AgreementTypes);
+  private readonly ModalitiesService = inject(ModalitiesService);
 
   // Formulario
   accion = 'Nuevo';
@@ -77,6 +83,8 @@ export class EstudiosPreviosEspecifico implements OnInit {
   states: CapacityAssessmentStateModel[] = [];
   capacity: EvaluacionCapacidadesModel[] = [];
   programs: Programs[] = [];
+  agrement_types: TipoAcuerdoModel[] = [];
+  modalities: ModalidadModel[] = [];
 
   estuPreviosData: PreviousStudiesModel = new PreviousStudiesModel({
     id: 0,
@@ -100,6 +108,8 @@ export class EstudiosPreviosEspecifico implements OnInit {
     contributions_fpn: 0,
     estimated_term: '',
     program_id: 0,
+    modality_id: 0,
+    agreement_type_id: 0,
   });
   /************************************************ */
 
@@ -152,6 +162,8 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.listarStates();
     this.listarCapacity();
     this.listarPrograms();
+    this.listarTposAcuerdo();
+    this.listarModalidades();
 
     if (this.idEstPrevios) {
       this.EstudiosPreviosService.getEstPreviosById(this.idEstPrevios).subscribe({
@@ -288,7 +300,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
         this.implementers = r;
-        console.log(r);
+        //console.log(r);
       },
       error: e => {
         console.error(e);
@@ -300,7 +312,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.PersonsService.getPersons().subscribe({
       next: r => {
         this.persons = r;
-        console.log(r);
+        //console.log(r);
       },
       error: e => {
         console.error(e);
@@ -312,7 +324,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.CapacityAssessmentStateService.getCapStates().subscribe({
       next: r => {
         this.states = r;
-        console.log(r);
+        //console.log(r);
       },
       error: e => {
         console.error(e);
@@ -324,7 +336,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.EvaluacionCapacidadesService.getEvaCapacidades().subscribe({
       next: r => {
         this.capacity = r;
-        console.log(r);
+        //console.log(r);
       },
       error: e => {
         console.error(e);
@@ -336,7 +348,43 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.ProgramsService.getPrograms().subscribe({
       next: r => {
         this.programs = r;
-        console.log(r);
+        //console.log(r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarTposAcuerdo() {
+    this.AgreementTypesService.getagreementTypes().subscribe({
+      next: r => {
+        this.agrement_types = r;
+        console.log('tipos de acuerdos ', r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarModalidades() {
+    this.ModalitiesService.getModalities().subscribe({
+      next: r => {
+        this.modalities = r;
+        console.log('Modalidades ', r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarTiposAcuerdos() {
+    this.ModalitiesService.getModalities().subscribe({
+      next: r => {
+        this.modalities = r;
+        console.log('Modalidades ', r);
       },
       error: e => {
         console.error(e);
@@ -375,13 +423,13 @@ export class EstudiosPreviosEspecifico implements OnInit {
       programa,
       start_date,
     } = this.evaluacion;
-
+    /*
     console.log(id);
     console.log(name);
     console.log(person);
     console.log('imlemeter_id', this.estuPreviosData.implementer_id);
     console.log('person_id', this.estuPreviosData.persons_id);
-
+    */
     // Data que envia   desde el formulario el usuario
 
     const estudios_previos_data: PreviousStudiesModel = {
@@ -402,6 +450,8 @@ export class EstudiosPreviosEspecifico implements OnInit {
       persons_id: this.estuPreviosData.persons_id,
       implementer_id,
       program_id,
+      agreement_type_id: this.estuPreviosData.agreement_type_id,
+      modality_id: this.estuPreviosData.modality_id,
     };
 
     console.log('prueba union', estudios_previos_data);
@@ -427,36 +477,6 @@ export class EstudiosPreviosEspecifico implements OnInit {
             //capacity_assessment_id: id,
             prevou_study_id: response.identity,
           };
-
-          const requestAgreement = this.AgreementsService.saveAgreement(acuerdoo);
-          requestAgreement.subscribe({
-            next: respAcuerdo => {
-              this.isLoading = false;
-              if (respAcuerdo.solicitud_exitosa) {
-                this.snackBar.open(
-                  respAcuerdo.mensaje ?? 'Estudio previo y acuerdo guardados',
-                  '',
-                  { duration: 3000 }
-                );
-                this.router.navigate(['/acuerdos/estudios-previos']);
-              } else {
-                this.snackBar.open(
-                  respAcuerdo.mensaje ??
-                    'El estudio previo se guardó, pero hubo un error al guardar el acuerdo',
-                  '',
-                  { duration: 4000 }
-                );
-              }
-            },
-            error: () => {
-              this.isLoading = false;
-              this.snackBar.open(
-                'El estudio previo se guardó, pero falló el guardado del acuerdo',
-                '',
-                { duration: 4000 }
-              );
-            },
-          });
 
           //TODO
           this.router.navigate(['/acuerdos/estudios-previos']);
