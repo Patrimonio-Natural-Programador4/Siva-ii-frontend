@@ -79,7 +79,7 @@
             <!-- Programa -->
 
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="programa" class="form-label font-weight-bold">Programa</label>
               <select id="programa" name="program_id" class="form-select"
                 [(ngModel)]="evaCapacidadesData.program_id">
@@ -93,7 +93,7 @@
             </div>
 
             <!-- PID -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="pid" class="form-label font-weight-bold">PID</label>
               <select id="pid" name="pid_id" class="form-select"
                 [(ngModel)]="evaCapacidadesData.pid_id">
@@ -101,6 +101,20 @@
                 @for (pid of pids; track pid.id || $index) {
                 <option [value]="pid.id">
                   {{ pid.name }}
+                </option>
+                }
+              </select>
+            </div>
+
+             <!-- pilar -->
+            <div class="col-md-4 mb-3">
+              <label for="pid" class="form-label font-weight-bold">Pilar</label>
+              <select id="pid" name="pid_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.pillar_id">
+                <option value="" disabled selected>Seleccione un Pilar</option>
+                @for (pilar of pilares; track pilar.id || $index) {
+                <option [value]="pilar.id">
+                  {{ pilar.name }}
                 </option>
                 }
               </select>

@@ -65,9 +65,9 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
   readonly displayedColumns = [
     'id',
     'precedents',
-    'justification',
+    //'justification',
     'scope',
-    'overall_objective',
+    //'overall_objective', //objetivo general
     'term',
     'obligations',
     'supervisor',
@@ -87,7 +87,9 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     'estimated_term',
     'programs',
     'prev_studies_state',
+    //'modality_id',
     'acciones',
+    //'modality'
   ];
 
   readonly pageSizeOptions = [20];

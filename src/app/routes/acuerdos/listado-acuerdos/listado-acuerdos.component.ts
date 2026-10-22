@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { PageHeader } from '@shared';
 import { AgreementsListSP } from 'src/app/models/agreements';
 import { AgreementsService } from 'src/app/services/agreements.service';
+import { AgreementsService as AgreemserServ } from 'src/app/services/agreements/agreements';
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-listado-acuerdos',
@@ -59,6 +61,10 @@ export class ListarAcuerdos implements OnInit, AfterViewInit {
   readonly paginator = viewChild(MatPaginator);
   private readonly service = inject(AgreementsService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private AgreemserServ = inject(AgreemserServ);
+  private detailsUrl = `acuerdos/detalle`;
+
+  private oldSiva = 'https://sivarem2.patrimonionatural.org.co';
 
   columnasAcuerdo = [
     'codigo_siva',
@@ -196,8 +202,23 @@ export class ListarAcuerdos implements OnInit, AfterViewInit {
 
   verDetalle(id: number | null): void {
     if (id) {
-      // Logic to view detail or navigate
-      console.log('Ver detalle: ', id);
+      //
+      //this.AgreemserServ.getAcuerdoId(id)
+      this.AgreemserServ.getAcuerdoId(id).subscribe({
+        next: r => {
+          this.router.navigate([`${this.detailsUrl}`, r.guid]);
+        },
+        error: e => {
+          console.error(e);
+        },
+      });
+    }
+  }
+
+  editarAcuerdo(id: number): void {
+    if (id) {
+      const url = `${this.oldSiva}/juridico/acuerdos/${id}`; // tu variable con la URL
+      window.open(url, '_blank', 'noopener');
     }
   }
 }

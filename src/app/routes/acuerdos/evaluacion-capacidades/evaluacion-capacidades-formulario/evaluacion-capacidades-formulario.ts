@@ -30,6 +30,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { Usuarios } from 'src/app/models/usuarios';
+import { PilarModel } from 'src/app/models/pilares';
+import { PilaresService } from 'src/app/services/pilares/pilares.service';
 
 @Component({
   selector: 'evaluacion-capacidades-formulario',
@@ -59,6 +61,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly PilarService = inject(PilaresService);
 
   private readonly auth = inject(AuthService);
   user = toSignal(this.auth.user());
@@ -68,6 +71,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   isLoading = false;
   programs: Programs[] = [];
   pids: PidModel[] = [];
+  pilares: PilarModel[] = [];
   implementers: ImplementerModel[] = [];
   persons: PersonModel[] = [];
   states: CapacityAssessmentStateModel[] = [];
@@ -98,6 +102,8 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     capacity_assessments_states_id: 1,
     modalitie: '',
     //modality_id: 0,
+    pilar: '',
+    pillar_id: 0,
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -117,6 +123,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.listarPersons();
     this.listarStates();
     this.listarModalities();
+    this.listarPilares();
     this.evaCapacidadesData.program_id = 2;
 
     if (this.guidEvaCapacidades) {
@@ -187,6 +194,18 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.PidsService.getPids().subscribe({
       next: r => {
         this.pids = r;
+        this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
+    });
+  }
+
+  listarPilares() {
+    this.PilarService.getPilars().subscribe({
+      next: r => {
+        console.log('Pilares ', r);
+
+        this.pilares = r;
         this.cdr.detectChanges();
       },
       error: e => console.error(e),

@@ -172,6 +172,7 @@
                   </div>
 
                   <!-- Justificación -->
+
                   <div class="col-md-6">
                     <label for="justification" class="form-label fw-bold">Justificación <span
                         class="text-danger">*</span></label>
@@ -254,33 +255,35 @@
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div>
-            
-          
-                  <!-- Tipo de acuerdo -->
-                <div class="col-md-4">
-                  <label for="agreement_type_id" class="form-label fw-bold">Tipo de acuerdo</label>
-                  <select id="agreement_type_id" name="agreement_type_id" class="form-select text-capitalize"
-                    [(ngModel)]="estuPreviosData.agreement_type_id">
-                    <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
-                    @for (tA of agrement_types; track tA.id) {
-                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
-                    }
-                  </select>
-                </div>
-
-                <!-- Modalidad -->
+                  <!-- Modalidad -->
                   <div class="col-md-4">
-                  <label for="modality_id" class="form-label fw-bold">Modalidad</label>
-                  <select id="modality_id" name="modality_id" class="form-select text-capitalize"
-                    [(ngModel)]="estuPreviosData.modality_id">
-                    <option [ngValue]="0" disabled>Seleccione modalidad</option>
-                    @for (tA of modalities; track tA.id) {
+                    <label for="modality_id" class="form-label fw-bold">Modalidad</label>
+                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.modality_id">
+                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                      @for (tA of modalities; track tA.id) {
                       <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
-                    }
-                  </select>
-                </div>
+                      }
+                    </select>
+                  </div>
 
-         
+                  <!-- Tipo de acuerdo -->
+                  <div class="col-md-4">
+                    <label for="agreement_type_id" class="form-label fw-bold">Tipo de
+                      acuerdo</label>
+                    <select id="agreement_type_id" name="agreement_type_id"
+                      class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.agreement_type_id">
+                      <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
+                      @for (tA of agrement_types; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                      }
+                    </select>
+                  </div>
+
+
+
+
 
                   <!-- Plazo Estimado -->
                   <!--

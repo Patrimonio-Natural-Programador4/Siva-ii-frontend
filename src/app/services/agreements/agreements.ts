@@ -17,7 +17,7 @@ export class AgreementsService {
   saveAgreement(agreement: AcuerdoModel): Observable<ResponseRequest> {
     //const previous_studies_states_id = 1;
 
-    console.log('agreement service', agreement);
+    //console.log('agreement service', agreement);
     try {
       return this.http.post<ResponseRequest>(this.apiUrl, agreement);
     } catch (error) {
@@ -34,8 +34,12 @@ export class AgreementsService {
     return this.http.get<AcuerdoModel>(`${this.apiUrl}${uuid}/detalle`);
   }
 
+  getAcuerdoId(id: number): Observable<AcuerdoModel> {
+    return this.http.get<AcuerdoModel>(`${this.apiUrl}${id}`);
+  }
+
   getAcuerdoById(uuid: string): Observable<AcuerdoModel> {
-    console.log('URLLL', `${this.apiUrl}${uuid}/detalle`);
+    //console.log('URLLL', `${this.apiUrl}${uuid}/detalle`);
 
     return this.http.get(`${this.apiUrl}${uuid}/detalle`).pipe(
       catchError(err => {

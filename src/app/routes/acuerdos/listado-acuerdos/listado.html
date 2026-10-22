@@ -11,9 +11,11 @@
           <!-- Fila principal de búsqueda y botón limpiar -->
           <div class="row g-3 align-items-end mb-2">
             <div class="col-md-9 col-lg-10">
-              <label for="filtrobusqueda" class="form-label small fw-semibold">Filtrar por nombre o código del acuerdo</label>
+              <label for="filtrobusqueda" class="form-label small fw-semibold">Filtrar por nombre o
+                código del acuerdo</label>
               <input type="text" (ngModelChange)="filtroText($event)" class="form-control"
-                id="filtrobusqueda" name="filtrobusqueda" placeholder="Buscar por nombre, código o descripción..."
+                id="filtrobusqueda" name="filtrobusqueda"
+                placeholder="Buscar por nombre, código o descripción..."
                 [(ngModel)]="filtrobusqueda" />
             </div>
             <div class="col-md-3 col-lg-2 text-md-end">
@@ -30,8 +32,8 @@
             <div class="col-12 col-sm-6 col-md-3">
               <label for="id_tipos" class="form-label small fw-semibold">Tipo</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="id_tipos" [(ngModel)]="id_tipos" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todos los tipos">
+                <mat-select id="id_tipos" [(ngModel)]="id_tipos" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todos los tipos">
                   @for (tipo of listadosFiltros?.[0]?.lista_generica; track tipo.identity) {
                   <mat-option [value]="tipo.identity">{{ tipo.valor }}</mat-option>
                   }
@@ -42,9 +44,10 @@
             <div class="col-12 col-sm-6 col-md-3">
               <label for="id_modalidades" class="form-label small fw-semibold">Modalidad</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="id_modalidades" [(ngModel)]="id_modalidades" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todas las modalidades">
-                  @for (modalidad of listadosFiltros?.[1]?.lista_generica; track modalidad.identity) {
+                <mat-select id="id_modalidades" [(ngModel)]="id_modalidades" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todas las modalidades">
+                  @for (modalidad of listadosFiltros?.[1]?.lista_generica; track modalidad.identity)
+                  {
                   <mat-option [value]="modalidad.identity">{{ modalidad.valor }}</mat-option>
                   }
                 </mat-select>
@@ -54,8 +57,8 @@
             <div class="col-12 col-sm-6 col-md-3">
               <label for="id_pilares" class="form-label small fw-semibold">Pilar</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="id_pilares" [(ngModel)]="id_pilares" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todos los pilares">
+                <mat-select id="id_pilares" [(ngModel)]="id_pilares" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todos los pilares">
                   @for (pilar of listadosFiltros?.[2]?.lista_generica; track pilar.identity) {
                   <mat-option [value]="pilar.identity">{{ pilar.valor }}</mat-option>
                   }
@@ -66,8 +69,8 @@
             <div class="col-12 col-sm-6 col-md-3">
               <label for="id_etapas" class="form-label small fw-semibold">Fases</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="id_etapas" [(ngModel)]="id_etapas" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todas las fases">
+                <mat-select id="id_etapas" [(ngModel)]="id_etapas" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todas las fases">
                   @for (etapa of listadosFiltros?.[3]?.lista_generica; track etapa.identity) {
                   <mat-option [value]="etapa.identity">{{ etapa.valor }}</mat-option>
                   }
@@ -78,8 +81,8 @@
             <div class="col-12 col-sm-4 col-md-4">
               <label for="anios" class="form-label small fw-semibold">Año de ejecución</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="anios" [(ngModel)]="anios" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todos los años">
+                <mat-select id="anios" [(ngModel)]="anios" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todos los años">
                   @for (anio of listadosFiltros?.[4]?.lista_generica; track anio.identity) {
                   <mat-option [value]="anio.identity">{{ anio.valor }}</mat-option>
                   }
@@ -90,8 +93,8 @@
             <div class="col-12 col-sm-4 col-md-4">
               <label for="prioridades" class="form-label small fw-semibold">Prioridad</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="prioridades" [(ngModel)]="prioridades" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todas las prioridades">
+                <mat-select id="prioridades" [(ngModel)]="prioridades" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todas las prioridades">
                   @for (p of listadosFiltros?.[5]?.lista_generica; track p.identity) {
                   <mat-option [value]="p.valor">{{ p.valor }}</mat-option>
                   }
@@ -102,8 +105,8 @@
             <div class="col-12 col-sm-4 col-md-4">
               <label for="alertas" class="form-label small fw-semibold">Alerta vigencia</label>
               <mat-form-field class="small" appearance="outline">
-                <mat-select id="alertas" [(ngModel)]="alertas" multiple (selectionChange)="aplicarFiltro()"
-                  placeholder="Todas las alertas">
+                <mat-select id="alertas" [(ngModel)]="alertas" multiple
+                  (selectionChange)="aplicarFiltro()" placeholder="Todas las alertas">
                   @for (a of listadosFiltros?.[6]?.lista_generica; track a.identity) {
                   <mat-option [value]="a.valor">{{ a.valor }}</mat-option>
                   }
@@ -217,9 +220,15 @@
                     (click)="verDetalle(element.id); $event.stopPropagation()" title="Detalles">
                     <mat-icon>visibility</mat-icon>
                   </button>
+                  <button mat-icon-button class="btn-accion"
+                    (click)="editarAcuerdo(element.id); $event.stopPropagation()" title="Editar">
+                    <mat-icon>edit</mat-icon>
+                  </button>
                   <button mat-icon-button class="btn-accion" aria-label="Expandir fila"
-                    (click)="toggleFila(element); $event.stopPropagation()" title="Expandir/Colapsar">
-                    <mat-icon>{{ estaExpandido(element) ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+                    (click)="toggleFila(element); $event.stopPropagation()"
+                    title="Expandir/Colapsar">
+                    <mat-icon>{{ estaExpandido(element) ? 'keyboard_arrow_up' :
+                      'keyboard_arrow_down' }}</mat-icon>
                   </button>
                 </div>
               </td>
@@ -229,7 +238,7 @@
               <td mat-cell *matCellDef="let element" [attr.colspan]="columnasAcuerdo.length"
                 style="padding: 0; border-bottom-width: 0;">
                 <div class="detalle-panel-wrapper"
-                     [@detailExpand]="estaExpandido(element) ? 'expanded' : 'collapsed'">
+                  [@detailExpand]="estaExpandido(element) ? 'expanded' : 'collapsed'">
                   <div class="detalle-sticky">
                     <div class="detalle-panel">
                       <div class="detalle-seccion detalle-objeto">
