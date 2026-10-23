@@ -118,8 +118,6 @@ export class PreviousStudiesListModel {
   step_order_actual_request?: number;
   guid_msft_adjustment?: string;
   total_records?: number;
-
-  ///
   modality_id?: number;
   agreement_type_id?: number;
   agreement_type?: string;
