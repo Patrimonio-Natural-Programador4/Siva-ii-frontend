@@ -151,12 +151,7 @@
 
                 <!-- ==================== SECCIÓN 1: INFORMACIÓN GENERAL ==================== -->
                 <div class="row g-3 mb-4 form-section">
-                  <div class="col-12">
-                    <h6 class="form-section__title">
-                      <span class="section-icon-badge"><i class="bi bi-info-circle"></i></span>
-                      Información General
-                    </h6>
-                  </div>
+
 
                   <!-- Antecedentes -->
                   <div class="col-md-6">
@@ -214,13 +209,13 @@
 
 
                   <!-- Obligaciones -->
-                  <!-- 
+                  <!--
                   <div class="col-md-6">
                     <label for="obligations" class="form-label fw-bold">Obligaciones <span
                         class="text-danger">*</span></label>
                     <textarea id="obligations" name="obligations" class="form-control" rows="2"
                       placeholder="Ingresa las obligaciones" required
-                      [(ngModel)]="estuPreviosData.obligations" 
+                      [(ngModel)]="estuPreviosData.obligations"
                       #obligations="ngModel"
                       [class.is-invalid]="obligations.invalid && (obligations.dirty || obligations.touched)"></textarea>
                     @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
@@ -229,7 +224,7 @@
                   </div>-->
 
                   <!-- Funciones del Supervisor -->
-                  <!-- 
+                  <!--
                   <div class="col-md-6">
                     <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
                         class="text-danger">*</span></label>
@@ -254,33 +249,36 @@
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div>
-            
-          
+
+
                   <!-- Tipo de acuerdo -->
-                <div class="col-md-4">
-                  <label for="agreement_type_id" class="form-label fw-bold">Tipo de acuerdo</label>
-                  <select id="agreement_type_id" name="agreement_type_id" class="form-select text-capitalize"
-                    [(ngModel)]="estuPreviosData.agreement_type_id">
-                    <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
-                    @for (tA of agrement_types; track tA.id) {
-                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
-                    }
-                  </select>
-                </div>
-
-                <!-- Modalidad -->
                   <div class="col-md-4">
-                  <label for="modality_id" class="form-label fw-bold">Modalidad</label>
-                  <select id="modality_id" name="modality_id" class="form-select text-capitalize"
-                    [(ngModel)]="estuPreviosData.modality_id">
-                    <option [ngValue]="0" disabled>Seleccione modalidad</option>
-                    @for (tA of modalities; track tA.id) {
+                    <label for="agreement_type_id" class="form-label fw-bold">Tipo de
+                      acuerdo</label>
+                    <select id="agreement_type_id" name="agreement_type_id"
+                      class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.agreement_type_id">
+                      <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
+                      @for (tA of agrement_types; track tA.id) {
                       <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
-                    }
-                  </select>
-                </div>
+                      }
+                    </select>
+                  </div>
 
-         
+                  <!-- Modalidad -->
+                  <div class="col-md-4">
+                    <label for="modality_id" class="form-label fw-bold">Modalidad</label>
+                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.modality_id">
+                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                      @for (tA of modalities; track tA.id) {
+                      <option [ngValue]="tA.id">{{ tA.name | titlecase }}
+                      </option>
+                      }
+                    </select>
+                  </div>
+
+
 
                   <!-- Plazo Estimado -->
                   <!--
@@ -301,12 +299,7 @@
 
                 <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
                 <div class="row g-3 mb-4 form-section">
-                  <div class="col-12">
-                    <h6 class="form-section__title">
-                      <span class="section-icon-badge"><i class="bi bi-cash-stack"></i></span>
-                      Aspectos Financieros
-                    </h6>
-                  </div>
+
 
                   <div class="col-md-4">
                     <label for="total_value" class="form-label fw-bold">Valor total</label>
@@ -360,14 +353,9 @@
                   </div>
                 </div>
 
-                <!-- ==================== SECCIÓN 3: ASIGNACIÓN Y RELACIONES ==================== -->
+
                 <div class="row g-3 mb-2 form-section">
-                  <div class="col-12">
-                    <h6 class="form-section__title">
-                      <span class="section-icon-badge"><i class="bi bi-diagram-3"></i></span>
-                      Asignación y Clasificación
-                    </h6>
-                  </div>
+
 
                   <!-- Líder del Pilar -->
                   <div class="col-md-6">
@@ -378,16 +366,13 @@
                       <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
                       @for (person of persons; track person.id || $index) {
                       <option [value]="person.id" class="text-capitalize">
-                        {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
-                        }}{{
-                        person.last_name || '' }}
+                        {{ person.first_name | titlecase }} {{ (person.other_name ?
+                        person.other_name + ' ' : '') | titlecase }}{{ (person.last_name || '') |
+                        titlecase }}
                       </option>
                       }
                     </select>
                   </div>
-
-
-
 
                 </div>
 

@@ -2,7 +2,7 @@ import { ProgramsService } from 'src/app/services/programs.service';
 import { EvaluacionCapacidadesModel } from 'src/app/models/evaluacion-capacidades';
 import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capacidades/evaluacion-capacidades.service';
 import { EstudiosPreviosService } from './../../../../services/estudios-previos/estudios-previos.service';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -14,6 +14,7 @@ import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { ImplementerModel } from 'src/app/models/implementers';
 import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
+import { EstudiosPreviosRiesgosTabla } from 'src/app/routes/acuerdos/estudios-previos/estudios-previos-riesgos/estudios-previos-riesgos-tabla/estudios-previos-riesgos-tabla';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PageHeader } from '@shared';
 import { ResponseRequest } from 'src/app/models/response-request';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-estudios-previos-formulario',
@@ -35,6 +37,8 @@ import { ResponseRequest } from 'src/app/models/response-request';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     CommonModule,
+    MatStepperModule,
+    EstudiosPreviosRiesgosTabla,
   ],
   templateUrl: './estudios-previos-formulario.html',
   styleUrl: './estudios-previos-formulario.scss',
@@ -50,6 +54,7 @@ export class EstudiosPreviosFormulario implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   accion = 'Nuevo';
   idEstPrevios: number | null = null;
@@ -108,6 +113,7 @@ export class EstudiosPreviosFormulario implements OnInit {
       this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
         next: data => {
           this.estuPreviosData = new PreviousStudiesModel(data);
+          this.cdr.markForCheck();
         },
         error: () => {
           this.snackBar.open('Error al cargar el estudios previos', '', {
@@ -122,6 +128,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
         this.implementers = r;
+        this.cdr.markForCheck();
         console.log(r);
       },
       error: e => {
@@ -134,6 +141,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.PersonsService.getPersons().subscribe({
       next: r => {
         this.persons = r;
+        this.cdr.markForCheck();
         console.log(r);
       },
       error: e => {
