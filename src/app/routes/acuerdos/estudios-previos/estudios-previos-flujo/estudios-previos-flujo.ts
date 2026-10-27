@@ -117,7 +117,7 @@ export class EstudiosPreviosFlujo implements OnInit {
 
     this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
       next: data => {
-        console.log('1. DATA RECIBIDA:', data);
+        //console.log('1. DATA RECIBIDA:', data);
         this.estudio = data;
         console.log('2. EVALUACION ASIGNADA:', this.estudio, 'guid:', this.estudio.guid);
         if (this.estudio.id) {
@@ -150,7 +150,7 @@ export class EstudiosPreviosFlujo implements OnInit {
       next: data => {
         this.historialAprobacion = data ?? [];
         this.cdr.detectChanges();
-        console.log('HISTORIAL APROBACION', this.historialAprobacion);
+        //console.log('HISTORIAL APROBACION', this.historialAprobacion);
       },
       error: () => {
         this.historialAprobacion = [];

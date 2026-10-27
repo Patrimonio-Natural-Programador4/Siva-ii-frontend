@@ -23,6 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PageHeader } from '@shared';
 import { ResponseRequest } from 'src/app/models/response-request';
+import { ModalitiesService } from 'src/app/services/modalidades.service';
+import { ModalidadModel } from 'src/app/models/modalidades';
+import { TipoAcuerdoModel } from 'src/app/models/tipos-acuerdos';
+import { AgreementTypes } from 'src/app/services/agreement-types/agreement-types';
 
 @Component({
   selector: 'app-estudios-previos-formulario',
@@ -50,6 +54,8 @@ export class EstudiosPreviosFormulario implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly ModalitiesService = inject(ModalitiesService);
+  private readonly AgreementTypesService = inject(AgreementTypes);
 
   accion = 'Nuevo';
   idEstPrevios: number | null = null;
@@ -60,6 +66,8 @@ export class EstudiosPreviosFormulario implements OnInit {
   states: CapacityAssessmentStateModel[] = [];
   capacity: EvaluacionCapacidadesModel[] = [];
   programs: Programs[] = [];
+  modalities: ModalidadModel[] = [];
+  agrement_types: TipoAcuerdoModel[] = [];
 
   estuPreviosData: PreviousStudiesModel = new PreviousStudiesModel({
     precedents: '',
@@ -103,6 +111,8 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.listarStates();
     this.listarCapacity();
     this.listarPrograms();
+    this.listarModalidades();
+    this.listarTposAcuerdo();
 
     if (this.guidEstudio) {
       this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
@@ -159,6 +169,31 @@ export class EstudiosPreviosFormulario implements OnInit {
       next: r => {
         this.capacity = r;
         console.log(r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarModalidades() {
+    this.ModalitiesService.getModalities().subscribe({
+      next: r => {
+        this.modalities = r;
+        //console.log('Modalidades ', r);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
+  listarTposAcuerdo() {
+    this.AgreementTypesService.getagreementTypes().subscribe({
+      next: r => {
+        const options = r.filter(O => O.is_independent);
+        this.agrement_types = options;
+        //console.log('tipos de acuerdos ', r);
       },
       error: e => {
         console.error(e);

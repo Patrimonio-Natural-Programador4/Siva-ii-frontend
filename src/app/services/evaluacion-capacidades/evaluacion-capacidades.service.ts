@@ -36,7 +36,7 @@ export class EvaluacionCapacidadesService {
       return this.http.post<ResponseRequest>(this.apiUrl, evCap);
     }
   }
-
+  //Aqui
   updateEvaCapacidades(guid: string, evCap: any): Observable<ResponseRequest> {
     return this.http.put<ResponseRequest>(`${this.apiUrl}/${guid}`, evCap);
   }

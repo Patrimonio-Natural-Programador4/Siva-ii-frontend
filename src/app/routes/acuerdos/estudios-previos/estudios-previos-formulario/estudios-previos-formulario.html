@@ -4,7 +4,7 @@
   <div class="col-12">
     <mat-card class="app-data-card shadow-sm">
       <mat-card-header class="app-data-card__header pb-2">
-        <mat-card-title>{{ accion }} Estudios Previos    </mat-card-title>
+        <mat-card-title>{{ accion }} Estudios Previos </mat-card-title>
         
       </mat-card-header>
 
@@ -25,7 +25,7 @@
                   class="text-danger">*</span></label>
               <textarea id="precedents" name="precedents" class="form-control" rows="2"
                 placeholder="Ingresa los antecedentes" required
-                [(ngModel)]="estuPreviosData.precedents" maxlength="500" #precedents="ngModel"
+                [(ngModel)]="estuPreviosData.precedents"  #precedents="ngModel"
                 [class.is-invalid]="precedents.invalid && (precedents.dirty || precedents.touched)"></textarea>
               @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
               <div class="invalid-feedback">Este campo es requerido.</div>
@@ -38,7 +38,7 @@
                   class="text-danger">*</span></label>
               <textarea id="justification" name="justification" class="form-control" rows="2"
                 placeholder="Ingresa la justificación" required
-                [(ngModel)]="estuPreviosData.justification" maxlength="500" #justification="ngModel"
+                [(ngModel)]="estuPreviosData.justification"  #justification="ngModel"
                 [class.is-invalid]="justification.invalid && (justification.dirty || justification.touched)"></textarea>
               @if (justification.invalid && (justification.dirty || justification.touched)) {
               <div class="invalid-feedback">Este campo es requerido.</div>
@@ -51,7 +51,7 @@
                   class="text-danger">*</span></label>
               <textarea id="scope" name="scope" class="form-control" rows="2"
                 placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
-                maxlength="500" #scope="ngModel"
+                 #scope="ngModel"
                 [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"></textarea>
               @if (scope.invalid && (scope.dirty || scope.touched)) {
               <div class="invalid-feedback">Este campo es requerido.</div>
@@ -64,7 +64,7 @@
                   class="text-danger">*</span></label>
               <textarea id="overall_objective" name="overall_objective" class="form-control"
                 rows="2" placeholder="Ingresa el objetivo general" required
-                [(ngModel)]="estuPreviosData.overall_objective" maxlength="500"
+                [(ngModel)]="estuPreviosData.overall_objective" 
                 #overall_objective="ngModel"
                 [class.is-invalid]="overall_objective.invalid && (overall_objective.dirty || overall_objective.touched)"></textarea>
               @if (overall_objective.invalid && (overall_objective.dirty ||
@@ -79,7 +79,7 @@
                   class="text-danger">*</span></label>
               <textarea id="obligations" name="obligations" class="form-control" rows="2"
                 placeholder="Ingresa las obligaciones" required
-                [(ngModel)]="estuPreviosData.obligations" maxlength="500" #obligations="ngModel"
+                [(ngModel)]="estuPreviosData.obligations"  #obligations="ngModel"
                 [class.is-invalid]="obligations.invalid && (obligations.dirty || obligations.touched)"></textarea>
               @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
               <div class="invalid-feedback">Este campo es requerido.</div>
@@ -92,7 +92,7 @@
                   class="text-danger">*</span></label>
               <textarea id="supervisor" name="supervisor" class="form-control" rows="2"
                 placeholder="Ingresa las funciones del supervisor" required
-                [(ngModel)]="estuPreviosData.supervisor" maxlength="500" #supervisor="ngModel"
+                [(ngModel)]="estuPreviosData.supervisor"  #supervisor="ngModel"
                 [class.is-invalid]="supervisor.invalid && (supervisor.dirty || supervisor.touched)"></textarea>
               @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
               <div class="invalid-feedback">Este campo es requerido.</div>
@@ -100,7 +100,7 @@
             </div>
 
             <!-- Plazo -->
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="term" class="form-label fw-bold">Plazo <span
                   class="text-danger">*</span></label>
               <input id="term" name="term" type="text" class="form-control"
@@ -112,7 +112,9 @@
               }
             </div>
 
+
             <!-- Plazo Estimado -->
+            <!--
             <div class="col-md-6">
               <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
                   class="text-danger">*</span></label>
@@ -125,6 +127,37 @@
               <div class="invalid-feedback">Este campo es requerido.</div>
               }
             </div>
+            --> 
+
+
+               <!-- Modalidad -->
+                  <div class="col-md-4">
+                    <label for="modality_id" class="form-label fw-bold">Modalidad</label>
+                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.modality_id">
+                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                      @for (tA of modalities; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <!-- Tipo de acuerdo -->
+                  <div class="col-md-4">
+                    <label for="agreement_type_id" class="form-label fw-bold">Tipo de
+                      acuerdo</label>
+                    <select id="agreement_type_id" name="agreement_type_id"
+                      class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.agreement_type_id">
+                      <option [ngValue]="0" disabled>Seleccione tipo de acuerdo</option>
+                      @for (tA of agrement_types; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                      }
+                    </select>
+                  </div>
+
+
+
           </div>
 
           <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->

@@ -74,7 +74,7 @@ export class EstudiosPreviosService {
   }
 
   getPorGuid(guid: string): Observable<PreviousStudiesModel> {
-    console.log('URLLL', `${this.apiUrl}/${guid}/detalle`);
+    //console.log('URLLL', `${this.apiUrl}/${guid}/detalle`);
 
     return this.http.get(`${this.apiUrl}/${guid}/detalle`).pipe(
       catchError(err => {

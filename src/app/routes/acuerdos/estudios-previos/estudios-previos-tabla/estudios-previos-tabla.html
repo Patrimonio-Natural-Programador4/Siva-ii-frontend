@@ -15,27 +15,24 @@
 
               <!-- Programa -->
               <div class="col-md-6 mb-3">
-                <label for="programa" class="form-label font-weight-bold">Filtrar por
-                  programa</label>
-                <select id="programa" class="form-select" required [(ngModel)]="selectedProgramId"
-                  name="program_id">
-                  <option [ngValue]="null" disabled>Seleccione el programa</option>
+                <label for="programa" class="form-label font-weight-bold">Filtrar por programa</label>
+                <select id="programa" class="form-select" name="program_id"
+                  [(ngModel)]="selectedProgramId" (ngModelChange)="aplicarFiltros()">
+                  <option [ngValue]="null">Todos los programas</option>
                   @for (prog of programs; track prog.id_programa) {
                   <option [ngValue]="prog.id_programa">{{ prog.name }}</option>
                   }
                 </select>
               </div>
 
-
-
-              <!-- estados -->
+              <!-- Estado -->
               <div class="col-md-6 mb-3">
-                <label for="programa" class="form-label font-weight-bold">Filtrar por estado</label>
-                <select id="programa" class="form-select" required [(ngModel)]="selectedProgramId"
-                  name="program_id">
-                  <option [ngValue]="null" disabled>Seleccione el estado</option>
-                  @for (prog of states; track prog.id) {
-                  <option [ngValue]="prog.state">{{ prog.state }}</option>
+                <label for="estado" class="form-label font-weight-bold">Filtrar por estado</label>
+                <select id="estado" class="form-select" name="capacity_state_id"
+                  [(ngModel)]="selectedStateId" (ngModelChange)="aplicarFiltros()">
+                  <option [ngValue]="null">Todos los estados</option>
+                  @for (st of states; track st.id) {
+                  <option [ngValue]="st.id">{{ st.state }}</option>
                   }
                 </select>
               </div>
@@ -47,183 +44,87 @@
           <hr />
         </div>
         <div style="width: 100%">
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-            <small><b>Total de registros [{{total}}]</b></small>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end align-items-center mb-2">
+            <button mat-stroked-button type="button" (click)="limpiarFiltros()"
+              [disabled]="selectedProgramId === null && selectedStateId === null">
+              <mat-icon>filter_alt_off</mat-icon> Limpiar filtros
+            </button>
+            <small><b>Total de registros [{{ total }}]</b></small>
           </div>
         </div>
 
         <div class="app-data-table-wrapper" style="height: 500px; overflow: auto">
-          <table mat-table [dataSource]="estudios" class="app-data-table mat-elevation-z1">
-            <ng-container matColumnDef="id">
+          <table mat-table [dataSource]="flujosTable" class="app-data-table mat-elevation-z1">
+            <ng-container matColumnDef="approval_request_id">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
                 ID
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.approval_request_id }}</td>
+            </ng-container>D
+
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef
+                style="position: sticky; top: 0; background: #fff; z-index: 2">
+                Rol
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.rol | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="precedents">
+            <ng-container matColumnDef="implementadora">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Antecedentes
+                implementadora
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.precedents | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.implementadora | uppercase }}</td>
             </ng-container>
 
-            
-            <ng-container matColumnDef="justification">
+            <ng-container matColumnDef="estado_aprobacion">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Justificación
+                estado_aprobacion
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.justification | uppercase }}</td>
-            </ng-container>
-            
-            <ng-container matColumnDef="scope">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Alcance
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.scope | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.estado_aprobacion | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="overall_objective">
+            <ng-container matColumnDef="pilar">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Objetivo general
+                pilar
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.overall_objective | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.pilar | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="term">
+            <ng-container matColumnDef="lider_pilar">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Plazo
+                lider_pilar
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.term | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.lider_pilar | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="obligations">
+            <ng-container matColumnDef="usuario">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Obligaciones
+                usuario
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.obligations | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.usuario | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="supervisor">
+            <ng-container matColumnDef="modalidad">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Funciones supervisor
+                modalidad
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.supervisor | uppercase }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.modalidad | uppercase }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="total_value">
+            <ng-container matColumnDef="capacity_state">
               <th mat-header-cell *matHeaderCellDef
                 style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Valor total
+                Estado evaluacion de capacidades
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.total_value | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="contributions_ei">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Aportes EI
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.contributions_ei | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_value_executes_fpn">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Valor total que ejecuta FPN
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.total_value_executes_fpn | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_value_executes_ei">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Valor total que ejecuta EI
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.total_value_executes_ei | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="implementers">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Implementadora
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.implementer }}</td>
-            </ng-container>
-
-            <!---
-            <ng-container matColumnDef="cap_assessments_state">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Estado evaluación de capacidades
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.cap_assessments_state }}</td>
-            </ng-container> -->
-
-            <ng-container matColumnDef="app_request">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Solicitud de aprobación
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.app_request }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="persons">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Lider del pilar
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.persons }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="capacity_assessment">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Evaluación de capacidades
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.capacity_assessment }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="programs">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Programa
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.program_name }}</td>
-            </ng-container>
-
-
-            <ng-container matColumnDef="contributions_fpn">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Aportes FPN
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.contributions_fpn | number }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="estimated_term">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Plazo estimado
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.estimated_term | uppercase }}</td>
-            </ng-container>
-
-
-            <ng-container matColumnDef="prev_studies_state">
-              <th mat-header-cell *matHeaderCellDef
-                style="position: sticky; top: 0; background: #fff; z-index: 2">
-                Estado estudios previos
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.prev_studies_state }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.capacity_state | uppercase }}</td>
             </ng-container>
 
 
@@ -233,39 +134,40 @@
                 Acciones
               </th>
               <td mat-cell *matCellDef="let element">
-                <button mat-icon-button type="button"
+                <button mat-icon-button type="button" class="btn_download"
                   matTooltip="Descargar formato Word" aria-label="Descargar formato Word"
-                  [disabled]="!element.guid || descargasEnCurso().has(element.guid)"
+                  [disabled]="!element.guid_ev || descargasEnCurso().has(element.guid_ev)"
                   (click)="descargarFormatoEp(element)">
-                  <mat-icon>download</mat-icon>
+                  <mat-icon>file_download</mat-icon>
                 </button>
                 <a href="javascript:void(0)" style="text-decoration: none" title="Editar"
-                  (click)="editarEstudioPrevio(element.guid)">
+                  (click)="editarEstudioPrevio(element.guid_ev)">
                   <mat-icon>edit</mat-icon>
                 </a>
 
                 <a href="javascript:void(0)" style="text-decoration: none"
                   title="Continuar flujo de aprobación" alt="Continuar flujo de aprobación"
-                  (click)="continuarFlujo(element.guid)">
+                  (click)="continuarFlujo(element.guid_ev)">
                   <mat-icon title="Continuar flujo de aprobación"
                     alt="Continuar flujo de aprobación">clear_all</mat-icon>
                 </a>
               </td>
             </ng-container>
 
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"
               [ngClass]="getRowClass(row)"></tr>
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell app-data-table__empty" [attr.colspan]="displayedColumns.length">
-                No se encontraron evaluaciones con ese criterio.
+                No se encontraron registros con ese criterio.
               </td>
             </tr>
           </table>
         </div>
 
-        <mat-paginator [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions"
-          showFirstLastButtons aria-label="Paginación de evaluación de capacidades" />
+        <mat-paginator [pageSize]="pageSize" hidePageSize showFirstLastButtons
+          aria-label="Paginación de estudios previos" />
       </mat-card-content>
     </mat-card>
   </div>

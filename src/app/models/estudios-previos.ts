@@ -24,6 +24,7 @@ export class PreviousStudiesModel {
   capacity_assessment_id?: number;
   contributions_fpn?: number;
   estimated_term?: string;
+  modalidad_id?: number;
   programs?: string;
   program_id?: number;
   codde?: string;

@@ -39,6 +39,7 @@ import { AgreementTypes } from 'src/app/services/agreement-types/agreement-types
 import { ModalitiesService } from 'src/app/services/modalidades.service';
 import { ModalidadModel } from 'src/app/models/modalidades';
 
+EvaluacionCapacidadesModel;
 @Component({
   selector: 'app-estudios-previos-especifico',
   imports: [
@@ -82,6 +83,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
   persons: PersonModel[] = [];
   states: CapacityAssessmentStateModel[] = [];
   capacity: EvaluacionCapacidadesModel[] = [];
+  //capacity_assessments_states
   programs: Programs[] = [];
   agrement_types: TipoAcuerdoModel[] = [];
   modalities: ModalidadModel[] = [];
@@ -336,7 +338,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.EvaluacionCapacidadesService.getEvaCapacidades().subscribe({
       next: r => {
         this.capacity = r;
-        //console.log(r);
+        console.log('Capacidades  ', r);
       },
       error: e => {
         console.error(e);
@@ -393,8 +395,9 @@ export class EstudiosPreviosEspecifico implements OnInit {
     });
   }
 
+  //guardar estudio previo
   guardarEstudiosPrevios(): void {
-    console.log(`Evaluacion :: ${JSON.stringify(this.evaluacion)}`);
+    //console.log(`Evaluacion :: ${JSON.stringify(this.evaluacion)}`);
 
     // Data tarida desde evaluacion de capaciddes
     const {
@@ -455,7 +458,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
       modality_id: this.estuPreviosData.modality_id,
     };
 
-    console.log('prueba union', estudios_previos_data);
+    //console.log('prueba union', estudios_previos_data);
 
     const request$ = this.EstudiosPreviosService.saveEstPrevios(estudios_previos_data); // Data que envia   desde el formulario el usuario
 
