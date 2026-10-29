@@ -7,6 +7,7 @@ import { PreviousStudiesListModel, PreviousStudiesModel } from 'src/app/models/e
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 import { Viajes } from 'src/app/models/viajes';
+import { EstadoDesembolso } from 'src/app/models/desembolsos-estudio';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,10 @@ export class EstudiosPreviosService {
   private readonly tipoSolicitud = 'APP_EP';
 
   refrescarTabla$ = new Subject<void>();
+
+  getEstadosDesembolso(): Observable<EstadoDesembolso[]> {
+    return this.http.get<EstadoDesembolso[]>(`${this.apiUrl}/catalogos/estados-desembolso`);
+  }
 
   // Lista estudios previos
   getEstPrevios(): Observable<PreviousStudiesModel[]> {

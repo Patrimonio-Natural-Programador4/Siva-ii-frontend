@@ -1,0 +1,108 @@
+<div class="p-4">
+  <h2 class="h5 mb-4">{{ data.registro ? 'Editar' : 'Agregar' }} {{ nombreTipo | lowercase }}</h2>
+  @if (data.padre) {
+    <p class="text-break">
+      <strong>Asociado a:</strong>
+      {{ data.padre }}
+    </p>
+  }
+  <form #form="ngForm" novalidate (ngSubmit)="guardar(form)">
+    @if (data.tipo !== 'objetivo') {
+      <div class="mb-3">
+        <label for="producto-code" class="form-label fw-bold">
+          Código {{ data.tipo === 'actividad' ? 'de la Actividad' : 'del Producto' }} *
+        </label>
+        <input
+          id="producto-code"
+          name="code"
+          class="form-control"
+          required
+          maxlength="255"
+          [(ngModel)]="registro.code"
+          #code="ngModel"
+          [class.is-invalid]="code.invalid && code.touched"
+        />
+        @if (code.invalid && code.touched) {
+          <div class="invalid-feedback">El código es requerido.</div>
+        }
+      </div>
+    }
+    <div class="mb-3">
+      <label for="producto-nombre" class="form-label fw-bold">
+        Nombre {{ data.tipo === 'actividad' ? 'de la Actividad' : 'del ' + nombreTipo }} *
+      </label>
+      <textarea
+        id="producto-nombre"
+        name="product"
+        class="form-control"
+        rows="4"
+        required
+        [(ngModel)]="registro.product"
+        #nombre="ngModel"
+        [class.is-invalid]="nombre.invalid && nombre.touched"
+      ></textarea>
+      @if (nombre.invalid && nombre.touched) {
+        <div class="invalid-feedback">El nombre es requerido.</div>
+      }
+      <!-- @if (data.tipo === 'objetivo') {
+        <div class="form-text">El código del objetivo se genera automáticamente.</div>
+      } -->
+    </div>
+    @if (data.tipo === 'producto') {
+      <div class="mb-3">
+        <label for="producto-unidad" class="form-label fw-bold">Unidad de medida *</label>
+        <input
+          id="producto-unidad"
+          name="unit_measure"
+          class="form-control"
+          required
+          [(ngModel)]="registro.unit_measure"
+          #unidad="ngModel"
+          [class.is-invalid]="unidad.invalid && unidad.touched"
+        />
+        @if (unidad.invalid && unidad.touched) {
+          <div class="invalid-feedback">La unidad de medida es requerida.</div>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="producto-cantidad" class="form-label fw-bold">Cantidad *</label>
+        <input
+          id="producto-cantidad"
+          name="quantity"
+          class="form-control"
+          type="text"
+          inputmode="decimal"
+          pattern="[0-9]{1,13}(\.[0-9]{1,2})?"
+          required
+          [(ngModel)]="registro.quantity"
+          #cantidad="ngModel"
+          [class.is-invalid]="cantidad.invalid && cantidad.touched"
+        />
+        <div class="form-text">Valor mayor o igual a cero. Use punto para hasta dos decimales.</div>
+        @if (cantidad.invalid && cantidad.touched) {
+          <div class="invalid-feedback">Ingrese una cantidad válida, con hasta dos decimales.</div>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="producto-observaciones" class="form-label fw-bold">Observaciones</label>
+        <textarea
+          id="producto-observaciones"
+          name="observations"
+          class="form-control"
+          rows="3"
+          [(ngModel)]="registro.observations"
+        ></textarea>
+      </div>
+    }
+    @if (error) {
+      <div class="alert alert-danger" role="alert">{{ error }}</div>
+    }
+    <!-- <p class="text-muted">Los cambios se guardarán al guardar el estudio previo.</p> -->
+    <div class="d-flex flex-wrap justify-content-end gap-2">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button type="submit" [disabled]="form.invalid">
+        {{ data.registro ? 'Aplicar cambios' : 'Agregar' }}
+      </button>
+    </div>
+  </form>
+</div>
