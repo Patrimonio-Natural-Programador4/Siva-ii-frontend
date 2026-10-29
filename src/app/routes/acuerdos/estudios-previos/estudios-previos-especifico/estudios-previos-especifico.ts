@@ -143,6 +143,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     solicitud_exitosa: false,
   });
 
+  //onInit
   ngOnInit(): void {
     const guid = this.route.snapshot.paramMap.get('guid');
     if (guid) {
@@ -181,7 +182,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
       });
     }
   }
-
+  //here
   volver(): void {
     this.router.navigate(['/acuerdos/evaluacion-capacidades']);
   }
