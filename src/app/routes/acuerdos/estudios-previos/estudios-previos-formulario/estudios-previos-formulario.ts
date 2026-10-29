@@ -2,7 +2,8 @@ import { ProgramsService } from 'src/app/services/programs.service';
 import { EvaluacionCapacidadesModel } from 'src/app/models/evaluacion-capacidades';
 import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capacidades/evaluacion-capacidades.service';
 import { EstudiosPreviosService } from './../../../../services/estudios-previos/estudios-previos.service';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -16,13 +17,30 @@ import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
 
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule } from '@angular/material/stepper';
 import { PageHeader } from '@shared';
 import { ResponseRequest } from 'src/app/models/response-request';
+import { MtxDrawer } from '@ng-matero/extensions/drawer';
+import {
+  ActividadEstudio,
+  ObjetivoEstudio,
+  ProductoEstudio,
+  ProductosFormData,
+} from 'src/app/models/agreements-products';
+import { ProductosForm } from '../productos-form/productos-form';
+import { DesembolsosForm } from '../desembolsos-form/desembolsos-form';
+import {
+  DesembolsoEstudio,
+  DesembolsoFormData,
+  EstadoDesembolso,
+  productosParaDesembolso,
+} from 'src/app/models/desembolsos-estudio';
 
 @Component({
   selector: 'app-estudios-previos-formulario',
@@ -33,6 +51,7 @@ import { ResponseRequest } from 'src/app/models/response-request';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatStepperModule,
     MatSnackBarModule,
     CommonModule,
   ],
@@ -50,11 +69,19 @@ export class EstudiosPreviosFormulario implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly drawer = inject(MtxDrawer);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   accion = 'Nuevo';
   idEstPrevios: number | null = null;
   guidEstudio: string | null = null;
   isLoading = false;
+  cargandoEstudio = false;
+  errorCarga = false;
+  estadosDesembolso: EstadoDesembolso[] = [];
+  cargandoEstadosDesembolso = false;
+  errorEstadosDesembolso = false;
   implementers: ImplementerModel[] = [];
   persons: PersonModel[] = [];
   states: CapacityAssessmentStateModel[] = [];
@@ -85,6 +112,8 @@ export class EstudiosPreviosFormulario implements OnInit {
     enviar_aprobacion: false,
     agreement_type_id: 0,
     modality_id: 0,
+    objetivos: [],
+    desembolsos: [],
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -103,13 +132,18 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.listarStates();
     this.listarCapacity();
     this.listarPrograms();
+    this.listarEstadosDesembolso();
 
     if (this.guidEstudio) {
+      this.cargandoEstudio = true;
       this.EstudiosPreviosService.getPorGuid(this.guidEstudio).subscribe({
         next: data => {
           this.estuPreviosData = new PreviousStudiesModel(data);
+          this.cargandoEstudio = false;
         },
         error: () => {
+          this.cargandoEstudio = false;
+          this.errorCarga = true;
           this.snackBar.open('Error al cargar el estudios previos', '', {
             duration: 3000,
           });
@@ -179,7 +213,7 @@ export class EstudiosPreviosFormulario implements OnInit {
   }
 
   guardarEstudiosPrevios(enviarAprobacion: boolean): void {
-    if (this.isLoading) {
+    if (this.isLoading || this.cargandoEstudio || this.errorCarga) {
       return;
     }
 
@@ -200,12 +234,210 @@ export class EstudiosPreviosFormulario implements OnInit {
           this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 4000 });
         }
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.snackBar.open('Error al guardar el estudios previos', '', { duration: 4000 });
+        const mensaje =
+          typeof error.error?.mensaje === 'string'
+            ? error.error.mensaje
+            : 'Error al guardar el estudio previo';
+        this.snackBar.open(mensaje, '', { duration: 4000 });
       },
     });
     //console.log(this.estuPreviosData);
+  }
+
+  agregarObjetivo(): void {
+    this.abrirProducto({ tipo: 'objetivo' }, registro => {
+      const objetivos = this.estuPreviosData.objetivos ?? [];
+      const siguiente =
+        Math.max(
+          0,
+          ...objetivos.map(objetivo =>
+            /^\d+$/.test(objetivo.code ?? '') ? Number(objetivo.code) : 0
+          )
+        ) + 1;
+      this.estuPreviosData.objetivos = [
+        ...objetivos,
+        { ...registro, code: String(siguiente), actividades: [] },
+      ];
+    });
+  }
+
+  agregarActividad(objetivo: ObjetivoEstudio): void {
+    this.abrirProducto(
+      { tipo: 'actividad', padre: `${objetivo.code ?? ''} - ${objetivo.product ?? ''}` },
+      registro => {
+        objetivo.actividades = [...objetivo.actividades, { ...registro, productos: [] }];
+      }
+    );
+  }
+
+  editarObjetivo(objetivo: ObjetivoEstudio): void {
+    this.abrirProducto({ tipo: 'objetivo', registro: objetivo }, registro => {
+      objetivo.product = registro.product;
+      objetivo.modificar = true;
+    });
+  }
+
+  editarActividad(objetivo: ObjetivoEstudio, actividad: ActividadEstudio): void {
+    this.abrirProducto(
+      {
+        tipo: 'actividad',
+        padre: `${objetivo.code ?? ''} - ${objetivo.product ?? ''}`,
+        registro: actividad,
+      },
+      registro => {
+        actividad.code = registro.code;
+        actividad.product = registro.product;
+        actividad.modificar = true;
+      }
+    );
+  }
+
+  agregarProducto(actividad: ActividadEstudio): void {
+    this.abrirProducto(
+      {
+        tipo: 'producto',
+        padre: `${actividad.code ?? ''} - ${actividad.product ?? ''}`,
+        codigosExistentes: actividad.productos.map(producto => producto.code),
+      },
+      registro => {
+        actividad.productos = [
+          ...actividad.productos,
+          { ...registro, client_id: crypto.randomUUID() },
+        ];
+      }
+    );
+  }
+
+  editarProducto(actividad: ActividadEstudio, producto: ProductoEstudio): void {
+    this.abrirProducto(
+      {
+        tipo: 'producto',
+        registro: producto,
+        padre: `${actividad.code ?? ''} - ${actividad.product ?? ''}`,
+        codigosExistentes: actividad.productos
+          .filter(actual => actual !== producto)
+          .map(actual => actual.code),
+      },
+      registro => {
+        Object.assign(producto, {
+          code: registro.code,
+          product: registro.product,
+          unit_measure: registro.unit_measure,
+          quantity: registro.quantity,
+          observations: registro.observations,
+          modificar: true,
+        });
+      }
+    );
+  }
+
+  listarEstadosDesembolso(): void {
+    this.cargandoEstadosDesembolso = true;
+    this.errorEstadosDesembolso = false;
+    this.EstudiosPreviosService.getEstadosDesembolso()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: estados => {
+          this.estadosDesembolso = estados;
+          this.cargandoEstadosDesembolso = false;
+          this.errorEstadosDesembolso = estados.length === 0;
+          if (!estados.length) {
+            this.snackBar.open('No hay estados de desembolso configurados.', '', {
+              duration: 4000,
+            });
+          }
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.cargandoEstadosDesembolso = false;
+          this.errorEstadosDesembolso = true;
+          this.snackBar.open('Error al cargar los estados de desembolso.', '', { duration: 4000 });
+          this.changeDetectorRef.markForCheck();
+        },
+      });
+  }
+
+  agregarDesembolso(desembolso?: DesembolsoEstudio): void {
+    const data: DesembolsoFormData = {
+      productos: productosParaDesembolso(
+        this.estuPreviosData.objetivos ?? [],
+        (this.estuPreviosData.desembolsos ?? []).filter(registro => registro !== desembolso)
+      ),
+      estados: this.estadosDesembolso,
+      desembolso,
+    };
+    const drawerRef = this.drawer.open<DesembolsosForm, DesembolsoFormData, DesembolsoEstudio>(
+      DesembolsosForm,
+      { position: 'right', width: '760px', maxWidth: '100vw', data }
+    );
+    drawerRef
+      .afterDismissed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(registro => {
+        if (registro) {
+          this.estuPreviosData.desembolsos = desembolso
+            ? (this.estuPreviosData.desembolsos ?? []).map(actual =>
+                actual === desembolso ? registro : actual
+              )
+            : [...(this.estuPreviosData.desembolsos ?? []), registro];
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  get totalDesembolsos(): number {
+    return (
+      (this.estuPreviosData.desembolsos ?? []).reduce(
+        (total, desembolso) => total + Math.round(Number(desembolso.value) * 100),
+        0
+      ) / 100
+    );
+  }
+
+  nombreEstadoDesembolso(id: number | null): string {
+    return this.estadosDesembolso.find(estado => estado.id === id)?.name ?? String(id ?? '');
+  }
+
+  productosDesembolso(
+    desembolso: DesembolsoEstudio
+  ): { key: string; producto: ProductoEstudio | undefined }[] {
+    const productos = new Map(
+      (this.estuPreviosData.objetivos ?? []).flatMap(objetivo =>
+        objetivo.actividades.flatMap(actividad =>
+          actividad.productos.map(
+            producto =>
+              [producto.id ? `id:${producto.id}` : `new:${producto.client_id}`, producto] as const
+          )
+        )
+      )
+    );
+    return desembolso.product_keys.map(key => ({ key, producto: productos.get(key) }));
+  }
+
+  private abrirProducto(
+    data: ProductosFormData,
+    agregar: (registro: ProductoEstudio) => void
+  ): void {
+    const drawerRef = this.drawer.open<ProductosForm, ProductosFormData, ProductoEstudio>(
+      ProductosForm,
+      {
+        position: 'right',
+        width: '560px',
+        maxWidth: '100vw',
+        data,
+      }
+    );
+    drawerRef
+      .afterDismissed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(registro => {
+        if (registro) {
+          agregar(registro);
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   volver(): void {

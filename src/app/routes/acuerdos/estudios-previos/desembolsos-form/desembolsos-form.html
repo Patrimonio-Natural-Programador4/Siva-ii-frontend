@@ -1,0 +1,156 @@
+<div class="p-4">
+  <h2 class="h5 mb-4">{{ data.desembolso ? 'Editar desembolso' : 'Agregar desembolso' }}</h2>
+  <form #form="ngForm" novalidate (ngSubmit)="guardar(form)">
+    <div class="row">
+      <!-- <div class="col-md-6 mb-3">
+        <label for="desembolso-fecha" class="form-label">Fecha programada de desembolso *</label>
+        <input
+          id="desembolso-fecha"
+          class="form-control"
+          type="date"
+          name="scheduled_date"
+          required
+          [(ngModel)]="registro.scheduled_date"
+        />
+      </div> -->
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-numero" class="form-label">Número de desembolso *</label>
+        <input
+          id="desembolso-numero"
+          class="form-control"
+          type="number"
+          name="number_disbursement"
+          min="1"
+          max="2147483647"
+          step="1"
+          required
+          [(ngModel)]="registro.number_disbursement"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-valor" class="form-label">Valor del desembolso *</label>
+        <input
+          id="desembolso-valor"
+          class="form-control"
+          type="text"
+          inputmode="decimal"
+          name="value"
+          pattern="[0-9]{1,13}(\.[0-9]{1,2})?"
+          required
+          [(ngModel)]="registro.value"
+        />
+        <!-- <div class="form-text">Valor no negativo; use punto para hasta dos decimales.</div> -->
+      </div>
+      <!-- <div class="col-md-6 mb-3">
+        <label for="desembolso-estado" class="form-label">Estado *</label>
+        <select
+          id="desembolso-estado"
+          class="form-select"
+          name="state_id"
+          required
+          [(ngModel)]="registro.state_id"
+        >
+          @for (estado of data.estados; track estado.id) {
+            <option [ngValue]="estado.id">{{ estado.name ?? estado.id }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-solicitud" class="form-label">Fecha de solicitud</label>
+        <input
+          id="desembolso-solicitud"
+          class="form-control"
+          type="date"
+          name="request_date"
+          [(ngModel)]="registro.request_date"
+        />
+      </div> 
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-validacion" class="form-label">Fecha de validación</label>
+        <input
+          id="desembolso-validacion"
+          class="form-control"
+          type="date"
+          name="validation_date"
+          [(ngModel)]="registro.validation_date"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-aprobacion" class="form-label">Fecha de aprobación</label>
+        <input
+          id="desembolso-aprobacion"
+          class="form-control"
+          type="date"
+          name="approval_date"
+          [(ngModel)]="registro.approval_date"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="desembolso-pago" class="form-label">Fecha de desembolso</label>
+        <input
+          id="desembolso-pago"
+          class="form-control"
+          type="date"
+          name="disbursement_date"
+          [(ngModel)]="registro.disbursement_date"
+        />
+      </div> -->
+    </div>
+    <!-- <div class="mb-3">
+      <label for="desembolso-soporte" class="form-label">Documento soporte</label>
+      <input
+        id="desembolso-soporte"
+        class="form-control"
+        name="documento_soporte"
+        [(ngModel)]="registro.documento_soporte"
+      />
+    </div> -->
+    <div class="mb-3">
+      <label for="desembolso-observaciones" class="form-label">Observaciones</label>
+      <textarea
+        id="desembolso-observaciones"
+        class="form-control"
+        name="observations"
+        rows="3"
+        [(ngModel)]="registro.observations"
+      ></textarea>
+    </div>
+    <fieldset class="border rounded p-3 mb-3">
+      <legend class="float-none w-auto fs-6 px-2">Productos asociados *</legend>
+      @for (producto of data.productos; track producto.key) {
+        <label class="d-flex gap-2 mb-2" [class.text-muted]="producto.usado">
+          <input
+            #seleccion
+            type="checkbox"
+            class="form-check-input flex-shrink-0"
+            [disabled]="producto.usado"
+            [checked]="registro.product_keys.includes(producto.key)"
+            (change)="seleccionar(producto.key, seleccion.checked)"
+          />
+          <span>
+            {{ producto.nombre }}
+            @if (producto.usado) {
+              <strong>— Ya asociado</strong>
+            }
+          </span>
+        </label>
+      } @empty {
+        <p class="text-muted">Agregue productos en el paso 4 antes de crear desembolsos.</p>
+      }
+    </fieldset>
+    @if (error) {
+      <div class="alert alert-danger" role="alert">{{ error }}</div>
+    }
+    <!-- <p class="text-muted">Los cambios se guardarán junto con el estudio previo.</p> -->
+    <div class="d-flex justify-content-end gap-2">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="form.invalid || !registro.product_keys.length"
+      >
+        {{ data.desembolso ? 'Aplicar cambios' : 'Agregar' }}
+      </button>
+    </div>
+  </form>
+</div>

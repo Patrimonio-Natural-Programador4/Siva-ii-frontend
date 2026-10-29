@@ -4,302 +4,884 @@
   <div class="col-12">
     <mat-card class="app-data-card shadow-sm">
       <mat-card-header class="app-data-card__header pb-2">
-        <mat-card-title>{{ accion }} Estudios Previos    </mat-card-title>
-        
+        <mat-card-title>{{ accion }} Estudios Previos</mat-card-title>
       </mat-card-header>
 
       <mat-card-content class="pt-3">
         <form novalidate #fEvaluacion="ngForm" class="programs-form">
+          <mat-stepper orientation="vertical">
+            <mat-step label="Información General">
+              <div class="row g-3 mb-4">
+                <!-- Antecedentes -->
+                <div class="col-md-6">
+                  <label for="precedents" class="form-label fw-bold">
+                    Antecedentes
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="precedents"
+                    name="precedents"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa los antecedentes"
+                    required
+                    [(ngModel)]="estuPreviosData.precedents"
+                    maxlength="500"
+                    #precedents="ngModel"
+                    [class.is-invalid]="
+                      precedents.invalid && (precedents.dirty || precedents.touched)
+                    "
+                  ></textarea>
+                  @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-          <!-- ==================== SECCIÓN 1: INFORMACIÓN GENERAL ==================== -->
-          <div class="row g-3 mb-4">
-            <div class="col-12">
-              <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
-                <i class="bi bi-info-circle me-1"></i> Información General
-              </h6>
-            </div>
+                <!-- Justificación -->
+                <div class="col-md-6">
+                  <label for="justification" class="form-label fw-bold">
+                    Justificación
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="justification"
+                    name="justification"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa la justificación"
+                    required
+                    [(ngModel)]="estuPreviosData.justification"
+                    maxlength="500"
+                    #justification="ngModel"
+                    [class.is-invalid]="
+                      justification.invalid && (justification.dirty || justification.touched)
+                    "
+                  ></textarea>
+                  @if (justification.invalid && (justification.dirty || justification.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Antecedentes -->
-            <div class="col-md-6">
-              <label for="precedents" class="form-label fw-bold">Antecedentes <span
-                  class="text-danger">*</span></label>
-              <textarea id="precedents" name="precedents" class="form-control" rows="2"
-                placeholder="Ingresa los antecedentes" required
-                [(ngModel)]="estuPreviosData.precedents" maxlength="500" #precedents="ngModel"
-                [class.is-invalid]="precedents.invalid && (precedents.dirty || precedents.touched)"></textarea>
-              @if (precedents.invalid && (precedents.dirty || precedents.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
+                <!-- Alcance -->
+                <div class="col-md-6">
+                  <label for="scope" class="form-label fw-bold">
+                    Alcance
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="scope"
+                    name="scope"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa el alcance"
+                    required
+                    [(ngModel)]="estuPreviosData.scope"
+                    maxlength="500"
+                    #scope="ngModel"
+                    [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"
+                  ></textarea>
+                  @if (scope.invalid && (scope.dirty || scope.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Justificación -->
-            <div class="col-md-6">
-              <label for="justification" class="form-label fw-bold">Justificación <span
-                  class="text-danger">*</span></label>
-              <textarea id="justification" name="justification" class="form-control" rows="2"
-                placeholder="Ingresa la justificación" required
-                [(ngModel)]="estuPreviosData.justification" maxlength="500" #justification="ngModel"
-                [class.is-invalid]="justification.invalid && (justification.dirty || justification.touched)"></textarea>
-              @if (justification.invalid && (justification.dirty || justification.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
+                <!-- Objetivo General -->
+                <div class="col-md-6">
+                  <label for="overall_objective" class="form-label fw-bold">
+                    Objetivo general
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="overall_objective"
+                    name="overall_objective"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa el objetivo general"
+                    required
+                    [(ngModel)]="estuPreviosData.overall_objective"
+                    maxlength="500"
+                    #overall_objective="ngModel"
+                    [class.is-invalid]="
+                      overall_objective.invalid &&
+                      (overall_objective.dirty || overall_objective.touched)
+                    "
+                  ></textarea>
+                  @if (
+                    overall_objective.invalid &&
+                    (overall_objective.dirty || overall_objective.touched)
+                  ) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Alcance -->
-            <div class="col-md-6">
-              <label for="scope" class="form-label fw-bold">Alcance <span
-                  class="text-danger">*</span></label>
-              <textarea id="scope" name="scope" class="form-control" rows="2"
-                placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
-                maxlength="500" #scope="ngModel"
-                [class.is-invalid]="scope.invalid && (scope.dirty || scope.touched)"></textarea>
-              @if (scope.invalid && (scope.dirty || scope.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
+                <!-- Obligaciones -->
+                <div class="col-md-6">
+                  <label for="obligations" class="form-label fw-bold">
+                    Obligaciones
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="obligations"
+                    name="obligations"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa las obligaciones"
+                    required
+                    [(ngModel)]="estuPreviosData.obligations"
+                    maxlength="500"
+                    #obligations="ngModel"
+                    [class.is-invalid]="
+                      obligations.invalid && (obligations.dirty || obligations.touched)
+                    "
+                  ></textarea>
+                  @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Objetivo General -->
-            <div class="col-md-6">
-              <label for="overall_objective" class="form-label fw-bold">Objetivo general <span
-                  class="text-danger">*</span></label>
-              <textarea id="overall_objective" name="overall_objective" class="form-control"
-                rows="2" placeholder="Ingresa el objetivo general" required
-                [(ngModel)]="estuPreviosData.overall_objective" maxlength="500"
-                #overall_objective="ngModel"
-                [class.is-invalid]="overall_objective.invalid && (overall_objective.dirty || overall_objective.touched)"></textarea>
-              @if (overall_objective.invalid && (overall_objective.dirty ||
-              overall_objective.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
+                <!-- Funciones del Supervisor -->
+                <div class="col-md-6">
+                  <label for="supervisor" class="form-label fw-bold">
+                    Funciones supervisor
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea
+                    id="supervisor"
+                    name="supervisor"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Ingresa las funciones del supervisor"
+                    required
+                    [(ngModel)]="estuPreviosData.supervisor"
+                    maxlength="500"
+                    #supervisor="ngModel"
+                    [class.is-invalid]="
+                      supervisor.invalid && (supervisor.dirty || supervisor.touched)
+                    "
+                  ></textarea>
+                  @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Obligaciones -->
-            <div class="col-md-6">
-              <label for="obligations" class="form-label fw-bold">Obligaciones <span
-                  class="text-danger">*</span></label>
-              <textarea id="obligations" name="obligations" class="form-control" rows="2"
-                placeholder="Ingresa las obligaciones" required
-                [(ngModel)]="estuPreviosData.obligations" maxlength="500" #obligations="ngModel"
-                [class.is-invalid]="obligations.invalid && (obligations.dirty || obligations.touched)"></textarea>
-              @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
+                <!-- Plazo -->
+                <div class="col-md-6">
+                  <label for="term" class="form-label fw-bold">
+                    Plazo
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    id="term"
+                    name="term"
+                    type="text"
+                    class="form-control"
+                    placeholder="Ej. 12 meses"
+                    required
+                    [(ngModel)]="estuPreviosData.term"
+                    maxlength="255"
+                    #term="ngModel"
+                    [class.is-invalid]="term.invalid && (term.dirty || term.touched)"
+                  />
+                  @if (term.invalid && (term.dirty || term.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
 
-            <!-- Funciones del Supervisor -->
-            <div class="col-md-6">
-              <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
-                  class="text-danger">*</span></label>
-              <textarea id="supervisor" name="supervisor" class="form-control" rows="2"
-                placeholder="Ingresa las funciones del supervisor" required
-                [(ngModel)]="estuPreviosData.supervisor" maxlength="500" #supervisor="ngModel"
-                [class.is-invalid]="supervisor.invalid && (supervisor.dirty || supervisor.touched)"></textarea>
-              @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
-
-            <!-- Plazo -->
-            <div class="col-md-6">
-              <label for="term" class="form-label fw-bold">Plazo <span
-                  class="text-danger">*</span></label>
-              <input id="term" name="term" type="text" class="form-control"
-                placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
-                maxlength="255" #term="ngModel"
-                [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
-              @if (term.invalid && (term.dirty || term.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
-
-            <!-- Plazo Estimado -->
-            <div class="col-md-6">
-              <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
-                  class="text-danger">*</span></label>
-              <input id="estimated_term" name="estimated_term" type="text" class="form-control"
-                placeholder="Ej. 60 días calendario" required
-                [(ngModel)]="estuPreviosData.estimated_term" maxlength="255"
-                #estimated_term="ngModel"
-                [class.is-invalid]="estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)" />
-              @if (estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)) {
-              <div class="invalid-feedback">Este campo es requerido.</div>
-              }
-            </div>
-          </div>
-
-          <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
-          <div class="row g-3 mb-4">
-            <div class="col-12">
-              <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
-                <i class="bi bi-cash-stack me-1"></i> Aspectos Financieros
-              </h6>
-            </div>
-
-            <div class="col-md-4">
-              
-              <label for="total_value" class="form-label fw-bold">Valor total</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input id="total_value" name="total_value" type="number" class="form-control"
-                  placeholder="0.00" min="0" [(ngModel)]="estuPreviosData.total_value" />
+                <!-- Plazo Estimado -->
+                <div class="col-md-6">
+                  <label for="estimated_term" class="form-label fw-bold">
+                    Plazo estimado
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    id="estimated_term"
+                    name="estimated_term"
+                    type="text"
+                    class="form-control"
+                    placeholder="Ej. 60 días calendario"
+                    required
+                    [(ngModel)]="estuPreviosData.estimated_term"
+                    maxlength="255"
+                    #estimated_term="ngModel"
+                    [class.is-invalid]="
+                      estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)
+                    "
+                  />
+                  @if (estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)) {
+                    <div class="invalid-feedback">Este campo es requerido.</div>
+                  }
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <label for="contributions_ei" class="form-label fw-bold">Aportes EI</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input id="contributions_ei" name="contributions_ei" type="number"
-                  class="form-control" placeholder="0.00" min="0"
-                  [(ngModel)]="estuPreviosData.contributions_ei" />
+              <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button mat-flat-button color="primary" type="button" matStepperNext>
+                  Continuar
+                </button>
               </div>
-            </div>
+            </mat-step>
 
-            <div class="col-md-4">
-              <label for="contributions_fpn" class="form-label fw-bold">Aportes FPN</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input id="contributions_fpn" name="contributions_fpn" type="number"
-                  class="form-control" placeholder="0.00" min="0"
-                  [(ngModel)]="estuPreviosData.contributions_fpn" />
+            <mat-step label="Aspectos Financieros">
+              <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                  <label for="total_value" class="form-label fw-bold">Valor total</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      id="total_value"
+                      name="total_value"
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                      min="0"
+                      [(ngModel)]="estuPreviosData.total_value"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="contributions_ei" class="form-label fw-bold">Aportes EI</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      id="contributions_ei"
+                      name="contributions_ei"
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                      min="0"
+                      [(ngModel)]="estuPreviosData.contributions_ei"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="contributions_fpn" class="form-label fw-bold">Aportes FPN</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      id="contributions_fpn"
+                      name="contributions_fpn"
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                      min="0"
+                      [(ngModel)]="estuPreviosData.contributions_fpn"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="total_value_executes_fpn" class="form-label fw-bold">
+                    Valor total que ejecuta FPN
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      id="total_value_executes_fpn"
+                      name="total_value_executes_fpn"
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                      min="0"
+                      [(ngModel)]="estuPreviosData.total_value_executes_fpn"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="total_value_executes_ei" class="form-label fw-bold">
+                    Valor total que ejecuta EI
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      id="total_value_executes_ei"
+                      name="total_value_executes_ei"
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                      min="0"
+                      [(ngModel)]="estuPreviosData.total_value_executes_ei"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-6">
-              <label for="total_value_executes_fpn" class="form-label fw-bold">Valor total que
-                ejecuta FPN</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input id="total_value_executes_fpn" name="total_value_executes_fpn" type="number"
-                  class="form-control" placeholder="0.00" min="0"
-                  [(ngModel)]="estuPreviosData.total_value_executes_fpn" />
+              <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext>
+                  Continuar
+                </button>
               </div>
-            </div>
+            </mat-step>
 
-            <div class="col-md-6">
-              <label for="total_value_executes_ei" class="form-label fw-bold">Valor total que
-                ejecuta EI</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input id="total_value_executes_ei" name="total_value_executes_ei" type="number"
-                  class="form-control" placeholder="0.00" min="0"
-                  [(ngModel)]="estuPreviosData.total_value_executes_ei" />
+            <mat-step label="Asignación y Clasificación">
+              <div class="row g-3 mb-2">
+                <!-- Estado de Evaluación -->
+                <div class="col-md-6">
+                  <label for="capacity_assessments_states_id" class="form-label fw-bold">
+                    Estado de Evaluación
+                  </label>
+                  <select
+                    id="capacity_assessments_states_id"
+                    name="capacity_assessments_states_id"
+                    class="form-select text-capitalize"
+                    [(ngModel)]="estuPreviosData.capacity_assessments_states_id"
+                  >
+                    <option [ngValue]="0" disabled selected>Seleccione un estado</option>
+                    @for (item of states; track item.id || $index) {
+                      <option [value]="item.id" class="text-capitalize">
+                        {{ item.state || '' | titlecase }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Implementadora -->
+                <div class="col-md-6">
+                  <label for="implementer_id" class="form-label fw-bold">Implementadora</label>
+                  <select
+                    id="implementer_id"
+                    name="implementer_id"
+                    class="form-select"
+                    [(ngModel)]="estuPreviosData.implementer_id"
+                  >
+                    <option [ngValue]="0" disabled selected>Seleccione una implementadora</option>
+                    @for (implementer of implementers; track implementer.id || $index) {
+                      <option [value]="implementer.id">
+                        {{ implementer.acronym }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Líder del Pilar -->
+                <div class="col-md-4">
+                  <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
+                  <select
+                    id="persons_id"
+                    name="persons_id"
+                    class="form-select text-capitalize"
+                    [(ngModel)]="estuPreviosData.persons_id"
+                  >
+                    <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
+                    @for (person of persons; track person.id || $index) {
+                      <option [value]="person.id" class="text-capitalize">
+                        {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
+                        }}{{ person.last_name || '' }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Evaluación de Capacidades -->
+                <div class="col-md-4">
+                  <label for="capacity_assessment_id" class="form-label fw-bold">
+                    Evaluación de capacidades
+                  </label>
+                  <select
+                    id="capacity_assessment_id"
+                    name="capacity_assessment_id"
+                    class="form-select text-capitalize"
+                    [(ngModel)]="estuPreviosData.capacity_assessment_id"
+                  >
+                    <option [ngValue]="0" disabled selected>
+                      Seleccione evaluación de capacidades
+                    </option>
+                    @for (item of capacity; track item.id || $index) {
+                      <option [value]="item.id" class="text-capitalize">
+                        {{ item.name || '' | titlecase }}
+                      </option>
+                    }
+                  </select>
+                </div>
+                <!-- Programa -->
+                <div class="col-md-4">
+                  <label for="p" class="form-label fw-bold">Programa</label>
+                  <select
+                    id="program_id"
+                    name="program_id"
+                    class="form-select"
+                    [(ngModel)]="estuPreviosData.program_id"
+                  >
+                    <option [ngValue]="0" disabled selected>Seleccione el programa</option>
+                    @for (item of programs; track item.id_programa) {
+                      <option [value]="item.id_programa">
+                        {{ item.description | titlecase }}
+                      </option>
+                    }
+                  </select>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- ==================== SECCIÓN 3: ASIGNACIÓN Y RELACIONES ==================== -->
-          <div class="row g-3 mb-2">
-            <div class="col-12">
-              <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
-                <i class="bi bi-diagram-3 me-1"></i> Asignación y Clasificación 
-              </h6>
-            </div>
-
-            <!-- Estado de Evaluación -->
-            <div class="col-md-6">
-              <label for="capacity_assessments_states_id" class="form-label fw-bold">Estado de
-                Evaluación</label>
-              <select id="capacity_assessments_states_id" name="capacity_assessments_states_id"
-                class="form-select text-capitalize"
-                [(ngModel)]="estuPreviosData.capacity_assessments_states_id">
-                <option [ngValue]="0" disabled selected>Seleccione un estado</option>
-                @for (item of states; track item.id || $index) {
-                <option [value]="item.id" class="text-capitalize">
-                  {{ (item.state || '') | titlecase }}
-                </option>
-                }
-              </select>
-            </div>
-
-            <!-- Implementadora -->
-            <div class="col-md-6">
-              <label for="implementer_id" class="form-label fw-bold">Implementadora</label>
-              <select id="implementer_id" name="implementer_id" class="form-select"
-                [(ngModel)]="estuPreviosData.implementer_id">
-                <option [ngValue]="0" disabled selected>Seleccione una implementadora</option>
-                @for (implementer of implementers; track implementer.id || $index) {
-                <option [value]="implementer.id">
-                  {{ implementer.acronym }}
-                </option>
-                }
-              </select>
-            </div>
-
-            <!-- Líder del Pilar -->
-            <div class="col-md-4">
-              <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
-              <select id="persons_id" name="persons_id" class="form-select text-capitalize"
-                [(ngModel)]="estuPreviosData.persons_id">
-                <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
-                @for (person of persons; track person.id || $index) {
-                <option [value]="person.id" class="text-capitalize">
-                  {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : '' }}{{
-                  person.last_name || '' }}
-                </option>
-                }
-              </select>
-            </div>
-
-            <!-- Evaluación de Capacidades -->
-            <div class="col-md-4">
-              <label for="capacity_assessment_id" class="form-label fw-bold">Evaluación de
-                capacidades</label>
-              <select id="capacity_assessment_id" name="capacity_assessment_id"
-                class="form-select text-capitalize"
-                [(ngModel)]="estuPreviosData.capacity_assessment_id">
-                <option [ngValue]="0" disabled selected>Seleccione evaluación de capacidades
-                </option>
-                @for (item of capacity; track item.id || $index) {
-                <option [value]="item.id" class="text-capitalize">
-                  {{ (item.name || '') | titlecase }}
-                </option>
-                }
-              </select>
-            </div>
-            <!-- Programa -->
-            <div class="col-md-4">
-              <label for="p" class="form-label fw-bold">Programa</label>
-              <select id="program_id" name="program_id" class="form-select "
-                [(ngModel)]="estuPreviosData.program_id">
-                <option [ngValue]="0" disabled selected>Seleccione el programa
-                </option>
-                @for (item of programs; track item.id_programa) {
-                <option [value]="item.id_programa">
-                  {{ (item.description) | titlecase }}
-                </option>
-                }
-              </select>
-            </div>
-
-          </div>
-
+              <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext>
+                  Continuar
+                </button>
+              </div>
+            </mat-step>
+            <mat-step label="Objetivos, Actividades y Productos">
+              <div class="d-flex justify-content-end mb-3">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  type="button"
+                  aria-label="Agregar objetivo"
+                  title="Agregar objetivo"
+                  (click)="agregarObjetivo()"
+                  [disabled]="isLoading || cargandoEstudio || errorCarga"
+                >
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+              <!-- <p class="text-muted">
+                Agregue actividades a cada objetivo y productos a cada actividad. Los cambios se
+                guardarán junto con el estudio previo.
+              </p> -->
+              @if (cargandoEstudio) {
+                <p role="status">Cargando objetivos, actividades y productos...</p>
+              } @else if (errorCarga) {
+                <div class="alert alert-danger" role="alert">
+                  No se pudo cargar el estudio previo. Recargue la página antes de continuar.
+                </div>
+              } @else {
+                <div class="table-responsive products-panel mb-3">
+                  <table class="table align-middle products-tree">
+                    <caption class="visually-hidden">
+                      Objetivos, actividades y productos del estudio previo
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Código</th>
+                        <th scope="col" colspan="3">Descripción</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (objetivo of estuPreviosData.objetivos ?? []; track objetivo) {
+                        <tr class="products-tree__objective">
+                          <td>{{ objetivo.code }}</td>
+                          <td colspan="4" class="text-break">{{ objetivo.product }}</td>
+                          <td>
+                            <span
+                              class="products-tree__type products-tree__type--objective"
+                              title="Objetivo"
+                            >
+                              OBJ
+                            </span>
+                          </td>
+                          <td>
+                            <button
+                              mat-icon-button
+                              color="primary"
+                              type="button"
+                              [attr.aria-label]="'Agregar actividad al objetivo ' + objetivo.code"
+                              title="Agregar actividad"
+                              (click)="agregarActividad(objetivo)"
+                              [disabled]="isLoading"
+                            >
+                              <mat-icon>add_circle</mat-icon>
+                            </button>
+                            <button
+                              mat-icon-button
+                              color="primary"
+                              type="button"
+                              [attr.aria-label]="'Editar objetivo ' + objetivo.code"
+                              title="Editar objetivo"
+                              (click)="editarObjetivo(objetivo)"
+                              [disabled]="isLoading || cargandoEstudio || errorCarga"
+                            >
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="7" class="products-tree__branch">
+                            <details>
+                              <summary>Ver actividades ({{ objetivo.actividades.length }})</summary>
+                              <div class="table-responsive">
+                                <table class="table align-middle mb-0 products-tree__activities">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Código</th>
+                                      <th scope="col" colspan="4">Actividad</th>
+                                      <th scope="col">Tipo</th>
+                                      <th scope="col">Acciones</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    @for (actividad of objetivo.actividades; track actividad) {
+                                      <tr class="products-tree__activity">
+                                        <td>{{ actividad.code }}</td>
+                                        <td colspan="4" class="text-break">
+                                          {{ actividad.product }}
+                                        </td>
+                                        <td>
+                                          <span
+                                            class="products-tree__type products-tree__type--activity"
+                                            title="Actividad"
+                                          >
+                                            ACT
+                                          </span>
+                                        </td>
+                                        <td>
+                                          <button
+                                            mat-icon-button
+                                            color="primary"
+                                            type="button"
+                                            [attr.aria-label]="
+                                              'Agregar producto a la actividad ' + actividad.code
+                                            "
+                                            title="Agregar producto"
+                                            (click)="agregarProducto(actividad)"
+                                            [disabled]="isLoading"
+                                          >
+                                            <mat-icon>add_circle</mat-icon>
+                                          </button>
+                                          <button
+                                            mat-icon-button
+                                            color="primary"
+                                            type="button"
+                                            [attr.aria-label]="'Editar actividad ' + actividad.code"
+                                            title="Editar actividad"
+                                            (click)="editarActividad(objetivo, actividad)"
+                                            [disabled]="isLoading || cargandoEstudio || errorCarga"
+                                          >
+                                            <mat-icon>edit</mat-icon>
+                                          </button>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="7" class="products-tree__branch">
+                                          <details>
+                                            <summary>
+                                              Ver productos ({{ actividad.productos.length }})
+                                            </summary>
+                                            <div class="table-responsive">
+                                              <table
+                                                class="table align-middle mb-0 products-tree__products"
+                                              >
+                                                <thead>
+                                                  <tr>
+                                                    <th scope="col">Código</th>
+                                                    <th scope="col">Producto</th>
+                                                    <th scope="col">Unidad de medida</th>
+                                                    <th scope="col" class="text-end">Cantidad</th>
+                                                    <th scope="col">Observaciones</th>
+                                                    <th scope="col">Tipo</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  @for (
+                                                    producto of actividad.productos;
+                                                    track producto
+                                                  ) {
+                                                    <tr class="products-tree__product">
+                                                      <td>{{ producto.code }}</td>
+                                                      <td class="text-break">
+                                                        {{ producto.product }}
+                                                      </td>
+                                                      <td>{{ producto.unit_measure }}</td>
+                                                      <td class="text-end">
+                                                        {{ producto.quantity }}
+                                                      </td>
+                                                      <td class="text-break">
+                                                        {{ producto.observations }}
+                                                      </td>
+                                                      <td>
+                                                        <span
+                                                          class="products-tree__type products-tree__type--product"
+                                                          title="Producto"
+                                                        >
+                                                          PRO
+                                                        </span>
+                                                      </td>
+                                                      <td>
+                                                        <button
+                                                          mat-icon-button
+                                                          color="primary"
+                                                          type="button"
+                                                          [attr.aria-label]="
+                                                            'Editar producto ' + producto.code
+                                                          "
+                                                          title="Editar producto"
+                                                          (click)="
+                                                            editarProducto(actividad, producto)
+                                                          "
+                                                          [disabled]="
+                                                            isLoading ||
+                                                            cargandoEstudio ||
+                                                            errorCarga
+                                                          "
+                                                        >
+                                                          <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                      </td>
+                                                    </tr>
+                                                  } @empty {
+                                                    <tr>
+                                                      <td colspan="7" class="text-muted">
+                                                        No hay productos registrados.
+                                                      </td>
+                                                    </tr>
+                                                  }
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </details>
+                                        </td>
+                                      </tr>
+                                    } @empty {
+                                      <tr>
+                                        <td colspan="7" class="text-muted">
+                                          No hay actividades registradas.
+                                        </td>
+                                      </tr>
+                                    }
+                                  </tbody>
+                                </table>
+                              </div>
+                            </details>
+                          </td>
+                        </tr>
+                      } @empty {
+                        <tr>
+                          <td colspan="7" class="text-center text-muted">
+                            No hay objetivos registrados.
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+              <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+                <button mat-flat-button color="primary" type="button" matStepperNext>
+                  Continuar
+                </button>
+              </div>
+            </mat-step>
+            <mat-step label="Desembolsos">
+              <div class="disbursements-toolbar">
+                <!-- <div>
+                  <h3 class="disbursements-toolbar__title">Programación de desembolsos</h3>
+                  <p class="disbursements-toolbar__description">
+                    Asocie productos del paso 4 a cada desembolso. Los cambios se guardarán junto
+                    con el estudio previo.
+                  </p>
+                </div> -->
+                <button
+                  mat-icon-button
+                  color="primary"
+                  class="disbursements-toolbar__add"
+                  type="button"
+                  aria-label="Agregar desembolso"
+                  title="Agregar desembolso"
+                  (click)="agregarDesembolso()"
+                  [disabled]="
+                    isLoading ||
+                    cargandoEstudio ||
+                    errorCarga ||
+                    cargandoEstadosDesembolso ||
+                    errorEstadosDesembolso
+                  "
+                >
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+              @if (cargandoEstadosDesembolso) {
+                <p role="status">Cargando estados de desembolso...</p>
+              }
+              @if (errorEstadosDesembolso) {
+                <div class="alert alert-danger" role="alert">
+                  No se pudieron obtener los estados de desembolso.
+                  <button mat-button type="button" (click)="listarEstadosDesembolso()">
+                    Reintentar
+                  </button>
+                </div>
+              }
+              <div class="table-responsive disbursements-panel mb-3">
+                <table class="table align-middle disbursements-tree">
+                  <caption class="visually-hidden">Desembolsos del estudio previo</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Número</th>
+                      <th scope="col">Fecha programada</th>
+                      <th scope="col" class="text-end">Valor</th>
+                      <th scope="col" class="text-center">Productos</th>
+                      <!-- <th scope="col">Estado</th> -->
+                      <!-- <th scope="col">Fecha de solicitud</th> -->
+                      <!-- <th scope="col">Fecha de validación</th> -->
+                      <!-- <th scope="col">Fecha de aprobación</th> -->
+                      <!-- <th scope="col">Fecha de desembolso</th> -->
+                      <!-- <th scope="col">Documento soporte</th> -->
+                      <th scope="col">Observaciones</th>
+                      <th scope="col" class="text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (desembolso of estuPreviosData.desembolsos ?? []; track desembolso) {
+                      <tr class="disbursement-row">
+                        <td class="disbursements-tree__number">
+                          #{{ desembolso.number_disbursement }}
+                        </td>
+                        <td>{{ desembolso.scheduled_date | date: 'dd/MM/yyyy' }}</td>
+                        <td class="disbursements-tree__amount text-end">
+                          {{ desembolso.value | currency: 'COP' : 'symbol-narrow' : '1.2-2' }}
+                        </td>
+                        <td class="text-center">
+                          <span class="disbursements-tree__count">
+                            {{ desembolso.product_keys.length }} producto(s)
+                          </span>
+                        </td>
+                        <!-- <td>
+                          <span class="disbursements-tree__state">
+                            {{ nombreEstadoDesembolso(desembolso.state_id) }}
+                          </span>
+                        </td>
+                        <td>{{ desembolso.request_date | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ desembolso.validation_date | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ desembolso.approval_date | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ desembolso.disbursement_date | date: 'dd/MM/yyyy' }}</td>
+                        <td class="text-break">{{ desembolso.documento_soporte }}</td> -->
+                        <td class="text-break">{{ desembolso.observations }}</td>
+                        <td class="text-center">
+                          <button
+                            mat-icon-button
+                            color="primary"
+                            type="button"
+                            [attr.aria-label]="
+                              'Editar desembolso ' + desembolso.number_disbursement
+                            "
+                            title="Editar desembolso"
+                            (click)="agregarDesembolso(desembolso)"
+                            [disabled]="
+                              isLoading ||
+                              cargandoEstudio ||
+                              errorCarga ||
+                              cargandoEstadosDesembolso ||
+                              errorEstadosDesembolso
+                            "
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                      @if (desembolso.product_keys.length > 0) {
+                        <tr class="disbursements-tree__branch">
+                          <td colspan="6">
+                            <details>
+                              <summary>
+                                <mat-icon class="disbursements-tree__chevron" aria-hidden="true">
+                                  chevron_right
+                                </mat-icon>
+                                Ver productos asociados ({{ desembolso.product_keys.length }})
+                              </summary>
+                              <div class="table-responsive disbursements-tree__products">
+                                <table class="table mb-0">
+                                  <caption class="visually-hidden">
+                                    Productos del desembolso {{ desembolso.number_disbursement }}
+                                  </caption>
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Código</th>
+                                      <th scope="col">Producto</th>
+                                      <th scope="col">Unidad de medida</th>
+                                      <th scope="col" class="text-end">Cantidad</th>
+                                      <th scope="col">Observaciones</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    @for (
+                                      asociado of productosDesembolso(desembolso);
+                                      track asociado.key
+                                    ) {
+                                      <tr class="disbursements-tree__product">
+                                        @if (asociado.producto; as producto) {
+                                          <td>{{ producto.code }}</td>
+                                          <td class="text-break">{{ producto.product }}</td>
+                                          <td>{{ producto.unit_measure ?? '-' }}</td>
+                                          <td class="text-end">{{ producto.quantity ?? '-' }}</td>
+                                          <td class="text-break">
+                                            {{ producto.observations ?? '-' }}
+                                          </td>
+                                        } @else {
+                                          <td colspan="5" class="text-danger">
+                                            No se encontró el producto asociado: {{ asociado.key }}
+                                          </td>
+                                        }
+                                      </tr>
+                                    }
+                                  </tbody>
+                                </table>
+                              </div>
+                            </details>
+                          </td>
+                        </tr>
+                      }
+                    } @empty {
+                      <tr>
+                        <td colspan="6" class="disbursements-tree__empty text-center text-muted">
+                          No hay desembolsos registrados.
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th scope="row" colspan="2">Total de desembolsos</th>
+                      <td class="disbursements-tree__amount text-end">
+                        {{ totalDesembolsos | currency: 'COP' : 'symbol-narrow' : '1.2-2' }}
+                      </td>
+                      <td colspan="3"></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button mat-stroked-button type="button" matStepperPrevious>Anterior</button>
+              </div>
+            </mat-step>
+          </mat-stepper>
         </form>
       </mat-card-content>
 
       <!-- Botones de Acción -->
       <mat-card-actions align="end" class="p-3 bg-light border-top mt-3">
-        <button mat-stroked-button type="button" class="me-2" (click)="volver()">
-          Cancelar
-        </button>
-        <button mat-flat-button color="primary" type="button"
-          (click)="guardarEstudiosPrevios(false)" [disabled]="isLoading || !fEvaluacion.valid">
+        <button mat-stroked-button type="button" class="me-2" (click)="volver()">Cancelar</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="guardarEstudiosPrevios(false)"
+          [disabled]="isLoading || cargandoEstudio || errorCarga || !fEvaluacion.valid"
+        >
           @if (isLoading) {
-          <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
+            <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>
+            Guardando...
           } @else {
-          Guardar
+            Guardar
           }
         </button>
 
         @if (accion === 'Editar') {
-        <button mat-flat-button color="primary" type="button" (click)="guardarEstudiosPrevios(true)"
-          [disabled]="isLoading || !fEvaluacion.valid">
-          @if (isLoading) {
-          <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner> Guardando...
-          } @else {
-          Enviar por aprobación
-          }
-        </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="guardarEstudiosPrevios(true)"
+            [disabled]="isLoading || cargandoEstudio || errorCarga || !fEvaluacion.valid"
+          >
+            @if (isLoading) {
+              <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>
+              Guardando...
+            } @else {
+              Enviar por aprobación
+            }
+          </button>
         }
       </mat-card-actions>
     </mat-card>

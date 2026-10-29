@@ -1,3 +1,6 @@
+import { ObjetivoEstudio } from './agreements-products';
+import { DesembolsoEstudio } from './desembolsos-estudio';
+
 export class PreviousStudiesModel {
   id?: number;
   precedents?: string;
@@ -36,6 +39,8 @@ export class PreviousStudiesModel {
   agreement_type_id?: number;
   agreement_type?: string;
   modality?: string;
+  objetivos?: ObjetivoEstudio[];
+  desembolsos?: DesembolsoEstudio[];
 
   constructor(data?: Partial<PreviousStudiesModel>) {
     Object.assign(this, data);
