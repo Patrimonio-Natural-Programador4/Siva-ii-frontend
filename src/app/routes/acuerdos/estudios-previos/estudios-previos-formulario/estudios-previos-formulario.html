@@ -423,16 +423,10 @@
             </mat-step>
             <mat-step label="Objetivos, Actividades y Productos">
               <div class="d-flex justify-content-end mb-3">
-                <button
-                  mat-icon-button
-                  color="primary"
-                  type="button"
-                  aria-label="Agregar objetivo"
-                  title="Agregar objetivo"
-                  (click)="agregarObjetivo()"
-                  [disabled]="isLoading || cargandoEstudio || errorCarga"
-                >
-                  <mat-icon>add_circle</mat-icon>
+                <button mat-flat-button color="primary" class="mt-4" type="button"
+                    (click)="agregarObjetivo()">
+                    <mat-icon>add</mat-icon>
+                    Agregar objetivo
                 </button>
               </div>
               <!-- <p class="text-muted">
@@ -463,7 +457,7 @@
                       @for (objetivo of estuPreviosData.objetivos ?? []; track objetivo) {
                         <tr class="products-tree__objective">
                           <td>{{ objetivo.code }}</td>
-                          <td colspan="4" class="text-break">{{ objetivo.product }}</td>
+                          <td colspan="3" class="text-break">{{ objetivo.product }}</td>
                           <td>
                             <span
                               class="products-tree__type products-tree__type--objective"
@@ -665,33 +659,13 @@
               </div>
             </mat-step>
             <mat-step label="Desembolsos">
-              <div class="disbursements-toolbar">
-                <!-- <div>
-                  <h3 class="disbursements-toolbar__title">Programación de desembolsos</h3>
-                  <p class="disbursements-toolbar__description">
-                    Asocie productos del paso 4 a cada desembolso. Los cambios se guardarán junto
-                    con el estudio previo.
-                  </p>
-                </div> -->
-                <button
-                  mat-icon-button
-                  color="primary"
-                  class="disbursements-toolbar__add"
-                  type="button"
-                  aria-label="Agregar desembolso"
-                  title="Agregar desembolso"
-                  (click)="agregarDesembolso()"
-                  [disabled]="
-                    isLoading ||
-                    cargandoEstudio ||
-                    errorCarga ||
-                    cargandoEstadosDesembolso ||
-                    errorEstadosDesembolso
-                  "
-                >
-                  <mat-icon>add_circle</mat-icon>
+               <div class="d-flex justify-content-end mb-3">
+                  <button mat-flat-button color="primary" class="mt-4" type="button"
+                    (click)="agregarDesembolso()">
+                    <mat-icon>add</mat-icon>
+                    Agregar desembolso
                 </button>
-              </div>
+                </div>
               @if (cargandoEstadosDesembolso) {
                 <p role="status">Cargando estados de desembolso...</p>
               }

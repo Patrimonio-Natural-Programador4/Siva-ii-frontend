@@ -78,7 +78,7 @@
           #cantidad="ngModel"
           [class.is-invalid]="cantidad.invalid && cantidad.touched"
         />
-        <div class="form-text">Valor mayor o igual a cero. Use punto para hasta dos decimales.</div>
+        <!-- <div class="form-text">Valor mayor o igual a cero. Use punto para hasta dos decimales.</div> -->
         @if (cantidad.invalid && cantidad.touched) {
           <div class="invalid-feedback">Ingrese una cantidad válida, con hasta dos decimales.</div>
         }
