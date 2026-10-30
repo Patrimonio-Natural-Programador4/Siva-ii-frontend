@@ -421,6 +421,20 @@
                 </button>
               </div>
             </mat-step>
+            <mat-step>
+
+            <ng-template matStepLabel>Riesgos</ng-template>
+
+              <app-estudios-previos-riesgos-tabla [estudioPrevioId]="estuPreviosData.id" />
+              <div class="step-actions between">
+                <button mat-stroked-button type="button" matStepperPrevious>Atrás</button>
+                 <button mat-flat-button color="primary" type="button" matStepperNext>
+                  Continuar
+                </button>
+              </div>
+
+
+            </mat-step>
             <mat-step label="Objetivos, Actividades y Productos">
               <div class="d-flex justify-content-end mb-3">
                 <button mat-flat-button color="primary" class="mt-4" type="button"
