@@ -49,7 +49,7 @@ export class TiposDocumentoAcuerdoTabla implements OnInit, AfterViewInit {
     'description',
     'template',
     'number',
-    'template_path',
+    // 'template_path',
     'is_required',
     'documents_approval_id',
   ];
@@ -93,6 +93,7 @@ export class TiposDocumentoAcuerdoTabla implements OnInit, AfterViewInit {
 
     this.tiposDocAcuService.getTipoDocAcuerdos(Number(idParam)).subscribe(data => {
       this.tipoDocAcuTable.data = data;
+      console.log('tipoDocAcuTable', this.tipoDocAcuTable.data);
     });
   }
 
