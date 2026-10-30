@@ -15,6 +15,7 @@ import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { ImplementerModel } from 'src/app/models/implementers';
 import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
+import { EstudiosPreviosRiesgosTabla } from 'src/app/routes/acuerdos/estudios-previos/estudios-previos-riesgos/estudios-previos-riesgos-tabla/estudios-previos-riesgos-tabla';
 
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -54,6 +55,8 @@ import {
     MatStepperModule,
     MatSnackBarModule,
     CommonModule,
+    MatStepperModule,
+    EstudiosPreviosRiesgosTabla,
   ],
   templateUrl: './estudios-previos-formulario.html',
   styleUrl: './estudios-previos-formulario.scss',
@@ -72,6 +75,7 @@ export class EstudiosPreviosFormulario implements OnInit {
   private readonly drawer = inject(MtxDrawer);
   private readonly destroyRef = inject(DestroyRef);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   accion = 'Nuevo';
   idEstPrevios: number | null = null;
@@ -140,6 +144,7 @@ export class EstudiosPreviosFormulario implements OnInit {
         next: data => {
           this.estuPreviosData = new PreviousStudiesModel(data);
           this.cargandoEstudio = false;
+          this.cdr.markForCheck();
         },
         error: () => {
           this.cargandoEstudio = false;
@@ -156,6 +161,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
         this.implementers = r;
+        this.cdr.markForCheck();
         console.log(r);
       },
       error: e => {
@@ -168,6 +174,7 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.PersonsService.getPersons().subscribe({
       next: r => {
         this.persons = r;
+        this.cdr.markForCheck();
         console.log(r);
       },
       error: e => {

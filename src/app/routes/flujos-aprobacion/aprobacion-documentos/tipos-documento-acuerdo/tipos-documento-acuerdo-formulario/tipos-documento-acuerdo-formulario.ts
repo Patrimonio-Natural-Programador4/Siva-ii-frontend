@@ -95,6 +95,12 @@ export class TiposDocumentoAcuerdoFormulario implements OnInit {
     this.listarTipoDocAcu();
   }
 
+  private obtenerIdDeUrl(): number | null {
+    const ultimo = this.router.url.split('?')[0].split('/').pop();
+    const id = Number(ultimo);
+    return isNaN(id) ? null : id;
+  }
+
   volver(): void {
     this.router.navigate(['/flujos-aprobacion/aprobacion-documentos']);
   }
@@ -102,6 +108,14 @@ export class TiposDocumentoAcuerdoFormulario implements OnInit {
   guardarDocumento(): void {
     this.isLoading = true;
 
+    const id = this.obtenerIdDeUrl();
+    if (!id) {
+      this.snackBar.open('No se encontró el ID en la URL', '', { duration: 4000 });
+      return;
+    }
+
+    this.typedocagreData = { ...this.typedocagreData, documents_approval_id: id };
+    console.log('DATAAA', this.typedocagreData);
     this.TiposDocumentoAcuerdosService.saveTipoDocAcuerdos(this.typedocagreData).subscribe({
       next: response => {
         this.isLoading = false;

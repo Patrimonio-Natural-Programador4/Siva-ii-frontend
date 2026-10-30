@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-end mt-3 mb-3">
+  <button mat-flat-button color="primary" type="button" (click)="agregarRiesgo()"
+    [disabled]="!estudioPrevioId()">
+    <mat-icon>add</mat-icon>
+    Agregar riesgo
+  </button>
+</div>
+
+@if (!estudioPrevioId()) {
+<div class="empty-step">Guarda primero el estudio previo para poder registrar riesgos.</div>
+} @else if (isLoading) {
+<div class="empty-step">Cargando riesgos...</div>
+} @else if (riesgos.length > 0) {
+<div class="app-data-table-wrapper" style="overflow: auto;">
+  <table mat-table [dataSource]="riesgos" class="app-data-table">
+
+    <ng-container matColumnDef="risk">
+      <th mat-header-cell *matHeaderCellDef style="text-align: center;">Riesgo</th>
+      <td mat-cell *matCellDef="let r" style="text-align: center;">{{ r.risk || '--' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="mitigation">
+      <th mat-header-cell *matHeaderCellDef style="text-align: center;">Mitigación</th>
+      <td mat-cell *matCellDef="let r" style="text-align: center;">{{ r.mitigation || '--' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones" stickyEnd>
+      <th mat-header-cell *matHeaderCellDef style="text-align: center;">Acciones</th>
+      <td mat-cell *matCellDef="let r" style="text-align: center;">
+        <a title="Editar riesgo" (click)="editarRiesgo(r)">
+          <mat-icon>edit</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+} @else {
+<div class="empty-step">No hay riesgos registrados.</div>
+}

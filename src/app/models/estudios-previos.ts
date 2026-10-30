@@ -35,6 +35,7 @@ export class PreviousStudiesModel {
   total_registros?: number;
   capacity_assessments_states_id?: number;
   enviar_aprobacion?: boolean;
+  agreetment_id?: number;
   modality_id?: number;
   agreement_type_id?: number;
   agreement_type?: string;
