@@ -117,8 +117,8 @@ export class EstudiosPreviosFormulario implements OnInit {
     estimated_term: '',
     program_id: 0,
     enviar_aprobacion: false,
-    agreement_type_id: null,
-    modality_id: null,
+    agreement_type_id: undefined,
+    modality_id: undefined,
     objetivos: [],
     desembolsos: [],
   });
@@ -163,7 +163,9 @@ export class EstudiosPreviosFormulario implements OnInit {
   listarImplementers() {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
-        this.implementers = r;
+        this.implementers = r.sort((a, b) =>
+          (a.acronym || '').trim().localeCompare((b.acronym || '').trim())
+        );
         this.cdr.markForCheck();
         console.log(r);
       },

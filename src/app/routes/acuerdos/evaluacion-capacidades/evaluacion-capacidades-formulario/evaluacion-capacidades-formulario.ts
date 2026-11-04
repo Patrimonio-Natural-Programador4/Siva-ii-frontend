@@ -208,7 +208,9 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   listarImplementers() {
     this.ImplementersService.getImplementers().subscribe({
       next: r => {
-        this.implementers = r;
+        this.implementers = r.sort((a, b) =>
+          (a.name || a.acronym || '').localeCompare(b.name || b.acronym || '')
+        );
         this.onImplementerChange(this.evaCapacidadesData.implementer_id ?? null);
         this.cdr.detectChanges();
       },
