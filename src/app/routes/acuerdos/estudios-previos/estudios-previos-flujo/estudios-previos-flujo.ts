@@ -232,10 +232,7 @@ export class EstudiosPreviosFlujo implements OnInit {
           this.accionesAprobacion = {};
           this.getHistorialAprobacion(this.estudio_Previo_Id);
           this.getValidacionAccionesAprobacion();
-          console.log('ESTUDIO PREVIO ID----', this.estudio_Previo_Id);
-
-          this.router.navigateByUrl(this.urlActual);
-          //this.router.navigate([this.urlActual]);
+          this.router.navigate(['/acuerdos/estudios-previos']);
         } else {
           this.snackBar.open(response.mensaje || 'La operación no fue exitosa', '', {
             duration: 3000,

@@ -117,15 +117,18 @@ export class EstudiosPreviosService {
     page = 1,
     idEstado: number[] = [-1],
     filtro = '',
-    programa: number | null = null
+    programas: number[] = [-1]
   ): Observable<PreviousStudiesListModel[]> {
     let params = new HttpParams().set('page', page.toString()).set('filtro', filtro ?? '');
+
     (idEstado.length ? idEstado : [-1]).forEach(id => {
       params = params.append('estado', id.toString());
     });
-    if (programa !== null) {
-      params = params.set('programa', programa.toString());
-    }
+
+    (programas.length ? programas : [-1]).forEach(id => {
+      params = params.append('programa', id.toString());
+    });
+
     return this.http.get<PreviousStudiesListModel[]>(`${this.apiUrl}/filtro`, { params });
   }
 }

@@ -21,15 +21,17 @@ import { Router } from '@angular/router';
 import { PageHeader } from '@shared';
 import { UpperCasePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 import { Programs } from 'src/app/models/programs';
-
 import { PreviousStudiesListModel, PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { EstudiosPreviosService as estpreviosser } from 'src/app/services/estudios-previos/estudios-previos.service';
 import { ProgramsService } from 'src/app/services/programs.service';
 import { FormsModule } from '@angular/forms';
 import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
 import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
+import { FlujoPreviousStudiesListModel } from 'src/app/models/flujos-estudios-previos';
+import { HistorialAprobacionEstudiosPrevios } from 'src/app/services/historial-aprobacion-estudios-previos/historial-aprobacion-estudios-previos';
 import { environment } from '@env/environment';
 
 @Component({
@@ -47,7 +49,7 @@ import { environment } from '@env/environment';
     PageHeader,
     UpperCasePipe,
     CommonModule,
-    RouterLink,
+    MatSelectModule,
   ],
   templateUrl: './estudios-previos-tabla.html',
   styleUrl: './estudios-previos-tabla.scss',
@@ -60,49 +62,38 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
   readonly descargasEnCurso = signal(new Set<string>());
   private readonly ProgramsService = inject(ProgramsService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
+  private readonly FlujoEpService = inject(HistorialAprobacionEstudiosPrevios);
 
   readonly paginator = viewChild(MatPaginator);
   readonly displayedColumns = [
-    'id',
-    'precedents',
-    'justification',
-    'scope',
-    'overall_objective',
-    'term',
-    'obligations',
-    'supervisor',
-    //'user_session',
-    //'create_date',
-    'total_value',
-    'contributions_ei',
-    'total_value_executes_fpn',
-    'total_value_executes_ei',
-
-    //'cap_assessments_state',
-    //'app_request',
-    'implementers',
-    'persons',
-    'capacity_assessment',
-    'contributions_fpn',
-    'estimated_term',
-    'programs',
-    'prev_studies_state',
+    'approval_request_id',
+    'rol',
+    'implementadora',
+    'estado_aprobacion',
+    'pilar',
+    'lider_pilar',
+    'usuario',
+    'modalidad',
+    'capacity_state',
     'acciones',
   ];
 
   readonly pageSizeOptions = [20];
   readonly estPreviosTable = new MatTableDataSource<PreviousStudiesModel>([]);
+  readonly flujosTable = new MatTableDataSource<FlujoPreviousStudiesListModel>([]);
   programs: Programs[] = [];
-  selectedProgramId: number | null = null;
-  estudiosPrevios: PreviousStudiesModel[] = [];
+  programasSeleccionados: number[] = [];
+  //estudiosPrevios: PreviousStudiesModel[] = [];
   estudios: PreviousStudiesListModel[] = [];
   id_estado: number[] = [];
   id_programa: number | null = -1;
-  estudios_previos: PreviousStudiesModel[] = [];
+  //estudios_previos: PreviousStudiesModel[] = [];
+
   page = 1;
   currentPage = 0;
   total = 0;
   filtrobusqueda = '';
+  estadosSeleccionados: number[] = [];
 
   estuPreviosData: PreviousStudiesModel = new PreviousStudiesModel({
     precedents: '',
@@ -139,11 +130,11 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     this.listarProgramas();
     this.listarStates();
     this.getEstudios();
+    this.getFlujosEstudios();
     //this.estPreviosService.refrescarTabla$.subscribe(() => this.getEstudios());
   }
 
   pageChange(event: any) {
-    this.page = event;
     this.currentPage = event.pageIndex;
     this.filtrarDatos(false);
   }
@@ -154,7 +145,7 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     }
   }
 
-  getEstudios(): void {
+  /*getEstudios(): void {
     this.estPreviosService.getListado(this.currentPage + 1, [-1], this.filtrobusqueda).subscribe({
       next: response => {
         console.log('dataestudios', response);
@@ -163,6 +154,25 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
         this.cdr.detectChanges();
       },
       error: error => console.error('Error al listar estudios previos:', error),
+    });
+  } */
+
+  getEstudios(): void {
+    this.filtrarDatos();
+  }
+
+  getFlujosEstudios(): void {
+    this.FlujoEpService.getFlujoEstudiosPrevios().subscribe({
+      next: r => {
+        console.log(' getFlujosEstudios ', r);
+
+        this.flujosTable.data = r ?? [];
+        // this.aplicarFiltros();
+        this.cdr.detectChanges();
+      },
+      error: e => {
+        console.error(e);
+      },
     });
   }
 
@@ -188,6 +198,7 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
   }
 
   descargarFormatoEp(estudio: PreviousStudiesListModel): void {
+    console.log('click descargar', estudio);
     const guid = estudio.guid;
     if (!guid || this.descargasEnCurso().has(guid)) {
       return;
@@ -252,23 +263,25 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     }
   }*/
 
-  filtrarDatos(filtrar = false) {
+  filtrarDatos(filtrar = false): void {
+    if (filtrar) {
+      this.currentPage = 0; // al cambiar un filtro, volver a la página 1
+    }
     this.estPreviosService
-      .getEstudiosPreviosFiltro(
+      .getListado(
         this.currentPage + 1,
-        this.id_estado,
+        this.estadosSeleccionados.length ? this.estadosSeleccionados : [-1],
         this.filtrobusqueda,
-        this.id_programa
+        this.programasSeleccionados.length ? this.programasSeleccionados : [-1]
       )
       .subscribe({
         next: response => {
-          this.estudios_previos = response;
-          this.total = response.length > 0 ? response[0].total_registros! : 0;
+          this.estudios = response;
+          this.total = response.length > 0 ? response[0].total_records! : 0;
           this.cdr.detectChanges();
+          console.log('fila ejemplo', response[0]);
         },
-        error: error => {
-          console.error('Error fetching estudios previos:', error);
-        },
+        error: error => console.error('Error al listar estudios previos:', error),
       });
   }
 
@@ -300,5 +313,12 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     console.log('Boton editar AQUIIIIII', guid);
 
     this.router.navigate(['/acuerdos/estudios-previos/editar', guid]);
+  }
+
+  listaUsuarios(usuario: string | null): string[] {
+    return (usuario ?? '')
+      .split(',')
+      .map(u => u.trim())
+      .filter(Boolean);
   }
 }

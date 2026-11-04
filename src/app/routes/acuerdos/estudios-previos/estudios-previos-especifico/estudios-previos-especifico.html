@@ -142,20 +142,27 @@
           <mat-step>
             <ng-template matStepLabel>Crear estudio previo </ng-template>
 
+            <!--
             <mat-card-header class="app-data-card__header pb-2">
-              <mat-card-title>{{ accion }} Estudios Previos </mat-card-title>
-            </mat-card-header>
+              <mat-card-title>{{ accion }} Estudios Previos</mat-card-title>
+            </mat-card-header>-->
 
             <mat-card-content class="pt-3">
               <form novalidate #fEvaluacion="ngForm" class="programs-form">
 
                 <!-- ==================== SECCIÓN 1: INFORMACIÓN GENERAL ==================== -->
-                <div class="row g-3 mb-4 form-section">
 
+                <div class="row g-3 mb-4 form-section">
+                  <div class="col-12">
+                    <h6 class="form-section__title">
+                      <span class="section-icon-badge"><i class="bi bi-info-circle"></i></span>
+
+                    </h6>
+                  </div>
 
                   <!-- Antecedentes -->
                   <div class="col-md-6">
-                    <label for="precedents" class="form-label fw-bold">Antecedentes <span
+                    <label for="precedents" class="form-label ">Antecedentes <span
                         class="text-danger">*</span></label>
                     <textarea id="precedents" name="precedents" class="form-control" rows="2"
                       placeholder="Ingresa los antecedentes" required
@@ -167,8 +174,9 @@
                   </div>
 
                   <!-- Justificación -->
+
                   <div class="col-md-6">
-                    <label for="justification" class="form-label fw-bold">Justificación <span
+                    <label for="justification" class="form-label ">Justificación <span
                         class="text-danger">*</span></label>
                     <textarea id="justification" name="justification" class="form-control" rows="2"
                       placeholder="Ingresa la justificación" required
@@ -181,7 +189,7 @@
 
                   <!-- Alcance -->
                   <div class="col-md-6">
-                    <label for="scope" class="form-label fw-bold">Alcance <span
+                    <label for="scope" class="form-label ">Alcance <span
                         class="text-danger">*</span></label>
                     <textarea id="scope" name="scope" class="form-control" rows="2"
                       placeholder="Ingresa el alcance" required [(ngModel)]="estuPreviosData.scope"
@@ -194,7 +202,7 @@
 
                   <!-- Objetivo General -->
                   <div class="col-md-6">
-                    <label for="overall_objective" class="form-label fw-bold">Objetivo general <span
+                    <label for="overall_objective" class="form-label ">Objetivo general <span
                         class="text-danger">*</span></label>
                     <textarea id="overall_objective" name="overall_objective" class="form-control"
                       rows="2" placeholder="Ingresa el objetivo general" required
@@ -211,7 +219,7 @@
                   <!-- Obligaciones -->
                   <!--
                   <div class="col-md-6">
-                    <label for="obligations" class="form-label fw-bold">Obligaciones <span
+                    <label for="obligations" class="form-label ">Obligaciones <span
                         class="text-danger">*</span></label>
                     <textarea id="obligations" name="obligations" class="form-control" rows="2"
                       placeholder="Ingresa las obligaciones" required
@@ -226,7 +234,7 @@
                   <!-- Funciones del Supervisor -->
                   <!--
                   <div class="col-md-6">
-                    <label for="supervisor" class="form-label fw-bold">Funciones supervisor <span
+                    <label for="supervisor" class="form-label ">Funciones supervisor <span
                         class="text-danger">*</span></label>
                     <textarea id="supervisor" name="supervisor" class="form-control" rows="2"
                       placeholder="Ingresa las funciones del supervisor" required
@@ -239,7 +247,7 @@
 
                   <!-- Plazo -->
                   <div class="col-md-4">
-                    <label for="term" class="form-label fw-bold">Plazo <span
+                    <label for="term" class="form-label ">Plazo <span
                         class="text-danger">*</span></label>
                     <input id="term" name="term" type="text" class="form-control"
                       placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
@@ -249,11 +257,21 @@
                     <div class="invalid-feedback">Este campo es requerido.</div>
                     }
                   </div>
-
+                  <!-- Modalidad -->
+                  <div class="col-md-4">
+                    <label for="modality_id" class="form-label ">Modalidad</label>
+                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
+                      [(ngModel)]="estuPreviosData.modality_id">
+                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                      @for (tA of modalities; track tA.id) {
+                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                      }
+                    </select>
+                  </div>
 
                   <!-- Tipo de acuerdo -->
                   <div class="col-md-4">
-                    <label for="agreement_type_id" class="form-label fw-bold">Tipo de
+                    <label for="agreement_type_id" class="form-label ">Tipo de
                       acuerdo</label>
                     <select id="agreement_type_id" name="agreement_type_id"
                       class="form-select text-capitalize"
@@ -265,25 +283,14 @@
                     </select>
                   </div>
 
-                  <!-- Modalidad -->
-                  <div class="col-md-4">
-                    <label for="modality_id" class="form-label fw-bold">Modalidad</label>
-                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
-                      [(ngModel)]="estuPreviosData.modality_id">
-                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
-                      @for (tA of modalities; track tA.id) {
-                      <option [ngValue]="tA.id">{{ tA.name | titlecase }}
-                      </option>
-                      }
-                    </select>
-                  </div>
+
 
 
 
                   <!-- Plazo Estimado -->
                   <!--
                   <div class="col-md-6">
-                    <label for="estimated_term" class="form-label fw-bold">Plazo estimado <span
+                    <label for="estimated_term" class="form-label ">Plazo estimado <span
                         class="text-danger">*</span></label>
                     <input id="estimated_term" name="estimated_term" type="text"
                       class="form-control" placeholder="Ej. 60 días calendario" required
@@ -299,10 +306,15 @@
 
                 <!-- ==================== SECCIÓN 2: ASPECTOS FINANCIEROS ==================== -->
                 <div class="row g-3 mb-4 form-section">
-
+                  <div class="col-12">
+                    <h6 class="form-section__title">
+                      <span class="section-icon-badge"><i class="bi bi-cash-stack"></i></span>
+                      Aspectos Financieros
+                    </h6>
+                  </div>
 
                   <div class="col-md-4">
-                    <label for="total_value" class="form-label fw-bold">Valor total</label>
+                    <label for="total_value" class="form-label ">Valor total</label>
                     <div class="input-group">
                       <span class="input-group-text">$</span>
                       <input id="total_value" name="total_value" type="number" class="form-control"
@@ -311,7 +323,7 @@
                   </div>
 
                   <div class="col-md-4">
-                    <label for="contributions_ei" class="form-label fw-bold">Aportes EI</label>
+                    <label for="contributions_ei" class="form-label ">Aportes EI</label>
                     <div class="input-group">
                       <span class="input-group-text">$</span>
                       <input id="contributions_ei" name="contributions_ei" type="number"
@@ -321,7 +333,7 @@
                   </div>
 
                   <div class="col-md-4">
-                    <label for="contributions_fpn" class="form-label fw-bold">Aportes FPN</label>
+                    <label for="contributions_fpn" class="form-label ">Aportes FPN</label>
                     <div class="input-group">
                       <span class="input-group-text">$</span>
                       <input id="contributions_fpn" name="contributions_fpn" type="number"
@@ -331,7 +343,7 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label for="total_value_executes_fpn" class="form-label fw-bold">Valor total que
+                    <label for="total_value_executes_fpn" class="form-label ">Valor total que
                       ejecuta FPN</label>
                     <div class="input-group">
                       <span class="input-group-text">$</span>
@@ -342,7 +354,7 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label for="total_value_executes_ei" class="form-label fw-bold">Valor total que
+                    <label for="total_value_executes_ei" class="form-label ">Valor total que
                       ejecuta EI</label>
                     <div class="input-group">
                       <span class="input-group-text">$</span>
@@ -353,34 +365,12 @@
                   </div>
                 </div>
 
-
-                <div class="row g-3 mb-2 form-section">
-
-
-                  <!-- Líder del Pilar -->
-                  <div class="col-md-6">
-                    <!--<span>Aquii</span>-->
-                    <label for="persons_id" class="form-label fw-bold">Líder del pilar</label>
-                    <select id="persons_id" name="persons_id" class="form-select text-capitalize"
-                      [(ngModel)]="estuPreviosData.persons_id">
-                      <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
-                      @for (person of persons; track person.id || $index) {
-                      <option [value]="person.id" class="text-capitalize">
-                        {{ person.first_name | titlecase }} {{ (person.other_name ?
-                        person.other_name + ' ' : '') | titlecase }}{{ (person.last_name || '') |
-                        titlecase }}
-                      </option>
-                      }
-                    </select>
-                  </div>
-
-                </div>
-
               </form>
             </mat-card-content>
 
             <!-- Botones de Acción -->
-            <mat-card-actions align="end" class="p-3 bg-light border-top mt-3">
+            <mat-card-actions align="end" class="p-3  border-top mt-3"
+              style="border-top: none !important;">
               <div class="step-actions between w-100">
                 <button mat-stroked-button matStepperPrevious>
                   <i class="bi bi-arrow-left me-1"></i><mat-icon>arrow_circle_left</mat-icon>Atrás
@@ -407,8 +397,8 @@
                 </div>
               </div>
             </mat-card-actions>
-
           </mat-step>
+
         </mat-vertical-stepper>
       </mat-card-content>
     </mat-card>

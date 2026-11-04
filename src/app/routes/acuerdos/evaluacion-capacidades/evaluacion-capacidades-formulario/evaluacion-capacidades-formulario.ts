@@ -30,6 +30,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { Usuarios } from 'src/app/models/usuarios';
+import { PilarModel } from 'src/app/models/pilares';
+import { PilaresService } from 'src/app/services/pilares/pilares.service';
 
 @Component({
   selector: 'evaluacion-capacidades-formulario',
@@ -55,6 +57,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
   private readonly ModalitiesService = inject(ModalitiesService);
   private readonly UsuariosService = inject(UsuariosService);
+  private readonly PilarService = inject(PilaresService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -75,6 +78,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   userFound: Usuarios = {};
   programsByMtf: Programs[] = [];
   tipoImplementadora: string | null = null;
+  pilares: PilarModel[] = [];
 
   evaCapacidadesData: EvaluacionCapacidadesModel = new EvaluacionCapacidadesModel({
     name: '',
@@ -98,6 +102,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     capacity_assessments_states_id: 1,
     modalitie: '',
     //modality_id: 0,
+    pilar: '',
   });
 
   responseRequest: ResponseRequest = new ResponseRequest({
@@ -118,6 +123,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.listarStates();
     this.listarModalities();
     this.evaCapacidadesData.program_id = 2;
+    this.listarPilares();
 
     if (this.guidEvaCapacidades) {
       this.EvaluacionCapacidadesService.getPorGuid(this.guidEvaCapacidades).subscribe({
@@ -208,6 +214,18 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     this.PersonsService.getPersons().subscribe({
       next: r => {
         this.persons = r;
+        this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
+    });
+  }
+
+  listarPilares() {
+    this.PilarService.getPilars().subscribe({
+      next: r => {
+        console.log('Pilares ', r);
+
+        this.pilares = r;
         this.cdr.detectChanges();
       },
       error: e => console.error(e),

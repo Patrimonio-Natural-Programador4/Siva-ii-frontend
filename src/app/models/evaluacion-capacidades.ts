@@ -30,6 +30,8 @@ export class EvaluacionCapacidadesModel {
   total_registros?: number;
   url_sharepoint_ec?: string | null;
   enviar_aprobacion?: boolean;
+  pillar_id?: number;
+  pilar?: string;
 
   constructor(data?: Partial<EvaluacionCapacidadesModel>) {
     Object.assign(this, data);
