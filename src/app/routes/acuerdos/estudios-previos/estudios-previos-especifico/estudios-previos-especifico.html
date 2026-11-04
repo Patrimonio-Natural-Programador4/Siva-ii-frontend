@@ -247,29 +247,56 @@
 
                   <!-- Plazo -->
                   <div class="col-md-4">
-                    <label for="term" class="form-label ">Plazo <span
+                    <label for="term" class="form-label">Plazo <span
                         class="text-danger">*</span></label>
-                    <input id="term" name="term" type="text" class="form-control"
-                      placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
-                      #term="ngModel"
+                    <input id="term" name="term" type="text" inputmode="numeric"
+                      class="form-control" placeholder="Ej. 12" required pattern="[0-9]*"
+                      maxlength="4" [(ngModel)]="estuPreviosData.term" #term="ngModel"
+                      (input)="soloNumeros($event)"
                       [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
                     @if (term.invalid && (term.dirty || term.touched)) {
-                    <div class="invalid-feedback">Este campo es requerido.</div>
+                    <div class="invalid-feedback">Este campo es requerido y solo admite números.
+                    </div>
                     }
                   </div>
+
                   <!-- Modalidad -->
                   <div class="col-md-4">
-                    <label for="modality_id" class="form-label ">Modalidad</label>
-                    <select id="modality_id" name="modality_id" class="form-select text-capitalize"
-                      [(ngModel)]="estuPreviosData.modality_id">
-                      <option [ngValue]="0" disabled>Seleccione modalidad</option>
+                    <label for="modality_id" class="form-label">Modalidad</label>
+                    <ng-select #selMod labelForId="modality_id" name="modality_id" appendTo="body"
+                      placeholder="Seleccione modalidad" notFoundText="Sin resultados"
+                      [searchable]="false" [(ngModel)]="estuPreviosData.modality_id">
+                      <ng-template ng-header-tmp>
+                        <input type="text" class="form-control form-control-sm"
+                          placeholder="Buscar..."
+                          (input)="selMod.filter($any($event.target).value)">
+                      </ng-template>
                       @for (tA of modalities; track tA.id) {
-                      <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
+                      <ng-option [value]="tA.id">{{ tA.name | titlecase }}</ng-option>
                       }
-                    </select>
+                    </ng-select>
                   </div>
 
                   <!-- Tipo de acuerdo -->
+                  <div class="col-md-4">
+                    <label for="agreement_type_id" class="form-label">Tipo de acuerdo</label>
+                    <ng-select #selTipo labelForId="agreement_type_id" name="agreement_type_id"
+                      appendTo="body" placeholder="Seleccione tipo de acuerdo"
+                      notFoundText="Sin resultados" [searchable]="false"
+                      [(ngModel)]="estuPreviosData.agreement_type_id">
+                      <ng-template ng-header-tmp>
+                        <input type="text" class="form-control form-control-sm"
+                          placeholder="Buscar..."
+                          (input)="selTipo.filter($any($event.target).value)">
+                      </ng-template>
+                      @for (tA of agrement_types; track tA.id) {
+                      <ng-option [value]="tA.id">{{ tA.name | titlecase }}</ng-option>
+                      }
+                    </ng-select>
+                  </div>
+
+
+                  <!-- Tipo de acuerdo
                   <div class="col-md-4">
                     <label for="agreement_type_id" class="form-label ">Tipo de
                       acuerdo</label>
@@ -281,7 +308,7 @@
                       <option [ngValue]="tA.id" class="text-capitalize">{{ tA.name }}</option>
                       }
                     </select>
-                  </div>
+                  </div>-->
 
 
 

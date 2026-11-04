@@ -1217,10 +1217,10 @@
     photoviewer "^3.11.0"
     tslib "^2.4.0"
 
-"@ng-select/ng-select@^21.0.0":
-  version "21.1.4"
-  resolved "https://registry.npmjs.org/@ng-select/ng-select/-/ng-select-21.1.4.tgz"
-  integrity sha512-3oXRKlgz4Z6J33K06cS7THhG61NLxuc0UWVEYpX2vi88pKG5NwkZFB6ICeO6swwxmt+Opg/cP9ZAOfSqWobSgw==
+"@ng-select/ng-select@^21.0.0", "@ng-select/ng-select@^21.8.2":
+  version "21.8.2"
+  resolved "https://registry.npmjs.org/@ng-select/ng-select/-/ng-select-21.8.2.tgz"
+  integrity sha512-Gk5xlVKLOG3WTIgOteduwlKBZTt0njkoUXheKgUSKn+h+poYQAf61uENCK08Tj0XWxes9BQUc5J+R2GC+86jgA==
   dependencies:
     tslib "^2.8.1"
 

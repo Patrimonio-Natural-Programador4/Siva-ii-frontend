@@ -36,8 +36,8 @@ export class PreviousStudiesModel {
   capacity_assessments_states_id?: number;
   enviar_aprobacion?: boolean;
   agreetment_id?: number;
-  modality_id?: number;
-  agreement_type_id?: number;
+  modality_id?: number | null;
+  agreement_type_id?: number | null;
   agreement_type?: string;
   modality?: string;
   objetivos?: ObjetivoEstudio[];
