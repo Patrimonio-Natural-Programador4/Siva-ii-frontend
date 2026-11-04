@@ -241,31 +241,40 @@
 
                 <!-- Implementadora -->
                 <div class="col-md-6">
-                  <label for="implementer_id" class="form-label ">Implementadora</label>
-                  <select id="implementer_id" name="implementer_id" class="form-select"
+                  <label for="implementer_id" class="form-label">Implementadora</label>
+                  <ng-select #selImpl labelForId="implementer_id" name="implementer_id"
+                    appendTo="body" placeholder="Seleccione una implementadora"
+                    notFoundText="Sin resultados" [searchable]="false"
                     [(ngModel)]="estuPreviosData.implementer_id">
-                    <option [ngValue]="0" disabled selected>Seleccione una implementadora</option>
-                    @for (implementer of implementers; track implementer.id || $index) {
-                    <option [value]="implementer.id">
-                      {{ implementer.acronym }}
-                    </option>
+                    <ng-template ng-header-tmp>
+                      <input type="text" class="form-control form-control-sm"
+                        placeholder="Buscar..." (input)="selImpl.filter($any($event.target).value)">
+                    </ng-template>
+                    @for (implementer of implementers; track implementer.id) {
+                    <ng-option [value]="implementer.id">{{ implementer.acronym }}</ng-option>
                     }
-                  </select>
+                  </ng-select>
                 </div>
 
                 <!-- Líder del Pilar -->
                 <div class="col-md-4">
-                  <label for="persons_id" class="form-label ">Líder del pilar</label>
-                  <select id="persons_id" name="persons_id" class="form-select text-capitalize"
-                    [(ngModel)]="estuPreviosData.persons_id">
-                    <option [ngValue]="0" disabled selected>Seleccione líder del pilar</option>
-                    @for (person of persons; track person.id || $index) {
-                    <option [value]="person.id" class="text-capitalize">
-                      {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : ''
-                      }}{{ person.last_name || '' }}
-                    </option>
+                  <label for="persons_id" class="form-label">Líder del pilar</label>
+                  <ng-select #selPerson labelForId="persons_id" name="persons_id" appendTo="body"
+                    placeholder="Seleccione líder del pilar" notFoundText="Sin resultados"
+                    [searchable]="false" [(ngModel)]="estuPreviosData.persons_id">
+                    <ng-template ng-header-tmp>
+                      <input type="text" class="form-control form-control-sm"
+                        placeholder="Buscar..."
+                        (input)="selPerson.filter($any($event.target).value)">
+                    </ng-template>
+                    @for (person of persons; track person.id) {
+                    <ng-option [value]="person.id">
+                      {{ (person.first_name + ' ' + (person.other_name || '') + ' ' +
+                      (person.last_name || '') + ' ' + (person.other_last_name || '')) | titlecase
+                      }}
+                    </ng-option>
                     }
-                  </select>
+                  </ng-select>
                 </div>
 
                 <!-- Evaluación de Capacidades -->
@@ -274,18 +283,19 @@
                     Evaluación de capacidades
                   </label>
                   <select id="capacity_assessment_id" name="capacity_assessment_id"
-                    class="form-select text-capitalize"
+                    class="form-select text-capitalize" disabled
                     [(ngModel)]="estuPreviosData.capacity_assessment_id">
                     <option [ngValue]="0" disabled selected>
                       Seleccione evaluación de capacidades
                     </option>
                     @for (item of capacity; track item.id || $index) {
                     <option [value]="item.id" class="text-capitalize">
-                      {{ item.name || '' | titlecase }}
+                      {{ item.name || '' }}
                     </option>
                     }
                   </select>
                 </div>
+
                 <!-- Programa -->
                 <div class="col-md-4">
                   <label for="p" class="form-label ">Programa</label>
@@ -294,7 +304,7 @@
                     <option [ngValue]="0" disabled selected>Seleccione el programa</option>
                     @for (item of programs; track item.id_programa) {
                     <option [value]="item.id_programa">
-                      {{ item.description | titlecase }}
+                      {{ item.description }}
                     </option>
                     }
                   </select>

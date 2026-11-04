@@ -9,6 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { PageHeader } from '@shared';
+import { TitleCasePipe } from '@angular/common';
+
 import {
   AccionAprobacion,
   DialogResult,
@@ -38,6 +40,7 @@ import { TipoAcuerdoModel } from 'src/app/models/tipos-acuerdos';
 import { AgreementTypes } from 'src/app/services/agreement-types/agreement-types';
 import { ModalitiesService } from 'src/app/services/modalidades.service';
 import { ModalidadModel } from 'src/app/models/modalidades';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-estudios-previos-especifico',
@@ -53,6 +56,8 @@ import { ModalidadModel } from 'src/app/models/modalidades';
     MatStepperModule,
     FormsModule,
     MatTooltipModule,
+    TitleCasePipe,
+    NgSelectModule,
   ],
   templateUrl: './estudios-previos-especifico.html',
   styleUrl: './estudios-previos-especifico.scss',
@@ -108,8 +113,8 @@ export class EstudiosPreviosEspecifico implements OnInit {
     contributions_fpn: 0,
     estimated_term: '',
     program_id: 0,
-    modality_id: 0,
-    agreement_type_id: 0,
+    modality_id: null,
+    agreement_type_id: null,
   });
   /************************************************ */
 
@@ -500,5 +505,12 @@ export class EstudiosPreviosEspecifico implements OnInit {
     const url = `${environment.apiUrl2}/evaluaciones-de-capacidades/${guid}/pdf_solicitud/documento`;
     window.open(url, '_blank');
     console.log('URL', url);
+  }
+
+  soloNumeros(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const limpio = input.value.replace(/\D/g, '');
+    input.value = limpio;
+    this.estuPreviosData.term = limpio;
   }
 }

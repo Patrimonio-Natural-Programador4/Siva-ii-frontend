@@ -17,7 +17,7 @@ import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosRiesgosTabla } from 'src/app/routes/acuerdos/estudios-previos/estudios-previos-riesgos/estudios-previos-riesgos-tabla/estudios-previos-riesgos-tabla';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,6 +42,7 @@ import {
   EstadoDesembolso,
   productosParaDesembolso,
 } from 'src/app/models/desembolsos-estudio';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-estudios-previos-formulario',
@@ -57,6 +58,8 @@ import {
     CommonModule,
     MatStepperModule,
     EstudiosPreviosRiesgosTabla,
+    TitleCasePipe,
+    NgSelectModule,
   ],
   templateUrl: './estudios-previos-formulario.html',
   styleUrl: './estudios-previos-formulario.scss',
@@ -107,15 +110,15 @@ export class EstudiosPreviosFormulario implements OnInit {
     total_value_executes_fpn: 0,
     total_value_executes_ei: 0,
     capacity_assessments_states_id: 0,
-    implementer_id: 0,
-    persons_id: 0,
+    implementer_id: undefined,
+    persons_id: undefined,
     capacity_assessment_id: 0,
     contributions_fpn: 0,
     estimated_term: '',
     program_id: 0,
     enviar_aprobacion: false,
-    agreement_type_id: 0,
-    modality_id: 0,
+    agreement_type_id: null,
+    modality_id: null,
     objetivos: [],
     desembolsos: [],
   });

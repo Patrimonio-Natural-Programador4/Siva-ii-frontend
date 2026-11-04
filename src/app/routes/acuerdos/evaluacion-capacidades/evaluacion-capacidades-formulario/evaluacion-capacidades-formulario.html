@@ -51,7 +51,7 @@
                 class="form-select text-capitalize" [(ngModel)]="evaCapacidadesData.modality_id">
                 <option value="" disabled selected>Seleccione una modalidad</option>
                 @for (item of modalities; track item.id || $index) {
-                <option [value]="item.id" class="text-capitalize">
+                <option [value]="item.id">
                   {{ (item.name || '') | titlecase }}
                 </option>
                 }
@@ -120,33 +120,23 @@
               </select>
             </div>
 
-            <!-- Implementadora
-            <div class="col-md-6 mb-3">
-              <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
-              <select id="implementer" name="implementer_id" class="form-select"
-                [(ngModel)]="evaCapacidadesData.implementer_id">
-                <option value="" disabled selected>Seleccione una implementadora</option>
-                @for (implementer of implementers; track implementer.id || $index) {
-                <option [value]="implementer.id">
-                  {{ implementer.name || implementer.acronym }}
-                </option>
-                }
-              </select>
-            </div>-->
 
             <!-- Implementadora -->
             <div class="col-md-6 mb-3">
               <label for="implementer" class="form-label font-weight-bold">Implementadora</label>
-              <select id="implementer" name="implementer_id" class="form-select"
-                [(ngModel)]="evaCapacidadesData.implementer_id"
+              <ng-select #selImplEva labelForId="implementer" name="implementer_id" appendTo="body"
+                placeholder="Seleccione una implementadora" notFoundText="Sin resultados"
+                [searchable]="false" [(ngModel)]="evaCapacidadesData.implementer_id"
                 (ngModelChange)="onImplementerChange($event)">
-                <option [ngValue]="0" disabled>Seleccione una implementadora</option>
-                @for (implementer of implementers; track implementer.id || $index) {
-                <option [ngValue]="implementer.id">
-                  {{ implementer.name || implementer.acronym }}
-                </option>
+                <ng-template ng-header-tmp>
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar..."
+                    (input)="selImplEva.filter($any($event.target).value)">
+                </ng-template>
+                @for (implementer of implementers; track implementer.id) {
+                <ng-option [value]="implementer.id">{{ implementer.name || implementer.acronym
+                  }}</ng-option>
                 }
-              </select>
+              </ng-select>
             </div>
 
             <!-- Tipo de implementadora -->
@@ -161,17 +151,21 @@
             <!-- Persona -->
             <div class="col-md-6 mb-3">
               <label for="person" class="form-label font-weight-bold">Nombre punto de contacto de la
-                entidad </label>
-              <select id="person" name="persons_id" class="form-select text-capitalize"
-                [(ngModel)]="evaCapacidadesData.persons_id">
-                <option value="" disabled selected>Seleccione una persona</option>
-                @for (person of persons; track person.id || $index) {
-                <option [value]="person.id" class="text-capitalize">
-                  {{ person.first_name }} {{ person.other_name ? person.other_name + ' ' : '' }}{{
-                  person.last_name || '' }} {{ person.other_last_name || '' }}
-                </option>
+                entidad</label>
+              <ng-select #selPersonEva labelForId="person" name="persons_id" appendTo="body"
+                placeholder="Seleccione una persona" notFoundText="Sin resultados"
+                [searchable]="false" [(ngModel)]="evaCapacidadesData.persons_id">
+                <ng-template ng-header-tmp>
+                  <input type="text" class="form-control form-control-sm" placeholder="Buscar..."
+                    (input)="selPersonEva.filter($any($event.target).value)">
+                </ng-template>
+                @for (person of persons; track person.id) {
+                <ng-option [value]="person.id">
+                  {{ (person.first_name + ' ' + (person.other_name || '') + ' ' +
+                  (person.last_name || '') + ' ' + (person.other_last_name || '')) | titlecase }}
+                </ng-option>
                 }
-              </select>
+              </ng-select>
             </div>
           </div>
 
@@ -194,7 +188,8 @@
 
             <!-- Fechas -->
             <div style="display:none" class="col-md-6 mb-3">
-              <label for="policy_approval_date" class="form-label font-weight-bold">Fecha aprobación
+              <label for="policy_approval_date" class="form-label font-weight-bold">Fecha
+                aprobación
                 de política</label>
               <input id="policy_approval_date" type="date" class="form-control"
                 [(ngModel)]="evaCapacidadesData.policy_approval_date" name="policy_approval_date" />

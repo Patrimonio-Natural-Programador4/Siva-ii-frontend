@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PageHeader } from '@shared';
+import { TitleCasePipe } from '@angular/common';
 
 import { ResponseRequest } from 'src/app/models/response-request';
 import { EvaluacionCapacidadesService } from 'src/app/services/evaluacion-capacidades/evaluacion-capacidades.service';
@@ -32,6 +33,8 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 import { Usuarios } from 'src/app/models/usuarios';
 import { PilarModel } from 'src/app/models/pilares';
 import { PilaresService } from 'src/app/services/pilares/pilares.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @Component({
   selector: 'evaluacion-capacidades-formulario',
@@ -44,6 +47,9 @@ import { PilaresService } from 'src/app/services/pilares/pilares.service';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     CommonModule,
+    TitleCasePipe,
+    NgSelectModule,
+    MatStepperModule,
   ],
   templateUrl: './evaluacion-capacidades-formulario.html',
   styleUrl: './evaluacion-capacidades-formulario.scss',
@@ -94,10 +100,10 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     pid: '',
     pid_id: 0,
     implementer: '',
-    implementer_id: 0,
+    implementer_id: undefined,
     aproval_request: '',
     person: '',
-    persons_id: 0,
+    persons_id: undefined,
     capacity_assessments_state: '',
     capacity_assessments_states_id: 1,
     modalitie: '',
