@@ -37,9 +37,13 @@ export class EvaluacionCapacidadesService {
     }
   }
 
-  updateEvaCapacidades(guid: string, evCap: any): Observable<ResponseRequest> {
+  updateEvaCapacidades(
+    guid: string,
+    evCap: EvaluacionCapacidadesModel
+  ): Observable<ResponseRequest> {
     return this.http.put<ResponseRequest>(`${this.apiUrl}/${guid}`, evCap);
   }
+
   getListado(
     page = 1,
     idEstado: number[] = [-1],
