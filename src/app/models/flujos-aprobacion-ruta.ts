@@ -11,6 +11,7 @@ export class FlujosAprobacionRuta {
   asigna_revisor?: boolean;
   label_pendiente?: string;
   days_for_approval?: number;
+  habilita_delegacion?: boolean;
 
   constructor(data?: Partial<FlujosAprobacionRuta>) {
     Object.assign(this, data);
