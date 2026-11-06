@@ -364,7 +364,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
   listarTposAcuerdo() {
     this.AgreementTypesService.getagreementTypes().subscribe({
       next: r => {
-        this.agrement_types = r;
+        this.agrement_types = (r ?? []).filter(t => !!t.is_independent);
         console.log('tipos de acuerdos ', r);
       },
       error: e => {

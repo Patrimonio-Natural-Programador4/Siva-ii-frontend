@@ -32,6 +32,7 @@ export class EvaluacionCapacidadesModel {
   enviar_aprobacion?: boolean;
   pillar_id?: number;
   pilar?: string;
+  is_deleted?: boolean | null;
 
   constructor(data?: Partial<EvaluacionCapacidadesModel>) {
     Object.assign(this, data);
@@ -67,6 +68,7 @@ export interface EvaluacionCapacidadListSP {
   step_order_actual_request?: number;
   guid_msft_adjustment?: string;
   total_records?: number;
+  is_deleted?: boolean | null;
 }
 
 export interface AccionSolicitudAprobacionCapacidad {

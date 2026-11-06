@@ -8,12 +8,12 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ImplementersService } from 'src/app/services/implementers/implementers.service';
-import { PersonsService } from 'src/app/services/personas.service';
-import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
-import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
+//import { PersonsService } from 'src/app/services/personas.service';
+//import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessmentsStates.service';
+//import { CapacityAssessmentStateModel } from 'src/app/models/estado-evaluacion-capacidades';
 import { PreviousStudiesModel } from 'src/app/models/estudios-previos';
 import { ImplementerModel } from 'src/app/models/implementers';
-import { PersonModel } from 'src/app/models/personas';
+//import { PersonModel } from 'src/app/models/personas';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosRiesgosTabla } from 'src/app/routes/acuerdos/estudios-previos/estudios-previos-riesgos/estudios-previos-riesgos-tabla/estudios-previos-riesgos-tabla';
 
@@ -67,8 +67,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 export class EstudiosPreviosFormulario implements OnInit {
   private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
   private readonly ImplementersService = inject(ImplementersService);
-  private readonly PersonsService = inject(PersonsService);
-  private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
+  //private readonly PersonsService = inject(PersonsService);
+  //private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
   private readonly EvaluacionCapacidadesService = inject(EvaluacionCapacidadesService);
   private readonly ProgramsService = inject(ProgramsService);
 
@@ -90,8 +90,8 @@ export class EstudiosPreviosFormulario implements OnInit {
   cargandoEstadosDesembolso = false;
   errorEstadosDesembolso = false;
   implementers: ImplementerModel[] = [];
-  persons: PersonModel[] = [];
-  states: CapacityAssessmentStateModel[] = [];
+  //persons: PersonModel[] = [];
+  //states: CapacityAssessmentStateModel[] = [];
   capacity: EvaluacionCapacidadesModel[] = [];
   programs: Programs[] = [];
 
@@ -109,12 +109,12 @@ export class EstudiosPreviosFormulario implements OnInit {
     contributions_ei: 0,
     total_value_executes_fpn: 0,
     total_value_executes_ei: 0,
-    capacity_assessments_states_id: 0,
+    //capacity_assessments_states_id: 0,
     implementer_id: undefined,
-    persons_id: undefined,
+    //persons_id: undefined,
     capacity_assessment_id: 0,
     contributions_fpn: 0,
-    estimated_term: '',
+    // estimated_term: '',
     program_id: 0,
     enviar_aprobacion: false,
     agreement_type_id: undefined,
@@ -135,8 +135,8 @@ export class EstudiosPreviosFormulario implements OnInit {
     this.accion = this.guidEstudio ? 'Editar' : 'Nuevo';
 
     this.listarImplementers();
-    this.listarPersons();
-    this.listarStates();
+    //this.listarPersons();
+    //this.listarStates();
     this.listarCapacity();
     this.listarPrograms();
     this.listarEstadosDesembolso();
@@ -175,20 +175,20 @@ export class EstudiosPreviosFormulario implements OnInit {
     });
   }
 
-  listarPersons() {
-    this.PersonsService.getPersons().subscribe({
-      next: r => {
-        this.persons = r;
-        this.cdr.markForCheck();
-        console.log(r);
-      },
-      error: e => {
-        console.error(e);
-      },
-    });
-  }
+  /*  listarPersons() {
+      this.PersonsService.getPersons().subscribe({
+        next: r => {
+          this.persons = r;
+          this.cdr.markForCheck();
+          console.log(r);
+        },
+        error: e => {
+          console.error(e);
+        },
+      });
+    }*/
 
-  listarStates() {
+  /*listarStates() {
     this.CapacityAssessmentStateService.getCapStates().subscribe({
       next: r => {
         this.states = r;
@@ -198,7 +198,7 @@ export class EstudiosPreviosFormulario implements OnInit {
         console.error(e);
       },
     });
-  }
+  }*/
 
   listarCapacity() {
     this.EvaluacionCapacidadesService.getEvaCapacidades().subscribe({
@@ -454,5 +454,12 @@ export class EstudiosPreviosFormulario implements OnInit {
 
   volver(): void {
     this.router.navigate(['/acuerdos/estudios-previos']);
+  }
+
+  soloNumeros(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const limpio = input.value.replace(/\D/g, '');
+    input.value = limpio;
+    this.estuPreviosData.term = limpio;
   }
 }

@@ -118,20 +118,20 @@
 
                 <!-- Plazo -->
                 <div class="col-md-6">
-                  <label for="term" class="form-label ">
+                  <label for="term" class="form-label">
                     Plazo
                     <span class="text-danger">*</span>
                   </label>
-                  <input id="term" name="term" type="text" class="form-control"
-                    placeholder="Ej. 12 meses" required [(ngModel)]="estuPreviosData.term"
-                    maxlength="255" #term="ngModel"
+                  <input id="term" name="term" type="text" inputmode="numeric" class="form-control"
+                    placeholder="Ej. 12" required pattern="[0-9]*" maxlength="4"
+                    [(ngModel)]="estuPreviosData.term" #term="ngModel" (input)="soloNumeros($event)"
                     [class.is-invalid]="term.invalid && (term.dirty || term.touched)" />
                   @if (term.invalid && (term.dirty || term.touched)) {
-                  <div class="invalid-feedback">Este campo es requerido.</div>
+                  <div class="invalid-feedback">Este campo es requerido y solo admite números.</div>
                   }
                 </div>
 
-                <!-- Plazo Estimado -->
+                <!-- Plazo Estimado
                 <div class="col-md-6">
                   <label for="estimated_term" class="form-label ">
                     Plazo estimado
@@ -146,7 +146,7 @@
                   @if (estimated_term.invalid && (estimated_term.dirty || estimated_term.touched)) {
                   <div class="invalid-feedback">Este campo es requerido.</div>
                   }
-                </div>
+                </div> -->
               </div>
 
               <div class="d-flex flex-wrap justify-content-end gap-2">
@@ -222,7 +222,8 @@
 
             <mat-step label="Asignación y Clasificación">
               <div class="row g-3 mb-2">
-                <!-- Estado de Evaluación -->
+
+                <!-- Estado de Evaluación
                 <div class="col-md-6">
                   <label for="capacity_assessments_states_id" class="form-label ">
                     Estado de Evaluación
@@ -237,10 +238,10 @@
                     </option>
                     }
                   </select>
-                </div>
+                </div> -->
 
                 <!-- Implementadora -->
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label for="implementer_id" class="form-label">Implementadora</label>
                   <ng-select #selImpl labelForId="implementer_id" name="implementer_id"
                     appendTo="body" placeholder="Seleccione una implementadora"
@@ -256,7 +257,7 @@
                   </ng-select>
                 </div>
 
-                <!-- Líder del Pilar -->
+                <!-- Líder del Pilar
                 <div class="col-md-4">
                   <label for="persons_id" class="form-label">Líder del pilar</label>
                   <ng-select #selPerson labelForId="persons_id" name="persons_id" appendTo="body"
@@ -275,7 +276,7 @@
                     </ng-option>
                     }
                   </ng-select>
-                </div>
+                </div> -->
 
                 <!-- Evaluación de Capacidades -->
                 <div class="col-md-4">

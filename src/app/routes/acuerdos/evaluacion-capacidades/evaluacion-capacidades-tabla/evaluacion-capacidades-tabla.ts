@@ -27,6 +27,7 @@ import { CapacityAssessmentStateService } from 'src/app/services/CapacityAssessm
 import { ProgramsService } from 'src/app/services/programs.service';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-evaluaciones-capacidad-listar',
@@ -53,6 +54,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly service = inject(EvaluacionCapacidadesService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly EvaluacionCapacidadesService = inject(EvaluacionCapacidadesService);
   private readonly CapacityAssessmentStateService = inject(CapacityAssessmentStateService);
   private readonly ProgramsService = inject(ProgramsService);
@@ -98,7 +100,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   getEvaluaciones(): void {
     this.service.getListado(this.currentPage + 1, [-1], this.filtrobusqueda).subscribe({
       next: response => {
-        this.evaluaciones = response;
+        this.evaluaciones = response.filter(evaluacion => !evaluacion.is_deleted);
         this.total = response.length > 0 ? response[0].total_records! : 0;
         this.cdr.detectChanges();
       },
@@ -211,5 +213,29 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   }
   tieneEstudioPrevio(row: EvaluacionCapacidadListSP): boolean {
     return this.evaluacionesConEstudio.has(row.capacity_assessments_id!);
+  }
+
+  deleteCapacityAssessment(guid: string, evaluacion: EvaluacionCapacidadesModel) {
+    evaluacion.is_deleted = true;
+
+    this.EvaluacionCapacidadesService.updateEvaCapacidades(guid, evaluacion).subscribe({
+      next: response => {
+        console.log('Respuesta:', response);
+        this.snackBar.open('Evaluación de capacidad eliminada correctamente', '', {
+          duration: 3000,
+        });
+        this.getEvaluaciones();
+      },
+      error: error => {
+        console.error('Error:', error);
+        this.snackBar.open('Error al eliminar Evaluación de capacidad', '', {
+          duration: 3000,
+        });
+      },
+      complete: () => {
+        console.log('Proceso finalizado');
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
