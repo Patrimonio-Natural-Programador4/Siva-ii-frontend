@@ -41,6 +41,7 @@ import { AgreementTypes } from 'src/app/services/agreement-types/agreement-types
 import { ModalitiesService } from 'src/app/services/modalidades.service';
 import { ModalidadModel } from 'src/app/models/modalidades';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AcuerdoListModel } from 'src/app/models/acuerdos';
 
 @Component({
   selector: 'app-estudios-previos-especifico',
@@ -76,7 +77,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
   private readonly urlActual = this.router.url;
-  //private readonly AgreementsService = inject(AgreementsService);
+  private readonly AgreementsService = inject(AgreementsService);
   private readonly AgreementTypesService = inject(AgreementTypes);
   private readonly ModalitiesService = inject(ModalitiesService);
 
@@ -90,6 +91,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
   programs: Programs[] = [];
   agrement_types: TipoAcuerdoModel[] = [];
   modalities: ModalidadModel[] = [];
+  Agrementss: AcuerdoListModel[] = [];
 
   estuPreviosData: PreviousStudiesModel = new PreviousStudiesModel({
     id: 0,
@@ -115,6 +117,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     program_id: 0,
     modality_id: null,
     agreement_type_id: null,
+    framework_agreement_id: null,
   });
   /************************************************ */
 
@@ -163,6 +166,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
     this.idEstPrevios = idParam ? Number(idParam) : null;
     this.accion = this.idEstPrevios ? 'Editar' : 'Nuevo';
     this.listarImplementers();
+    this.listarAgreementss();
     this.listarPersons();
     this.listarStates();
     this.listarCapacity();
@@ -361,6 +365,19 @@ export class EstudiosPreviosEspecifico implements OnInit {
     });
   }
 
+  listarAgreementss() {
+    //console.log("ACuerdo aqui");
+    this.AgreementsService.getAcuerdosListado().subscribe({
+      next: r => {
+        this.Agrementss = r;
+        console.log(`Acuerdoss :: ${r}`);
+      },
+      error: e => {
+        console.error(e);
+      },
+    });
+  }
+
   listarTposAcuerdo() {
     this.AgreementTypesService.getagreementTypes().subscribe({
       next: r => {
@@ -512,5 +529,14 @@ export class EstudiosPreviosEspecifico implements OnInit {
     const limpio = input.value.replace(/\D/g, '');
     input.value = limpio;
     this.estuPreviosData.term = limpio;
+  }
+
+  get esAcuerdoMarco(): boolean {
+    return this.estuPreviosData?.agreement_type_id == 2;
+  }
+
+  get colClass(): string {
+    const w = this.esAcuerdoMarco ? 'col-md-3' : 'col-md-4';
+    return w;
   }
 }

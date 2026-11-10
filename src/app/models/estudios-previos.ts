@@ -42,6 +42,7 @@ export class PreviousStudiesModel {
   modality?: string;
   objetivos?: ObjetivoEstudio[];
   desembolsos?: DesembolsoEstudio[];
+  framework_agreement_id?: number | null;
 
   constructor(data?: Partial<PreviousStudiesModel>) {
     Object.assign(this, data);
@@ -79,6 +80,7 @@ export class PreviousStudiesCreateModel {
 
   modality_id?: number;
   agreement_type_id?: number;
+  framework_agreement_id?: number;
 
   constructor(data?: Partial<PreviousStudiesCreateModel>) {
     Object.assign(this, data);
