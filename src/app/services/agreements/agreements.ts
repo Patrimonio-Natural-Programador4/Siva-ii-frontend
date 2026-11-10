@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ResponseRequest } from 'src/app/models/response-request';
-import { AcuerdoModel, AcuerdoCreateModel } from 'src/app/models/acuerdos';
+import { AcuerdoModel, AcuerdoCreateModel, AcuerdoListModel } from 'src/app/models/acuerdos';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
 
 import { catchError, Observable, throwError } from 'rxjs';
@@ -16,8 +16,7 @@ export class AgreementsService {
 
   saveAgreement(agreement: AcuerdoModel): Observable<ResponseRequest> {
     //const previous_studies_states_id = 1;
-
-    console.log('agreement service', agreement);
+    //console.log('agreement service', agreement);
     try {
       return this.http.post<ResponseRequest>(this.apiUrl, agreement);
     } catch (error) {
@@ -47,5 +46,9 @@ export class AgreementsService {
 
   updateAgreement(agreement: AcuerdoModel): Observable<ResponseRequest> {
     return this.http.put<ResponseRequest>(`${this.apiUrl}${agreement.guid}`, agreement);
+  }
+
+  getAcuerdosListado(): Observable<AcuerdoListModel[]> {
+    return this.http.get<AcuerdoListModel[]>(`${this.apiUrl}listar`);
   }
 }

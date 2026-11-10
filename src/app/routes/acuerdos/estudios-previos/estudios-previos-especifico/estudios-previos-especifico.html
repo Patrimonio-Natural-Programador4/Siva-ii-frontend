@@ -246,7 +246,7 @@
                   </div> -->
 
                   <!-- Plazo -->
-                  <div class="col-md-4">
+                  <div [class]="colClass">
                     <label for="term" class="form-label">Plazo <span
                         class="text-danger">*</span></label>
                     <input id="term" name="term" type="text" inputmode="numeric"
@@ -261,7 +261,7 @@
                   </div>
 
                   <!-- Modalidad -->
-                  <div class="col-md-4">
+                  <div [class]="colClass">
                     <label for="modality_id" class="form-label">Modalidad</label>
                     <ng-select #selMod labelForId="modality_id" name="modality_id" appendTo="body"
                       placeholder="Seleccione modalidad" notFoundText="Sin resultados"
@@ -278,7 +278,7 @@
                   </div>
 
                   <!-- Tipo de acuerdo -->
-                  <div class="col-md-4">
+                  <div [class]="colClass">
                     <label for="agreement_type_id" class="form-label">Tipo de acuerdo</label>
                     <ng-select #selTipo labelForId="agreement_type_id" name="agreement_type_id"
                       appendTo="body" placeholder="Seleccione tipo de acuerdo"
@@ -294,6 +294,29 @@
                       }
                     </ng-select>
                   </div>
+
+
+                  <!-- Acuerdo -->
+                  @if (estuPreviosData.agreement_type_id ==2) {
+                  <div class="col-md-3">
+                    <label for="framework_agreement_id" class="form-label">Acuerdo Marco</label>
+                    <ng-select #selAgree labelForId="framework_agreement_id"
+                      name="framework_agreement_id" appendTo="body" placeholder="Seleccione Acuerdo"
+                      notFoundText="Sin resultados" [searchable]="false"
+                      [(ngModel)]="estuPreviosData.framework_agreement_id">
+                      <ng-template ng-header-tmp>
+                        <input type="text" class="form-control form-control-sm"
+                          placeholder="Buscar..."
+                          (input)="selAgree.filter($any($event.target).value)">
+                      </ng-template>
+                      @for (A of Agrementss; track A.id) {
+                      <ng-option [value]="A.id">{{ A.codee | uppercase }}</ng-option>
+                      }
+                    </ng-select>
+                  </div>
+                  }
+
+
 
 
                 </div>
