@@ -1,9 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MSAL_INSTANCE } from '@azure/msal-angular';
 import { IPublicClientApplication } from '@azure/msal-browser';
 import { AuthService, User } from '@core/authentication';
 import { NgxPermissionsService, NgxRolesService } from 'ngx-permissions';
-import { switchMap, tap, startWith } from 'rxjs';
+import { defer, switchMap, tap, timeout } from 'rxjs';
 import { Menu, MenuService } from './menu.service';
 
 @Injectable({
@@ -15,6 +16,7 @@ export class StartupService {
   private readonly menuService = inject(MenuService);
   private readonly permissonsService = inject(NgxPermissionsService);
   private readonly rolesService = inject(NgxRolesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * Load the application only after get the menu or other essential informations
@@ -22,42 +24,29 @@ export class StartupService {
    */
   load() {
     return new Promise<void>((resolve, reject) => {
-      this.msalInstance
-        .initialize()
-        .then(() => {
-          // Trigger initial load to ensure menu loads even if session was already active
-          this.authService.triggerInitialLoad();
-
-          this.authService
-            .change()
-            .pipe(
-              tap(user => {
-                console.log('StartupService: Permisos establecidos para usuario', user);
-                this.setPermissions(user);
-              }),
-              switchMap(() => {
-                console.log('StartupService: Cargando menú...');
-                return this.authService.menu();
-              }),
-              tap(menu => {
-                console.log('StartupService: Menú cargado', menu);
-                this.setMenu(menu);
-              })
-            )
-            .subscribe({
-              next: () => {
-                console.log('StartupService: Carga completada');
-                resolve();
-              },
-              error: err => {
-                console.error('StartupService: Error al cargar', err);
-                resolve();
-              },
-            });
-        })
-        .catch(err => {
-          console.error('StartupService: Error inicializando MSAL', err);
-          resolve();
+      defer(() => this.msalInstance.initialize())
+        .pipe(
+          // Finish redirect processing before protected requests can renew the session.
+          switchMap(() => this.msalInstance.handleRedirectPromise()),
+          tap(result => {
+            if (result?.account) {
+              this.msalInstance.setActiveAccount(result.account);
+            }
+            this.authService.triggerInitialLoad();
+          }),
+          switchMap(() => this.authService.change()),
+          tap(user => this.setPermissions(user)),
+          switchMap(() => this.authService.menu().pipe(timeout({ first: 30_000 }))),
+          tap(menu => this.setMenu(menu)),
+          timeout({ first: 30_000 }),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe({
+          next: () => resolve(),
+          error: err => {
+            console.error('StartupService: Error al cargar', err);
+            reject(err);
+          },
         });
     });
   }
