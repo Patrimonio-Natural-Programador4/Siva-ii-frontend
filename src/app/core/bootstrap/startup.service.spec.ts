@@ -1,9 +1,14 @@
 import { fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
-import { MSAL_INSTANCE } from '@azure/msal-angular';
-import { AuthenticationResult, IPublicClientApplication } from '@azure/msal-browser';
+import { Location } from '@angular/common';
+import { MSAL_INSTANCE, MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import {
+  AuthenticationResult,
+  InteractionStatus,
+  IPublicClientApplication,
+} from '@azure/msal-browser';
 import { AuthService, User } from '@core/authentication';
 import { NgxPermissionsService, NgxRolesService } from 'ngx-permissions';
-import { BehaviorSubject, NEVER, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, EMPTY, NEVER, of, Subject, take, throwError } from 'rxjs';
 import { Menu, MenuService } from './menu.service';
 import { StartupService } from './startup.service';
 
@@ -20,6 +25,8 @@ describe('StartupService', () => {
       'initialize',
       'handleRedirectPromise',
       'setActiveAccount',
+      'initializeWrapperLibrary',
+      'addEventCallback',
     ]);
     msal.initialize.and.returnValue(Promise.resolve());
     msal.handleRedirectPromise.and.returnValue(Promise.resolve(null));
@@ -32,6 +39,9 @@ describe('StartupService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        MsalService,
+        MsalBroadcastService,
+        { provide: Location, useValue: { path: () => '' } },
         { provide: MSAL_INSTANCE, useValue: msal },
         { provide: AuthService, useValue: auth },
         { provide: MenuService, useValue: menu },
@@ -99,6 +109,20 @@ describe('StartupService', () => {
 
     expect(msal.setActiveAccount).not.toHaveBeenCalled();
     expect(menu.set).toHaveBeenCalledWith(items);
+    let status: InteractionStatus | undefined;
+    TestBed.inject(MsalBroadcastService)
+      .inProgress$.pipe(take(1))
+      .subscribe(value => (status = value));
+    expect(status).toBe(InteractionStatus.None);
+  });
+
+  it('rejects if the interceptor completes without a menu during interactive fallback', async () => {
+    auth.menu.and.returnValue(EMPTY);
+
+    await expectAsync(startup.load()).toBeRejectedWithError(
+      'La carga del menu termino sin respuesta de autenticacion'
+    );
+    expect(menu.set).not.toHaveBeenCalled();
   });
 
   it('keeps updating the menu on subsequent authentication changes', async () => {

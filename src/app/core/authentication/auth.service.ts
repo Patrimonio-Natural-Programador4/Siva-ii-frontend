@@ -1,7 +1,26 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { BehaviorSubject, catchError, iif, map, merge, of, share, startWith, Subject, switchMap, tap, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  iif,
+  map,
+  merge,
+  of,
+  share,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+  takeUntil,
+} from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AccountInfo, BrowserAuthError, EventMessage, EventType, InteractionRequiredAuthError } from '@azure/msal-browser';
+import {
+  AccountInfo,
+  BrowserAuthError,
+  EventMessage,
+  EventType,
+  InteractionRequiredAuthError,
+} from '@azure/msal-browser';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { filterObject, isEmptyObject } from './helpers';
 import { User } from './interface';
@@ -23,13 +42,9 @@ export class AuthService implements OnDestroy {
   /** Subject que emite para forzar carga inicial del menú. */
   private initTrigger$ = new BehaviorSubject<void>(undefined);
 
-  /** Emits whenever the MSAL auth state changes (login, token renewal, silent SSO). */
+  /** Token acquisition must not restart the menu request that triggered it. */
   private msalChange$ = this.msalBroadcastService.msalSubject$.pipe(
-    filter(
-      (event: EventMessage) =>
-        event.eventType === EventType.LOGIN_SUCCESS ||
-        event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS
-    )
+    filter((event: EventMessage) => event.eventType === EventType.LOGIN_SUCCESS)
   );
 
   private change$ = merge(
@@ -47,10 +62,7 @@ export class AuthService implements OnDestroy {
     // Detectar fallos de adquisición de token por inactividad y forzar re-login.
     this.msalBroadcastService.msalSubject$
       .pipe(
-        filter(
-          (event: EventMessage) =>
-            event.eventType === EventType.ACQUIRE_TOKEN_FAILURE
-        ),
+        filter((event: EventMessage) => event.eventType === EventType.ACQUIRE_TOKEN_FAILURE),
         takeUntil(this.destroy$)
       )
       .subscribe((event: EventMessage) => {
@@ -60,7 +72,10 @@ export class AuthService implements OnDestroy {
           (event.error as BrowserAuthError).errorCode === 'interaction_in_progress';
 
         if (isInteractionRequired || isInteractionInProgress) {
-          console.warn('AuthService: Token no renovable, limpiando estado y redirigiendo...', event.error);
+          console.warn(
+            'AuthService: Token no renovable, limpiando estado y redirigiendo...',
+            event.error
+          );
           // Limpiar el lock de interacción que MSAL guarda en sessionStorage para
           // desbloquear adquisiciones futuras.
           sessionStorage.removeItem('msal.interaction.status');

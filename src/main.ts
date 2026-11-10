@@ -1,8 +1,21 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
+import { broadcastResponseToMainFrame } from '@azure/msal-browser/redirect-bridge';
+import { environment } from './environments/environment';
+import { isMsalBridgeResponse } from './app/core/authentication/auth-response';
 
-bootstrapApplication(App, appConfig).catch(err => {
+const isEmbedded = window.parent !== window || !!window.opener;
+const startup = isMsalBridgeResponse(
+  new URL(window.location.href),
+  environment.adConfig.redirectUri,
+  isEmbedded
+)
+  ? // MSAL 5 receives silent/popup responses through its bridge, not another Angular app.
+    broadcastResponseToMainFrame()
+  : bootstrapApplication(App, appConfig);
+
+startup.catch(err => {
   console.error('No fue posible iniciar la aplicacion', err);
 
   const loader = document.getElementById('globalLoader');

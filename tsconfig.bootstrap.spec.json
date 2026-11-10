@@ -2,6 +2,10 @@
   "extends": "./tsconfig.spec.json",
   "include": [
     "src/app/core/bootstrap/startup.service.spec.ts",
-    "src/app/core/bootstrap/translate-lang.service.spec.ts"
+    "src/app/core/bootstrap/translate-lang.service.spec.ts",
+    "src/app/core/bootstrap/preloader.service.spec.ts",
+    "src/app/core/authentication/login.service.spec.ts",
+    "src/app/core/authentication/auth-response.spec.ts",
+    "src/app/core/authentication/auth-session.spec.ts"
   ]
 }
