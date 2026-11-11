@@ -130,7 +130,7 @@ export class EstudiosPreviosTabla implements OnInit, AfterViewInit {
     this.listarProgramas();
     this.listarStates();
     this.getEstudios();
-    this.getFlujosEstudios();
+    // this.getFlujosEstudios();
     //this.estPreviosService.refrescarTabla$.subscribe(() => this.getEstudios());
   }
 

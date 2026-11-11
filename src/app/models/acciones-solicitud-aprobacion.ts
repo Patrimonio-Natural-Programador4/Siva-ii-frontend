@@ -13,6 +13,25 @@ export interface UsuarioDisponibleAjuste {
   id_usuario_ajuste?: number;
 }
 
+export interface RolesDisponibleAjuste {
+  rol?: string;
+  rol_id?: number;
+  users?: {
+    user_id?: number;
+    name?: string;
+    email?: string;
+  }[];
+}
+
+export interface RolAsignadoAprobacion {
+  rol?: string;
+  rol_id: number;
+  users: {
+    user_id: number;
+    name?: string;
+  }[];
+}
+
 export interface AccionesSolicitudAprobacion {
   id_solicitud_aprobacion?: number;
   comentarios?: string;
@@ -40,4 +59,6 @@ export interface AccionesSolicitudAprobacion {
   habilitar_solicitar_ajustes?: boolean;
   id_estado_solicitud?: number;
   id_usuarios_mencion?: number[];
+  roles_disponibles_asignar?: RolesDisponibleAjuste[] | '[]' | null;
+  roles_asignados?: RolAsignadoAprobacion[];
 }

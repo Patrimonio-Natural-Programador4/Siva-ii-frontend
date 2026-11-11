@@ -57,7 +57,7 @@ export class UsuariosService {
   }
 
   getListados(userGuid: string): Observable<Listados[]> {
-    return this.http.get<Listados[]>(`${this.apiUrl}/listados/${userGuid}`);
+    return this.http.get<Listados[]>(`${this.apiUrl}/listados`);
   }
 
   validarUsuarioCorporativo(guid: string, datosValidacion: any): Observable<unknown> {

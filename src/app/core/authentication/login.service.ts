@@ -1,6 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  map,
+  shareReplay,
+  tap,
+  throwError,
+  throwIfEmpty,
+  timeout,
+} from 'rxjs';
 
 import { Menu as CoreMenu } from '@core';
 import { Menu as ApiMenu } from '../../models/menu';
@@ -11,9 +20,7 @@ import { Token, User } from './interface';
   providedIn: 'root',
 })
 export class LoginService {
-  private readonly routeAliases = new Map([
-    ['flujos-de-aprobacion', 'flujos-aprobacion'],
-  ]);
+  private readonly routeAliases = new Map([['flujos-de-aprobacion', 'flujos-aprobacion']]);
   private menuCache$?: Observable<CoreMenu[]>;
 
   protected readonly http = inject(HttpClient);
@@ -39,12 +46,15 @@ export class LoginService {
 
   menu() {
     this.menuCache$ ??= this.usuariosService.getMenu().pipe(
+      timeout({ first: 30_000 }),
+      throwIfEmpty(() => new Error('La solicitud del menu termino sin respuesta de autenticacion')),
       map(menu => this.buildMenu(menu)),
       catchError(error => {
+        console.error('LoginService: Error al cargar el menu', error);
         this.clearMenuCache();
         return throwError(() => error);
       }),
-      shareReplay({ bufferSize: 1, refCount: false })
+      shareReplay({ bufferSize: 1, refCount: true })
     );
 
     return this.menuCache$;

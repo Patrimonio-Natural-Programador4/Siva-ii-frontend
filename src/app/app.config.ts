@@ -6,7 +6,6 @@ import {
 } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   DEFAULT_CURRENCY_CODE,
   importProvidersFrom,
@@ -32,7 +31,6 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { registerLocaleData } from '@angular/common';
 import {
   BASE_URL,
-  AuthService,
   interceptors,
   SettingsService,
   StartupService,
@@ -88,13 +86,6 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   return msalInstance;
 }
 
-export function initializeMsalInstance() {
-  return () => {
-    const instance = MSALInstanceFactory();
-    return instance.initialize();
-  };
-}
-
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, string[]>();
   //have this set if more microservice used or requires different scope for different controllers
@@ -132,11 +123,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_INSTANCE,
       useFactory: MSALInstanceFactory,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeMsalInstance,
-      multi: true,
     },
     // Ahora sí, el resto de providers relacionados con MSAL
     {

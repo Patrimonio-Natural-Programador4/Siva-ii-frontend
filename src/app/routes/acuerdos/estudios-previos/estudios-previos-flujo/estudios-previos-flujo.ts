@@ -12,11 +12,12 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PageHeader } from '@shared';
+import { AsignarResponsable, AsignarResponsableDialogResult, PageHeader } from '@shared';
 import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
-
+import { AsignacionResponsableAprobacion } from 'src/app/models/asignacion-responsable-aprobacion';
 import { AccionesSolicitudAprobacion } from 'src/app/models/acciones-solicitud-aprobacion';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
+import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.service';
 import {
   AccionAprobacion,
   DialogResult,
@@ -48,6 +49,7 @@ export class EstudiosPreviosFlujo implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly flujosAprobacionService = inject(FlujosAprobacionService);
   private readonly urlActual = this.router.url;
 
   estudio_Previo_Id = 0;
@@ -63,6 +65,7 @@ export class EstudiosPreviosFlujo implements OnInit {
   estudioData: PreviousStudiesModel = {};
   accionesAprobacion: AccionesSolicitudAprobacion = {};
   tipoSolicitudAprobacion: string | undefined;
+  asignacionesResponsable: AsignacionResponsableAprobacion[] = [];
 
   displayedColumnsAprobacion: string[] = [
     'rol',
@@ -164,6 +167,7 @@ export class EstudiosPreviosFlujo implements OnInit {
       next: response => {
         if (!response.solicitud_exitosa || !response.mensaje) {
           this.accionesAprobacion = {};
+          this.asignacionesResponsable = [];
           return;
         }
         this.habilitarAcciones = response.solicitud_exitosa;
@@ -172,8 +176,26 @@ export class EstudiosPreviosFlujo implements OnInit {
           ...acciones,
           id_solicitud_aprobacion: this.estudio.approval_request_id,
         };
+        this.cargarAsignacionesResponsable(this.estudio.approval_request_id);
       },
       error: () => (this.accionesAprobacion = {}),
+    });
+  }
+  private cargarAsignacionesResponsable(approvalRequestId: number | undefined): void {
+    if (!approvalRequestId) {
+      //console.warn('C. sin approvalRequestId, no se consultan asignaciones');
+      this.asignacionesResponsable = [];
+      return;
+    }
+    this.flujosAprobacionService.getAsignacionesResponsable(approvalRequestId).subscribe({
+      next: asignaciones => {
+        console.log('D. asignaciones:', asignaciones);
+        this.asignacionesResponsable = asignaciones ?? [];
+      },
+      error: err => {
+        console.error('D. error asignaciones:', err);
+        this.asignacionesResponsable = [];
+      },
     });
   }
 
@@ -185,13 +207,61 @@ export class EstudiosPreviosFlujo implements OnInit {
     return !!this.accionesAprobacion.id_solicitud_aprobacion;
   }
 
-  abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
-    const titulo = tipoAccion === 'APROBAR' ? 'Aprobar evaluación' : 'Solicitar ajustes';
+  get puedeAsignarResponsable(): boolean {
+    return this.asignacionesResponsable.length > 0;
+  }
 
-    const dialogRef = this.dialog.open(AccionAprobacion, {
+  abrirModalAsignarResponsable(): void {
+    if (!this.puedeAsignarResponsable) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AsignarResponsable, {
       width: '520px',
       disableClose: true,
-      data: { titulo, tipoAccion, comentarios: this.accionesAprobacion.comentarios || '' },
+      data: { asignaciones: this.asignacionesResponsable },
+    });
+
+    dialogRef.afterClosed().subscribe((result: AsignarResponsableDialogResult | undefined) => {
+      if (!result) {
+        return;
+      }
+
+      this.isSavingAprobacion = true;
+      this.flujosAprobacionService.asignarResponsable(result).subscribe({
+        next: response => {
+          this.isSavingAprobacion = false;
+          if (!response.solicitud_exitosa) {
+            this.snackBar.open(response.mensaje || 'No se pudo asignar el responsable', '', {
+              duration: 3000,
+            });
+            return;
+          }
+
+          this.snackBar.open(response.mensaje || 'Responsable asignado', '', { duration: 3000 });
+          this.router.navigate(['/acuerdos/estudios-previos']);
+        },
+        error: () => {
+          this.isSavingAprobacion = false;
+          this.snackBar.open('Error al asignar el responsable', '', { duration: 3000 });
+        },
+      });
+    });
+  }
+
+  abrirModalAccion(tipoAccion: 'APROBAR' | 'AJUSTAR'): void {
+    const titulo = tipoAccion === 'APROBAR' ? 'Aprobar registro' : 'Solicitar ajustes';
+
+    const dialogRef = this.dialog.open(AccionAprobacion, {
+      width: '50%',
+      disableClose: true,
+      data: {
+        titulo,
+        tipoAccion,
+        comentarios: this.accionesAprobacion.comentarios || '',
+        roles_disponibles_asignar: this.accionesAprobacion.roles_disponibles_asignar,
+        roles_asignados: this.accionesAprobacion.roles_asignados,
+      },
     });
     dialogRef.componentInstance.usuarios_disponibles =
       this.accionesAprobacion.usuarios_disponibles_ajustes || [];

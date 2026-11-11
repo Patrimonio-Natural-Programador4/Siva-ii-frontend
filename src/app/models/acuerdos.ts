@@ -187,3 +187,14 @@ export class AcuerdoCreateModel {
     Object.assign(this, data);
   }
 }
+
+export class AcuerdoListModel {
+  id?: number;
+  name?: string | null;
+  codee?: string | null;
+  description?: string | null;
+
+  constructor(data?: Partial<AcuerdoListModel>) {
+    Object.assign(this, data);
+  }
+}

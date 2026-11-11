@@ -207,6 +207,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
           ...acciones,
           id_solicitud_aprobacion: this.evaluacion.approval_request_id,
         };
+
+        console.log('C. accionesAprobacion:', this.accionesAprobacion);
         this.cargarAsignacionesResponsable(this.evaluacion.approval_request_id);
       },
       error: err => {
@@ -241,13 +243,22 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     const dialogRef = this.dialog.open(AccionAprobacion, {
       width: '520px',
       disableClose: true,
-      data: { titulo, tipoAccion, comentarios: this.accionesAprobacion.comentarios || '' },
+      data: {
+        titulo,
+        tipoAccion,
+        comentarios: this.accionesAprobacion.comentarios || '',
+        roles_disponibles_asignar: this.accionesAprobacion.roles_disponibles_asignar,
+        roles_asignados: this.accionesAprobacion.roles_asignados,
+      },
     });
     dialogRef.componentInstance.usuarios_disponibles =
       this.accionesAprobacion.usuarios_disponibles_ajustes || [];
     dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {
       if (!result) return;
       this.accionesAprobacion.comentarios = result.comentarios;
+      if (result.roles_asignados !== undefined) {
+        this.accionesAprobacion.roles_asignados = result.roles_asignados;
+      }
       if (tipoAccion === 'AJUSTAR') {
         this.accionesAprobacion.id_usuario_ajuste = result.id_usuario_ajuste;
         this.accionesAprobacion.id_rol_aprobacion_ajuste = result.id_rol_aprobacion_ajuste;

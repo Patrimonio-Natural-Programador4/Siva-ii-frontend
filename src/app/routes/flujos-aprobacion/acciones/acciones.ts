@@ -52,6 +52,7 @@ export class AccionesFlujosAprobacion implements OnInit {
     'labelPendiente',
     'labelAprobacion',
     'labelAjuste',
+    'habilitaDelegacion',
     'asignaRevisor',
     'acciones',
   ];
@@ -151,6 +152,7 @@ export class AccionesFlujosAprobacion implements OnInit {
       label_aprobacion: '',
       label_ajuste: '',
       asigna_revisor: false,
+      habilita_delegacion: false,
       days_for_approval: 0,
     });
 

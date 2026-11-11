@@ -14,14 +14,24 @@ export class PreloaderService {
 
   hide() {
     const el = this.getElement();
-    if (el) {
-      el.addEventListener('transitionend', () => {
-        el.className = 'global-loader-hidden';
-      });
-
-      if (!el.classList.contains('global-loader-hidden')) {
-        el.className += ' global-loader-fade-out';
-      }
+    if (!el || el.classList.contains('global-loader-hidden')) {
+      return;
     }
+
+    const finish = () => {
+      el.className = 'global-loader-hidden';
+      el.removeEventListener('transitionend', onTransitionEnd);
+      clearTimeout(fallback);
+    };
+    const onTransitionEnd = (event: TransitionEvent) => {
+      if (event.target === el && event.propertyName === 'opacity') {
+        finish();
+      }
+    };
+    // Hidden tabs and disabled animations may never emit transitionend.
+    const fallback = setTimeout(finish, 600);
+    el.addEventListener('transitionend', onTransitionEnd);
+    el.style.pointerEvents = 'none';
+    el.classList.add('global-loader-fade-out');
   }
 }

@@ -1,6 +1,7 @@
 <h2 mat-dialog-title>{{ data.titulo }}</h2>
 
 <div mat-dialog-content>
+ 
   <div class="col-md-12">
     <label for="comentarios-modal" class="form-label">Comentarios:</label>
     <textarea
@@ -8,24 +9,80 @@
       class="form-control"
       rows="4"
       [(ngModel)]="comentarios"
-      placeholder="Escriba sus comentarios"></textarea>
+      placeholder="Escriba sus comentarios"
+    ></textarea>
   </div>
+
+   @if (rolesDisponiblesAsignar.length) {
+    <div class="table-responsive mb-3 mt-3">
+      <h5>Asignación de roles y responsables</h5>
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Rol</th>
+            <th scope="col">Asignar usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (rol of rolesDisponiblesAsignar; track $index; let i = $index) {
+            <tr>
+              <td>{{ rol.rol }}</td>
+              <td>
+                <select
+                  class="form-select"
+                  [id]="'usuario-rol-' + i"
+                  [name]="'usuario-rol-' + i"
+                  [attr.aria-label]="'Asignar usuario para ' + rol.rol"
+                  [(ngModel)]="usuariosAsignados[i]"
+                  [disabled]="rol.rol_id === undefined || rol.rol_id === null || !rol.users?.length"
+                >
+                  <option [ngValue]="null">Seleccione el usuario</option>
+                  @for (usuario of rol.users; track $index) {
+                    <option
+                      [ngValue]="usuario.user_id"
+                      [disabled]="usuario.user_id === undefined || usuario.user_id === null"
+                    >
+                      {{ usuario.name }}
+                    </option>
+                  }
+                </select>
+                @if (!rol.users?.length) {
+                  <small class="text-muted">No hay usuarios disponibles para este rol.</small>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+
   <div class="col-md-12" *ngIf="data.tipoAccion == 'AJUSTAR'">
-      <label for="comentarios-modal" class="form-label">Seleccione el usuario a quien se le va a solicitar el ajuste:</label>
-      <select aria-label="Small select example" class="form-select" sizing="sm"
-          name="id_rol_aprobacion_ajuste" id="id_rol_aprobacion_ajuste" required
-          [(ngModel)]="id_rol_aprobacion_ajuste">
-          <option [ngValue]="null" [disabled]="true">Seleccione el usuario</option>
-          <option *ngFor="let data of usuarios_disponibles" [value]="data.id_rol_aprobacion_ajuste">{{ data.usuario |
-              uppercase}}</option>
-      </select>
-      <div class="invalid-feedback">
-          Este campo es requerido.
-      </div>
+    <label for="comentarios-modal" class="form-label">
+      Seleccione el usuario a quien se le va a solicitar el ajuste:
+    </label>
+    <select
+      aria-label="Small select example"
+      class="form-select"
+      sizing="sm"
+      name="id_rol_aprobacion_ajuste"
+      id="id_rol_aprobacion_ajuste"
+      required
+      [(ngModel)]="id_rol_aprobacion_ajuste"
+    >
+      <option [ngValue]="null" [disabled]="true">Seleccione el usuario</option>
+      <option *ngFor="let data of usuarios_disponibles" [value]="data.id_rol_aprobacion_ajuste">
+        {{ data.usuario | uppercase }}
+      </option>
+    </select>
+    <div class="invalid-feedback">Este campo es requerido.</div>
   </div>
 </div>
 
 <div mat-dialog-actions align="end" class="mt-3">
   <button type="button" mat-button (click)="onCancel()">Cancelar</button>
-  <button type="button" mat-raised-button color="primary" (click)="onSave()">{{data.titulo}}</button>
+  <button type="button" mat-raised-button color="primary" (click)="onSave()">
+    {{ data.titulo }}
+  </button>
 </div>

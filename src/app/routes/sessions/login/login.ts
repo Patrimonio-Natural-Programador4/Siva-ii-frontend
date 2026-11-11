@@ -34,7 +34,7 @@ import { RedirectRequest } from 'node_modules/@azure/msal-browser/dist/request/R
     MatFormFieldModule,
     MatInputModule,
     MtxButtonModule,
-    TranslateModule
+    TranslateModule,
   ],
 })
 export class Login implements OnInit, OnDestroy {
@@ -74,9 +74,6 @@ export class Login implements OnInit, OnDestroy {
       return;
     }
 
-    // Process any in-flight MSAL redirect response (called after redirect back from Microsoft).
-    this.msalService.handleRedirectObservable().subscribe();
-
     // Navigate to dashboard as soon as MSAL confirms login success.
     this.msalBroadcastService.msalSubject$
       .pipe(
@@ -100,7 +97,7 @@ export class Login implements OnInit, OnDestroy {
   loginRedirect() {
     if (this.msalGuardConfig.authRequest) {
       this.msalService.loginRedirect({
-        ...this.msalGuardConfig.authRequest
+        ...this.msalGuardConfig.authRequest,
       } as RedirectRequest);
     } else {
       this.msalService.loginRedirect();
