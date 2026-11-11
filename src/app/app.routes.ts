@@ -56,7 +56,12 @@ export const routes: Routes = [
       {
         path: 'tdr',
         loadChildren: () => import('./routes/tdr/routes').then(m => m.routes),
-      }
+      },
+
+      {
+        path: 'adquisiciones',
+        loadChildren: () => import('src/app/routes/adquisiciones/routes').then(m => m.routes),
+      },
     ],
   },
   {

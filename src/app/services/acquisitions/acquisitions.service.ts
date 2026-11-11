@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
 import {
@@ -26,36 +26,49 @@ export class AcquisitionsService {
     return this.http.get<AcquisitionsModel>(`${this.apiUrl}/${id}`);
   }
 
-  /*getEstudiosPreviosFiltro(
-     page = 1,
-     id_estado: number[] = [-1],
-     filtro: string,
-     programa: number | null = null
-   ): Observable<PreviousStudiesModel[]> {
-     let params = new HttpParams().set('page', page.toString()).set('filtro', filtro ?? '');
- 
-     if (!id_estado || id_estado.length === 0) {
-       id_estado = [-1];
-     }
- 
-     id_estado.forEach(id => {
-       params = params.append('estado', id.toString());
-     });
-     if (programa !== null) {
-       params = params.set('programa', programa.toString());
-     }
- 
-     return this.http.get<PreviousStudiesModel[]>(`${this.apiUrl}`, { params });
-   }
- 
-   getPorGuid(guid: string): Observable<PreviousStudiesModel> {
-     console.log('URLLL', `${this.apiUrl}/${guid}/detalle`);
- 
-     return this.http.get(`${this.apiUrl}/${guid}/detalle`).pipe(
-       catchError(err => {
-         console.error('Error en getPorGuid', err);
-         return throwError(() => err);
-       })
-     );
-   }*/
+  getAcquisitionsFilter(
+    page = 1,
+    filtro: string,
+    pid = -1,
+    actividad = -1,
+    procesos: string[] = [],
+    rubros: string[] = [],
+    rubros_cortos: string[] = [],
+    cod_actividad: string | null = null
+  ): Observable<AcquisitionsListSP[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('filtro', filtro ?? '')
+      .set('pid', (pid ?? -1).toString())
+      .set('actividad', (actividad ?? -1).toString());
+    console.log(
+      `page ${page}, filtro ${filtro}, pid ${pid}, actividad ${actividad}, procesos ${procesos}, rubros ${rubros}, rubrosCortos ${rubros_cortos}`
+    );
+
+    if (procesos && procesos.length > 0) {
+      procesos.forEach(p => {
+        params = params.append('procesos', p);
+      });
+    }
+
+    if (rubros && rubros.length > 0) {
+      rubros.forEach(r => {
+        params = params.append('rubros', r);
+      });
+    }
+
+    if (rubros_cortos && rubros_cortos.length > 0) {
+      rubros_cortos.forEach(rc => {
+        params = params.append('rubros_cortos', rc);
+      });
+    }
+
+    if (cod_actividad && cod_actividad.trim() !== '') {
+      params = params.set('actividad_codigo', cod_actividad.trim());
+    }
+
+    return this.http.get<AcquisitionsListSP[]>(`${this.apiUrl}/filtro`, {
+      params,
+    });
+  }
 }
