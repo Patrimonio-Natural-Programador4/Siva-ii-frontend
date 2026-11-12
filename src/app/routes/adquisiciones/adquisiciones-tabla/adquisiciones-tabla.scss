@@ -1,0 +1,158 @@
+
+.adquisiciones-table-wrapper {
+  max-height: calc(48px * 13 + 14px);
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+
+  tr.mat-mdc-header-row,
+  tr.mat-mdc-row {
+    height: 48px;
+  }
+
+
+
+  table {
+    width: 100%;
+    min-width: 1280px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+
+  :is(.mat-mdc-header-cell, .mat-mdc-cell) {
+    max-width: 300px;
+    padding: 10px 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    white-space: nowrap;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  td.mat-mdc-cell {
+    color: #374151;
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+  }
+
+
+  .text-end {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+
+  th.encabezado {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+
+  tr.fila-total th.celda-total {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #0f172a !important;
+    background-color: #eef2f7 !important;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  tr.fila-total th.etiqueta-total {
+    font-size: 11px;
+    color: #64748b !important;
+    text-align: left;
+    letter-spacing: 0.04em;
+  }
+
+
+  :is(.mat-mdc-header-cell, .mat-mdc-cell).mat-mdc-table-sticky {
+    z-index: 2;
+  }
+
+  .mat-mdc-header-cell.mat-mdc-table-sticky {
+    z-index: 3;
+  }
+
+  .mat-column-acciones.mat-mdc-table-sticky {
+    box-shadow: -8px 0 8px -8px rgba(15, 23, 42, 0.15);
+  }
+
+  tr.fila-impar td.mat-mdc-cell { background-color: #f1f5f9 !important; }
+  tr.mat-mdc-row:hover td.mat-mdc-cell { background-color: #f7fee7 !important; }
+
+  tr.fila-contratado td.mat-mdc-cell { background-color: #bfdbfe !important; }
+  tr.fila-pendiente td.mat-mdc-cell { background-color: #fbcfe8 !important; }
+  tr.fila-cancelado td.mat-mdc-cell { background-color: #ecfccb !important; }
+  tr.fila-ejecutado td.mat-mdc-cell { background-color: #bbf7d0 !important; }
+
+  tr.fila-contratado:hover td.mat-mdc-cell { background-color: #dbeafe !important; }
+  tr.fila-pendiente:hover td.mat-mdc-cell { background-color: #fce7f3 !important; }
+  tr.fila-cancelado:hover td.mat-mdc-cell { background-color: #ecfccb !important; }
+  tr.fila-ejecutado:hover td.mat-mdc-cell { background-color: #dcfce7 !important; }
+
+
+  .estado {
+    padding: 2px 8px;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+  .estado-contratado { color: #1e40af; } // text-blue-800
+  .estado-pendiente { color: #9d174d; }  // text-pink-800
+  .estado-cancelado { color: #3f6212; }  // text-lime-800
+  .estado-ejecutado { color: #166534; }  // text-green-800
+
+
+  td.mat-mdc-cell a {
+    font-weight: 500;
+    color: var(--mat-sys-primary, #2563eb);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+   .acciones {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+
+    .mat-mdc-icon-button {
+      --mdc-icon-button-state-layer-size: 32px;
+      --mat-icon-button-state-layer-size: 32px;
+
+      width: 32px;
+      height: 32px;
+      padding: 4px;
+      color: #64748b;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--mat-sys-primary, #2563eb);
+      }
+
+      .mat-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+::ng-deep .menu-columnas {
+  max-height: 400px;
+
+  .restablecer {
+    font-weight: 700;
+    color: #dc2626;
+  }
+}

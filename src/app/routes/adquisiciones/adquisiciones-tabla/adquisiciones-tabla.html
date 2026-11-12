@@ -1,0 +1,262 @@
+<page-header />
+
+<div class="row">
+  <div class="col-sm-12">
+    <mat-card class="app-data-card">
+      <mat-card-header class="app-data-card__header">
+        <mat-card-title>Listado de adquisiciones</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="app-data-card__content">
+
+        <!----FILTROS ---->
+        <div style="width: 100%">
+          <div class="form-row">
+            <div class="row">
+
+              <!-- Buscar -->
+              <div class="col-md-3">
+                <label for="buscar">Buscar</label>
+                <mat-form-field class="small" appearance="outline">
+                  <input matInput id="buscar" name="buscar" #buscar [value]="filtrobusqueda"
+                    (keyup.enter)="filtroText(buscar.value)"
+                    placeholder="Proceso, SIVA, detalle, rubro, PAD... (Enter para buscar)" />
+                </mat-form-field>
+              </div>
+
+              <!-- Procesos -->
+              <div class="col-md-3">
+                <label for="procesos">Filtrar por No. proceso</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select id="procesos" name="procesos" multiple [(ngModel)]="id_procesos"
+                    placeholder="Seleccione el proceso" (selectionChange)="filtrarDatos(true)">
+                    @for (p of listaProcesos; track p) {
+                    <mat-option [value]="p">{{ p }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- PAD -->
+              <div class="col-md-3">
+                <label for="pad">Filtrar por PAD</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select id="pad" name="pad" [(ngModel)]="id_pid"
+                    (selectionChange)="filtrarDatos(true)">
+                    <mat-option [value]="-1">TODOS</mat-option>
+                    @for (p of pads; track p.id) {
+                    <mat-option [value]="p.id">{{ p.pad | uppercase }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- Actividad -->
+              <div class="col-md-3">
+                <label for="actividad">Filtrar por actividad</label>
+                <mat-form-field class="small" appearance="outline">
+                  <mat-select id="actividad" name="actividad" [(ngModel)]="id_actividad"
+                    (selectionChange)="filtrarDatos(true)">
+                    <mat-option [value]="-1">TODAS</mat-option>
+                    @for (a of actividades; track a.id) {
+                    <mat-option [value]="a.id">{{ a.code }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-3">
+                <button mat-stroked-button type="button" (click)="limpiarFiltros()">
+                  <mat-icon>filter_alt_off</mat-icon> Limpiar filtros
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!----TOTAL Y COLUMNAS ---->
+        <div style="width: 100%">
+          <hr />
+        </div>
+        <div style="width: 100%">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end align-items-center mb-2">
+            <small class="me-auto"><b>Total de registros [{{ total }}]</b></small>
+
+
+
+            <button mat-flat-button type="button" class="btn-columnas"
+              [matMenuTriggerFor]="menuColumnas">
+              <mat-icon>view_column</mat-icon> Mostrar columnas
+            </button>
+
+            <mat-menu #menuColumnas="matMenu" class="menu-columnas">
+              <button mat-menu-item type="button" class="restablecer"
+                (click)="restablecerColumnas()">
+                <mat-icon>restart_alt</mat-icon>
+                <span>Restablecer columnas predeterminadas</span>
+              </button>
+              @for (col of columnasDisponibles; track col.key) {
+              <div mat-menu-item (click)="$event.stopPropagation()">
+                <mat-checkbox [checked]="esVisible(col.key)" (change)="toggleColumna(col.key)">
+                  {{ col.label }}
+                </mat-checkbox>
+              </div>
+              }
+            </mat-menu>
+          </div>
+        </div>
+
+        <!----TABLA ---->
+        <div class="adquisiciones-table-wrapper">
+          <table mat-table [dataSource]="adquisiciones"
+            class="adquisiciones-table mat-elevation-z1">
+
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef class="encabezado">ID</th>
+              <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+            </ng-container>
+            <ng-container matColumnDef="tg_id">
+              <th mat-header-cell *matHeaderCellDef class="celda-total etiqueta-total">TOTAL
+                GENERAL:</th>
+            </ng-container>
+            <ng-container matColumnDef="sp_id">
+              <th mat-header-cell *matHeaderCellDef class="celda-total etiqueta-total">SUBTOTAL
+                PÁGINA:</th>
+            </ng-container>
+
+            @for (col of columnasDisponibles; track col.key) {
+
+            <!-- Fila TOTAL GENERAL -->
+            <ng-container [matColumnDef]="'tg_' + col.key">
+              <th mat-header-cell *matHeaderCellDef class="celda-total"
+                [class.text-end]="col.tipo === 'moneda'">
+                @if (col.tipo === 'moneda') {
+                {{ formatoMoneda(totalesGenerales[col.campo!], col.decimales) }}
+                }
+              </th>
+            </ng-container>
+
+            <!-- Fila SUBTOTAL PÁGINA -->
+            <ng-container [matColumnDef]="'sp_' + col.key">
+              <th mat-header-cell *matHeaderCellDef class="celda-total"
+                [class.text-end]="col.tipo === 'moneda'">
+                @if (col.tipo === 'moneda') {
+                {{ formatoMoneda(totalesPagina[col.campo!], col.decimales) }}
+                }
+              </th>
+            </ng-container>
+
+            <!-- Encabezado y celdas -->
+            <ng-container [matColumnDef]="col.key" [stickyEnd]="col.key === 'acciones'">
+              <th mat-header-cell *matHeaderCellDef class="encabezado">{{ col.label }}</th>
+              <td mat-cell *matCellDef="let row" [class.text-end]="col.tipo === 'moneda'">
+                @switch (col.key) {
+
+                @case ('process_number') {
+                <a href="javascript:void(0)" (click)="verAdquisicion(row.id)">{{ row.process_number
+                  }}</a>
+                }
+
+                @case ('pid_id') {
+                <a href="javascript:void(0)" (click)="filtrarPorPad(row.pid_id)">{{ row.pad_name ??
+                  '-' }}</a>
+                }
+
+                @case ('activity_id') {
+                <a href="javascript:void(0)" (click)="filtrarPorActividad(row.activity_id)">
+                  {{ row.activity_code ?? '-' }}
+                </a>
+                }
+
+                @case ('cod_siva_acuerdo') {
+                @if (row.agreement_id) {
+                <a href="javascript:void(0)" class="enlace" (click)="verAcuerdo(row.agreement_id)">
+                  {{ row.cod_siva_acuerdo }}
+                </a>
+                } @else {
+                <span class="text-muted">{{ row.cod_siva_acuerdo ?? '-' }}</span>
+                }
+                }
+
+                @case ('cod_siva_contrato') {
+                @if (row.contract_id) {
+                <a href="javascript:void(0)" class="enlace" (click)="verContrato(row.contract_id)">
+                  {{ row.cod_siva_contrato }}
+                </a>
+                } @else {
+                <span class="text-muted">{{ row.cod_siva_contrato ?? '-' }}</span>
+                }
+                }
+
+                @case ('status') {
+                <span [ngClass]="getEstadoClass(row.status_name)">{{ row.status_name ?? '-'
+                  }}</span>
+                }
+
+                @case ('final_budget_cop') {
+                @if (esGestor) {
+                <a href="javascript:void(0)" class="enlace" matTooltip="Ver detalle de movimientos"
+                  (click)="verMovimientos(row.id)">
+                  {{ formatoMoneda(row.final_budget_cop, 0) }}
+                </a>
+                } @else {
+                {{ formatoMoneda(row.final_budget_cop, 0) }}
+                }
+                }
+
+                @case ('acciones') {
+                @if (esGestor) {
+                @if (puedeGestionarLineas) {
+                <div class="acciones">
+                  <button mat-icon-button type="button" matTooltip="Editar adquisición"
+                    (click)="editAdquisicion(row.id)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button mat-icon-button type="button" matTooltip="Ver detalles"
+                    (click)="verAdquisicion(row.id)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </div>
+                } @else {
+                <small class="text-muted fst-italic">Sin permiso de gestión</small>
+                }
+                } @else {
+                <small class="text-muted fst-italic">Solo lectura</small>
+                }
+                }
+
+                @default {
+                {{ valor(row, col) }}
+                }
+                }
+              </td>
+            </ng-container>
+            }
+
+
+            <tr mat-header-row *matHeaderRowDef="columnasTotalGeneral; sticky: true"
+              class="fila-total" [class.d-none]="adquisiciones.length === 0"></tr>
+            <tr mat-header-row *matHeaderRowDef="columnasSubtotal; sticky: true" class="fila-total"
+              [class.d-none]="adquisiciones.length === 0"></tr>
+            <tr mat-header-row *matHeaderRowDef="columnas; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; let i = index; columns: columnas"
+              [ngClass]="getRowClass(row, i)"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell app-data-table__empty" [attr.colspan]="columnas.length">
+                {{ cargando ? 'Cargando...' : 'No se encontraron registros con ese criterio.' }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]"
+          [pageSizeOptions]="pageSizeOptions" [pageIndex]="currentPage" showFirstLastButtons
+          (page)="pageChange($event)" aria-label="Paginación de adquisiciones" />
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
