@@ -2,6 +2,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
+  OnDestroy,
   OnInit,
   inject,
   viewChild,
@@ -49,12 +51,19 @@ import { AcquisitionsService } from 'src/app/services/acquisitions/acquisitions.
   templateUrl: './adquisiciones-tabla.html',
   styleUrl: './adquisiciones-tabla.scss',
 })
-export class AdquisicionesTabla implements OnInit, AfterViewInit {
+export class AdquisicionesTabla implements OnInit, AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly snackBar = inject(MatSnackBar);
   private readonly AcquisitionsService = inject(AcquisitionsService);
   readonly paginator = viewChild(MatPaginator);
+  private readonly tableWrapper = viewChild<ElementRef<HTMLDivElement>>('tableWrapper');
+  private readonly stickyHeader = viewChild<ElementRef<HTMLDivElement>>('stickyHeader');
+  private readonly stickyHeaderTable = viewChild<ElementRef<HTMLTableElement>>('stickyHeaderTable');
+
+  private scrollListener?: () => void;
+  private resizeObserver?: ResizeObserver;
+  private headerObserver?: MutationObserver;
 
   readonly columnasDisponibles: {
     key: string;
@@ -383,7 +392,105 @@ export class AdquisicionesTabla implements OnInit, AfterViewInit {
     this.listarCatalogos();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    const wrapper = this.tableWrapper()?.nativeElement;
+    const table = wrapper?.querySelector('table');
+
+    if (!wrapper || !table) return;
+
+    this.scrollListener = () => this.updateStickyHeaderPosition();
+    document.addEventListener('scroll', this.scrollListener, { capture: true, passive: true });
+    window.addEventListener('resize', this.scrollListener, { passive: true });
+    wrapper.addEventListener('scroll', this.scrollListener, { passive: true });
+
+    this.resizeObserver = new ResizeObserver(() => this.refreshStickyHeader());
+    this.resizeObserver.observe(wrapper);
+    this.resizeObserver.observe(table);
+
+    this.headerObserver = new MutationObserver(() => this.refreshStickyHeader());
+    this.headerObserver.observe(table, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+
+    this.refreshStickyHeader();
+  }
+
+  ngOnDestroy(): void {
+    if (this.scrollListener) {
+      document.removeEventListener('scroll', this.scrollListener, true);
+      window.removeEventListener('resize', this.scrollListener);
+      this.tableWrapper()?.nativeElement.removeEventListener('scroll', this.scrollListener);
+    }
+    this.resizeObserver?.disconnect();
+    this.headerObserver?.disconnect();
+  }
+
+  private refreshStickyHeader(): void {
+    const table = this.tableWrapper()?.nativeElement.querySelector('table');
+    const stickyTable = this.stickyHeaderTable()?.nativeElement;
+    const tableHead = table?.querySelector('thead');
+
+    if (!table || !stickyTable || !tableHead) return;
+
+    const clonedHead = tableHead.cloneNode(true) as HTMLTableSectionElement;
+    const originalRows = Array.from(tableHead.rows);
+    const clonedRows = Array.from(clonedHead.rows);
+
+    originalRows.forEach((row, rowIndex) => {
+      const clonedCells = clonedRows[rowIndex]?.cells;
+      if (!clonedCells) return;
+
+      Array.from(row.cells).forEach((cell, cellIndex) => {
+        const clonedCell = clonedCells[cellIndex] as HTMLElement | undefined;
+        if (!clonedCell) return;
+
+        clonedCell.style.width = `${cell.getBoundingClientRect().width}px`;
+        clonedCell.style.top = 'auto';
+      });
+    });
+
+    stickyTable.replaceChildren(clonedHead);
+    stickyTable.style.width = `${table.getBoundingClientRect().width}px`;
+    this.updateStickyHeaderPosition();
+  }
+
+  private updateStickyHeaderPosition(): void {
+    const wrapper = this.tableWrapper()?.nativeElement;
+    const table = wrapper?.querySelector('table');
+    const stickyHeader = this.stickyHeader()?.nativeElement;
+    const stickyTable = this.stickyHeaderTable()?.nativeElement;
+    const tableHead = table?.querySelector('thead');
+
+    if (!wrapper || !table || !stickyHeader || !stickyTable || !tableHead) return;
+
+    const stickyTop = Number.parseFloat(getComputedStyle(stickyHeader).top) || 0;
+    const headerHeight = tableHead.getBoundingClientRect().height;
+    const tableRect = table.getBoundingClientRect();
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const isVisible = tableRect.top < stickyTop && tableRect.bottom > stickyTop + headerHeight;
+
+    stickyHeader.classList.toggle('is-visible', isVisible);
+    if (!isVisible) return;
+
+    stickyHeader.style.left = `${wrapperRect.left + wrapper.clientLeft}px`;
+    stickyHeader.style.width = `${wrapper.clientWidth}px`;
+    stickyTable.style.transform = `translateX(-${wrapper.scrollLeft}px)`;
+
+    const sourceActionsHeader = tableHead.querySelector<HTMLElement>(
+      '.mat-column-acciones.mat-mdc-table-sticky'
+    );
+    const clonedActionsHeader = stickyTable.querySelector<HTMLElement>(
+      '.mat-column-acciones.mat-mdc-table-sticky'
+    );
+    if (sourceActionsHeader && clonedActionsHeader) {
+      const horizontalOffset =
+        sourceActionsHeader.getBoundingClientRect().right -
+        clonedActionsHeader.getBoundingClientRect().right;
+      clonedActionsHeader.style.transform = `translateX(${horizontalOffset}px)`;
+    }
+  }
 
   getAdquisiciones(): void {
     this.filtrarDatos();

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -66,6 +66,7 @@ import { AcuerdoListModel } from 'src/app/models/acuerdos';
 export class EstudiosPreviosEspecifico implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly service = inject(EvaluacionCapacidadesService);
   private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
   private readonly ImplementersService = inject(ImplementersService);
@@ -209,6 +210,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
         }
         this.getValidacionAccionesAprobacion();
         this.isLoading = false;
+        this.cdr.markForCheck();
         console.log('3. isLoading:', this.isLoading);
       },
       error: err => {
@@ -221,6 +223,7 @@ export class EstudiosPreviosEspecifico implements OnInit {
         console.log('url:', err?.url);
         this.snackBar.open('Error al cargar la evaluación', '', { duration: 3000 });
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
