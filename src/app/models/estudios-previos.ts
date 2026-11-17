@@ -10,6 +10,8 @@ export class PreviousStudiesModel {
   term?: string;
   obligations?: string;
   supervisor?: string;
+  contact_ei?: string | null;
+  participants_ei?: string | null;
   user_session?: number;
   create_date?: string | Date;
   total_value?: number;
@@ -58,6 +60,8 @@ export class PreviousStudiesCreateModel {
   term?: string;
   obligations?: string;
   supervisor?: string;
+  contact_ei?: string | null;
+  participants_ei?: string | null;
   user_session?: number;
   create_date?: string | Date;
   total_value?: number;

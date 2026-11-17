@@ -108,7 +108,7 @@
         </div>
 
         <!----TABLA ---->
-        <div class="adquisiciones-table-wrapper">
+        <div class="adquisiciones-table-wrapper" #tableWrapper>
           <table mat-table [dataSource]="adquisiciones"
             class="adquisiciones-table mat-elevation-z1">
 
@@ -251,6 +251,10 @@
               </td>
             </tr>
           </table>
+        </div>
+
+        <div #stickyHeader class="adquisiciones-sticky-header" aria-hidden="true">
+          <table #stickyHeaderTable class="adquisiciones-table mat-elevation-z1"></table>
         </div>
 
         <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]"

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/app/routes/acuerdos/estudios-previos/estudios-previos-formulario/estudios-previos-formulario.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}
