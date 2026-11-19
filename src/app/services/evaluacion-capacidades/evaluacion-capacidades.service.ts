@@ -8,6 +8,7 @@ import {
   AccionSolicitudAprobacionCapacidad,
   EvaluacionCapacidadesModel,
   EvaluacionCapacidadListSP,
+  MaxNumber,
 } from 'src/app/models/evaluacion-capacidades';
 import { ResponseRequest } from 'src/app/models/response-request';
 import { SolicitudAprobacionHistorial } from 'src/app/models/solicitud-aprobacion-historial';
@@ -58,6 +59,10 @@ export class EvaluacionCapacidadesService {
       params = params.set('programa', programa.toString());
     }
     return this.http.get<EvaluacionCapacidadListSP[]>(`${this.apiUrl}/filtro`, { params });
+  }
+
+  getCodigoNumeroMayor(): Observable<MaxNumber> {
+    return this.http.get<MaxNumber>(`${this.apiUrl}/codigo_numero_mayor`);
   }
 
   getPorGuid(guid: string): Observable<EvaluacionCapacidadesModel> {

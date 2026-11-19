@@ -35,6 +35,7 @@ import { PilarModel } from 'src/app/models/pilares';
 import { PilaresService } from 'src/app/services/pilares/pilares.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatStepperModule } from '@angular/material/stepper';
+import { map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'evaluacion-capacidades-formulario',
@@ -85,7 +86,8 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   programsByMtf: Programs[] = [];
   tipoImplementadora: string | null = null;
   pilares: PilarModel[] = [];
-
+  code = 'Evaluación-capacidad';
+  max_number = 1;
   evaCapacidadesData: EvaluacionCapacidadesModel = new EvaluacionCapacidadesModel({
     name: '',
     observation: '',
@@ -94,7 +96,7 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     document_signature_date: '',
     start_date: '',
     end_date: '',
-    codigo: '',
+    codigo: this.code,
     programa: '',
     program_id: 0,
     pid: '',
@@ -148,47 +150,56 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
   }
 
   guardarEvaluacionCapacidades(enviarAprobacion = false): void {
-    if (this.isLoading) {
-      return;
-    }
-
+    if (this.isLoading) return;
     this.isLoading = true;
 
-    const payload = {
-      ...this.evaCapacidadesData,
-      code: this.evaCapacidadesData.codigo,
-      enviar_aprobacion: enviarAprobacion,
-    };
+    const codigo$ = this.guidEvaCapacidades
+      ? of(this.evaCapacidadesData.codigo)
+      : this.EvaluacionCapacidadesService.getCodigoNumeroMayor().pipe(
+          map(r => `${this.code}-${(parseInt(r.mensaje, 10) || 0) + 1}`)
+        );
 
-    const p = payload as any;
-    // Fechas vacías → null
-    if (!p.policy_approval_date) p.policy_approval_date = null;
-    if (!p.document_signature_date) p.document_signature_date = null;
-    if (!p.start_date) p.start_date = null;
-    if (!p.end_date) p.end_date = null;
+    codigo$
+      .pipe(
+        switchMap(code => {
+          const payload: any = {
+            ...this.evaCapacidadesData,
+            code,
+            enviar_aprobacion: enviarAprobacion,
+          };
 
-    delete p.codigo;
+          if (!payload.policy_approval_date) payload.policy_approval_date = null;
+          if (!payload.document_signature_date) payload.document_signature_date = null;
+          if (!payload.start_date) payload.start_date = null;
+          if (!payload.end_date) payload.end_date = null;
+          delete payload.codigo;
 
-    const request$ = this.guidEvaCapacidades
-      ? this.EvaluacionCapacidadesService.updateEvaCapacidades(this.guidEvaCapacidades, payload)
-      : this.EvaluacionCapacidadesService.saveEvaCapacidades(payload);
+          console.log('CODE_ payload', payload.code);
 
-    request$.subscribe({
-      next: response => {
-        this.isLoading = false;
-        if (response.solicitud_exitosa) {
-          this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
-          this.router.navigate(['/acuerdos/evaluacion-capacidades']);
-        } else {
-          this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 6000 });
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        const mensaje = err.error?.mensaje ?? 'Error al guardar la evaluación de capacidades';
-        this.snackBar.open(mensaje, '', { duration: 10000 });
-      },
-    });
+          return this.guidEvaCapacidades
+            ? this.EvaluacionCapacidadesService.updateEvaCapacidades(
+                this.guidEvaCapacidades,
+                payload
+              )
+            : this.EvaluacionCapacidadesService.saveEvaCapacidades(payload);
+        })
+      )
+      .subscribe({
+        next: response => {
+          this.isLoading = false;
+          if (response.solicitud_exitosa) {
+            this.snackBar.open(response.mensaje ?? 'Operación exitosa', '', { duration: 3000 });
+            this.router.navigate(['/acuerdos/evaluacion-capacidades']);
+          } else {
+            this.snackBar.open(response.mensaje ?? 'Error al guardar', '', { duration: 6000 });
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isLoading = false;
+          const mensaje = err.error?.mensaje ?? 'Error al guardar la evaluación de capacidades';
+          this.snackBar.open(mensaje, '', { duration: 10000 });
+        },
+      });
   }
 
   volver(): void {
@@ -255,6 +266,17 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
       next: r => {
         this.modalities = r;
         this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
+    });
+  }
+
+  getCodigoNumeroMayor() {
+    this.EvaluacionCapacidadesService.getCodigoNumeroMayor().subscribe({
+      next: r => {
+        this.max_number = parseInt(r.mensaje);
+        this.cdr.detectChanges();
+        console.log('MAXIMOOO', this.max_number);
       },
       error: e => console.error(e),
     });
