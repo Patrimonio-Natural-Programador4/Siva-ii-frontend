@@ -82,7 +82,7 @@
   "route": "acuerdos",
   "name": "Acuerdos",
   "type": "sub",
-  "icon": "assignment",
+  "icon": "description",
   "children": [
     {
       "route": "evaluacion-capacidades",

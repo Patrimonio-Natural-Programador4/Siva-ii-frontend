@@ -80,3 +80,12 @@ export interface AccionSolicitudAprobacionCapacidad {
   id_rol_aprobacion_ajuste?: number | null;
   orden_actual?: number;
 }
+
+export interface MaxNumber {
+  mensaje: string;
+  identity: number;
+  solicitud_exitosa: boolean;
+  guid?: null;
+  ids_usuarios_notificar?: [];
+  archivo?: null;
+}

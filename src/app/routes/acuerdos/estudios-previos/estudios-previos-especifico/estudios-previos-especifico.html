@@ -7,7 +7,7 @@
         class="app-data-card__header d-flex justify-content-between align-items-center"
         style="flex-direction: row;">
         <mat-card-title>Evaluación de capacidades : {{ evaluacion.name
-            }}</mat-card-title>
+          }}</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -245,17 +245,17 @@
                     }
                   </div> -->
 
-                  <div [class]="colClass">
-                    <label for="contact_ei" class="form-label">Contacto EI</label>
+                  <div class="col-md-6">
+                    <label for="contact_ei" class="form-label">Representante legal EI </label>
                     <textarea id="contact_ei" name="contact_ei" class="form-control" rows="2"
                       placeholder="Ingresa los datos del contacto EI"
                       [(ngModel)]="estuPreviosData.contact_ei"></textarea>
                   </div>
 
-                  <div [class]="colClass">
-                    <label for="participants_ei" class="form-label">Integrantes EI</label>
-                    <textarea id="participants_ei" name="participants_ei" class="form-control" rows="2"
-                      placeholder="Ingresa los integrantes EI"
+                  <div class="col-md-6">
+                    <label for="participants_ei" class="form-label">Contactos EI</label>
+                    <textarea id="participants_ei" name="participants_ei" class="form-control"
+                      rows="2" placeholder="Ingresa los integrantes EI"
                       [(ngModel)]="estuPreviosData.participants_ei"></textarea>
                   </div>
 
@@ -404,11 +404,12 @@
               style="border-top: none !important;">
               <div class="step-actions between w-100">
                 <button mat-stroked-button matStepperPrevious>
-                  <i class="bi bi-arrow-left me-1"></i><mat-icon>arrow_circle_left</mat-icon>Atrás
+                  <i class="bi bi-arrow-left me-1"></i><mat-icon>arrow_back</mat-icon>Atrás
                 </button>
 
                 <div class="end-actions">
                   <button mat-stroked-button type="button" (click)="volver()">
+                    <mat-icon>list</mat-icon>
                     Volver al listado
                   </button>
                   <button mat-stroked-button type="button"
@@ -417,6 +418,7 @@
                   </button>
                   <button mat-flat-button color="primary" type="button"
                     (click)="guardarEstudiosPrevios()" [disabled]="isLoading || !fEvaluacion.valid">
+                    <mat-icon>save</mat-icon>
                     <!---|| !fEvaluacion.valid-->
                     @if (isLoading) {
                     <mat-spinner diameter="18" class="d-inline-block me-2"></mat-spinner>

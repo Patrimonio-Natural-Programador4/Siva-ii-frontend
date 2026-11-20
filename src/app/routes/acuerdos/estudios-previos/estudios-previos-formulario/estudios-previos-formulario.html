@@ -82,7 +82,7 @@
                   }
                 </div>
 
-                <!-- Obligaciones -->
+                <!-- Obligaciones
                 <div class="col-md-6">
                   <label for="obligations" class="form-label ">
                     Obligaciones
@@ -97,9 +97,9 @@
                   @if (obligations.invalid && (obligations.dirty || obligations.touched)) {
                   <div class="invalid-feedback">Este campo es requerido.</div>
                   }
-                </div>
+                </div> -->
 
-                <!-- Funciones del Supervisor -->
+                <!-- Funciones del Supervisor
                 <div class="col-md-6">
                   <label for="supervisor" class="form-label ">
                     Funciones supervisor
@@ -114,19 +114,19 @@
                   @if (supervisor.invalid && (supervisor.dirty || supervisor.touched)) {
                   <div class="invalid-feedback">Este campo es requerido.</div>
                   }
-                </div>
+                </div> -->
 
                 <div class="col-md-6">
-                  <label for="contact_ei" class="form-label">Contacto EI</label>
+                  <label for="contact_ei" class="form-label">Representante legal EI</label>
                   <textarea id="contact_ei" name="contact_ei" class="form-control" rows="2"
                     placeholder="Ingresa los datos del contacto EI"
                     [(ngModel)]="estuPreviosData.contact_ei"></textarea>
                 </div>
 
                 <div class="col-md-6">
-                  <label for="participants_ei" class="form-label">Integrantes EI</label>
-                  <textarea id="participants_ei" name="participants_ei" class="form-control" rows="2"
-                    placeholder="Ingresa los integrantes EI"
+                  <label for="participants_ei" class="form-label">Contactos EI</label>
+                  <textarea id="participants_ei" name="participants_ei" class="form-control"
+                    rows="2" placeholder="Ingresa los integrantes EI"
                     [(ngModel)]="estuPreviosData.participants_ei"></textarea>
                 </div>
 
