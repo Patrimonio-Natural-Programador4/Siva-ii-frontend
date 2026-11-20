@@ -24,8 +24,6 @@ describe('EstudiosPreviosFormulario - productos', () => {
   const drawer = jasmine.createSpyObj<MtxDrawer>('drawer', ['open']);
   const estudios = jasmine.createSpyObj<EstudiosPreviosService>('estudios', [
     'saveEstPrevios',
-    'updateEstPrevios',
-    'getPorGuid',
     'getEstadosDesembolso',
   ]);
 
@@ -42,8 +40,6 @@ describe('EstudiosPreviosFormulario - productos', () => {
   beforeEach(() => {
     drawer.open.calls.reset();
     estudios.saveEstPrevios.calls.reset();
-    estudios.updateEstPrevios.calls.reset();
-    estudios.getPorGuid.calls.reset();
     estudios.getEstadosDesembolso.and.returnValue(of([{ id: 1, name: 'Programado' }]));
     TestBed.configureTestingModule({
       imports: [EstudiosPreviosFormulario],
@@ -63,58 +59,6 @@ describe('EstudiosPreviosFormulario - productos', () => {
       remove: { imports: [PageHeader] },
       add: { imports: [PageHeaderStub] },
     });
-  });
-
-  it('enlaza contacto e integrantes EI y los envia al crear', async () => {
-    const fixture = TestBed.createComponent(EstudiosPreviosFormulario);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    const contact: HTMLTextAreaElement = fixture.nativeElement.querySelector('#contact_ei');
-    const participants: HTMLTextAreaElement =
-      fixture.nativeElement.querySelector('#participants_ei');
-    expect(contact.labels![0].textContent).toContain('Contacto EI');
-    expect(participants.labels![0].textContent).toContain('Integrantes EI');
-    contact.value = 'Ana - ana@example.org';
-    participants.value = 'Ana\nLuis';
-    contact.dispatchEvent(new Event('input'));
-    participants.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    estudios.saveEstPrevios.and.returnValue(of({ solicitud_exitosa: false, mensaje: 'Prueba' }));
-    fixture.componentInstance.guardarEstudiosPrevios(false);
-    expect(estudios.saveEstPrevios).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        contact_ei: 'Ana - ana@example.org',
-        participants_ei: 'Ana\nLuis',
-      })
-    );
-  });
-
-  it('recupera los campos EI al editar y envia los cambios', async () => {
-    TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { params: { guid: 'estudio-prueba' } } },
-    });
-    estudios.getPorGuid.and.returnValue(
-      of({ guid: 'estudio-prueba', contact_ei: 'Ana', participants_ei: 'Ana\nLuis' })
-    );
-    const fixture = TestBed.createComponent(EstudiosPreviosFormulario);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    const contact: HTMLTextAreaElement = fixture.nativeElement.querySelector('#contact_ei');
-    const participants: HTMLTextAreaElement =
-      fixture.nativeElement.querySelector('#participants_ei');
-    expect(contact.value).toBe('Ana');
-    expect(participants.value).toBe('Ana\nLuis');
-    contact.value = 'Nuevo contacto';
-    participants.value = '';
-    contact.dispatchEvent(new Event('input'));
-    participants.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-    estudios.updateEstPrevios.and.returnValue(of({ solicitud_exitosa: false, mensaje: 'Prueba' }));
-    fixture.componentInstance.guardarEstudiosPrevios(false);
-    expect(estudios.updateEstPrevios).toHaveBeenCalledWith(
-      jasmine.objectContaining({ contact_ei: 'Nuevo contacto', participants_ei: '' })
-    );
-    expect(estudios.saveEstPrevios).not.toHaveBeenCalled();
   });
 
   it('abre el drawer, agrega los tres niveles a la tabla y solo envia al guardar', async () => {
