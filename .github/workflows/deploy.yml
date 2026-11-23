@@ -1,9 +1,17 @@
-name: Deploy Frontend - Developp
+name: Deploy Frontend
 
 on:
   push:
     branches:
       - developp
+      - production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -13,37 +21,64 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Show workspace
+      - name: Determine environment
         run: |
-          echo "Workspace:"
-          pwd
-          ls -la
+          if [ "$GITHUB_REF_NAME" = "production" ]; then
+            echo "APP_PATH=/opt/apps/siva2" >> "$GITHUB_ENV"
+            echo "CONTAINER=siva2-front" >> "$GITHUB_ENV"
+          elif [ "$GITHUB_REF_NAME" = "developp" ]; then
+            echo "APP_PATH=/opt/apps/devsiva2" >> "$GITHUB_ENV"
+            echo "CONTAINER=devsiva2-front" >> "$GITHUB_ENV"
+          else
+            echo "Branch not authorized"
+            exit 1
+          fi
 
-      - name: Sync frontend to server
+      - name: Verify environment
+        run: |
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Destination: $APP_PATH"
+          docker --version
+          docker compose version
+          rsync --version
+
+      - name: Sync frontend
         run: |
           rsync -av --delete \
             --exclude='.git/' \
             --exclude='.github/' \
-            ./ /opt/apps/devsiva2/front/
+            --exclude='.env' \
+            --exclude='node_modules/' \
+            --exclude='dist/' \
+            ./ "$APP_PATH/front/"
 
-      - name: Verify deployment files
+      - name: Verify files
         run: |
-          cd /opt/apps/devsiva2/front
-          echo "Contenido:"
-          ls -la
-          echo "Dockerfile:"
-          ls -l Dockerfile
+          test -f "$APP_PATH/front/Dockerfile"
+          test -f "$APP_PATH/front/package.json"
 
       - name: Build frontend
         run: |
-          cd /opt/apps/devsiva2
+          cd "$APP_PATH"
           docker compose build --no-cache front
 
       - name: Deploy frontend
         run: |
-          cd /opt/apps/devsiva2
+          cd "$APP_PATH"
           docker compose up -d --force-recreate front
 
       - name: Verify container
         run: |
-          docker ps --filter "name=devsiva2-front"
+          docker ps --filter "name=$CONTAINER"
+          docker exec "$CONTAINER" sh -c \
+            "test -f /usr/share/nginx/html/index.html"
+
+      - name: Verify HTTP response
+        run: |
+          if [ "$GITHUB_REF_NAME" = "production" ]; then
+            PORT=8083
+          else
+            PORT=8081
+          fi
+
+          curl -f "http://127.0.0.1:$PORT/"
