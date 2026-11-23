@@ -28,6 +28,11 @@ import { FlujosAprobacionService } from 'src/app/services/flujos-aprobacion.serv
 import { DocumentoAsociadoEvaluacionCapacidades } from 'src/app/models/documento-asociado-evaluacion-capacidades';
 
 import { EvaluacionCapacidadesDocumentoAsociado } from 'src/app/routes/acuerdos/evaluacion-capacidades/evaluacion-capacidades-documento-asociado/evaluacion-capacidades-documento-asociado';
+import { CheckDocumentsService } from 'src/app/services/evaluacion-capacidades/check-documents/check-documents.service';
+import { CheckDocumentsResponseModel } from 'src/app/models/checklist-evaluacion-capacidades';
+
+import { EstadoDocumentosAsociados } from 'src/app/routes/acuerdos/evaluacion-capacidades/estado-documentos-asociados/estado-documentos-asociados/estado-documentos-asociados';
+
 @Component({
   selector: 'app-evaluacion-capacidades-flujo-aprobacion',
   imports: [
@@ -58,6 +63,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly tipoSolicitudAprobacion = 'APP_EC';
   private readonly urlActual = this.router.url;
+  private readonly checkDocumentsService = inject(CheckDocumentsService);
+
   isLinear = false;
   isLoadingAprobacion = false;
   isSavingAprobacion = false;
@@ -86,8 +93,12 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
 
   userId: string | undefined | null;
   private route = inject(ActivatedRoute);
+  checkDocs: CheckDocumentsResponseModel = new CheckDocumentsResponseModel();
+  documentsRecieved: any = {};
 
   ngOnInit(): void {
+    this.getCheckDocumets();
+
     const guid = this.route.snapshot.paramMap.get('guid');
     if (guid) {
       this.guidEvaluacion = guid;
@@ -217,6 +228,44 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
         this.asignacionesResponsable = [];
       },
     });
+  }
+
+  private getCheckDocumets(abrirModal = false) {
+    this.checkDocumentsService.getCheckDocuments().subscribe({
+      next: data => {
+        this.documentsRecieved = JSON.parse(data.mensaje ?? '{}');
+        console.table(this.documentosConColor);
+
+        if (abrirModal) {
+          this.dialog.open(EstadoDocumentosAsociados, {
+            width: '520px',
+
+            position: { right: '0', top: '0' },
+            panelClass: 'dialog-derecha',
+            data: this.documentosConColor,
+          });
+        }
+      },
+      error: err => {
+        console.error('Error en getCheckDocuments:', err);
+      },
+    });
+  }
+
+  get documentosConColor() {
+    const docs = this.documentsRecieved?.documentos ?? [];
+    const evaluados = new Set(
+      (this.documentsRecieved?.documentos_evaluacion ?? []).map((e: any) => e.document_type_id)
+    );
+
+    return docs.map((d: any) => ({
+      ...d,
+      color: evaluados.has(d.id) ? 'green' : 'red',
+    }));
+  }
+
+  reviewDcos() {
+    this.getCheckDocumets(true);
   }
 
   private cargarAsignacionesResponsable(approvalRequestId: number | undefined): void {
