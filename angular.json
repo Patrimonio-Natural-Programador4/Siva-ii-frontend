@@ -62,15 +62,32 @@
                 }
               ],
               "outputHashing": "all",
+              "optimization": true,
+              "extractLicenses": true,
               "baseHref": "/"
             },
             "productionServer": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.production.ts"
                 }
-              ]
+              ],
+              "outputHashing": "all",
+              "optimization": true,
+              "extractLicenses": true,
+              "baseHref": "/"
             },
             "development": {
               "optimization": false,

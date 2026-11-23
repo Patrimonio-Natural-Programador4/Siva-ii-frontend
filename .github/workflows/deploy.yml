@@ -1,3 +1,4 @@
+
 name: Deploy Frontend
 
 on:
@@ -17,6 +18,10 @@ jobs:
   deploy:
     runs-on: [self-hosted, siva-ii-frontend]
 
+    # Protección mediante GitHub Environments
+    environment:
+      name: ${{ github.ref_name == 'production' && 'production' || 'testing' }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,9 +31,15 @@ jobs:
           if [ "$GITHUB_REF_NAME" = "production" ]; then
             echo "APP_PATH=/opt/apps/siva2" >> "$GITHUB_ENV"
             echo "CONTAINER=siva2-front" >> "$GITHUB_ENV"
+            echo "PORT=8083" >> "$GITHUB_ENV"
+            echo "BUILD_CONFIGURATION=productionServer" >> "$GITHUB_ENV"
+
           elif [ "$GITHUB_REF_NAME" = "developp" ]; then
             echo "APP_PATH=/opt/apps/devsiva2" >> "$GITHUB_ENV"
             echo "CONTAINER=devsiva2-front" >> "$GITHUB_ENV"
+            echo "PORT=8081" >> "$GITHUB_ENV"
+            echo "BUILD_CONFIGURATION=production" >> "$GITHUB_ENV"
+
           else
             echo "Branch not authorized"
             exit 1
@@ -38,6 +49,10 @@ jobs:
         run: |
           echo "Branch: $GITHUB_REF_NAME"
           echo "Destination: $APP_PATH"
+          echo "Container: $CONTAINER"
+          echo "Port: $PORT"
+          echo "Angular configuration: $BUILD_CONFIGURATION"
+
           docker --version
           docker compose version
           rsync --version
@@ -56,29 +71,30 @@ jobs:
         run: |
           test -f "$APP_PATH/front/Dockerfile"
           test -f "$APP_PATH/front/package.json"
+          test -f "$APP_PATH/front/angular.json"
+          test -f "$APP_PATH/front/src/environments/environment.ts"
 
       - name: Build frontend
         run: |
           cd "$APP_PATH"
-          docker compose build --no-cache front
+
+          docker compose build --no-cache \
+            --build-arg BUILD_CONFIGURATION="$BUILD_CONFIGURATION" \
+            front
 
       - name: Deploy frontend
         run: |
           cd "$APP_PATH"
+
           docker compose up -d --force-recreate front
 
       - name: Verify container
         run: |
           docker ps --filter "name=$CONTAINER"
+
           docker exec "$CONTAINER" sh -c \
             "test -f /usr/share/nginx/html/index.html"
 
       - name: Verify HTTP response
         run: |
-          if [ "$GITHUB_REF_NAME" = "production" ]; then
-            PORT=8083
-          else
-            PORT=8081
-          fi
-
           curl -f "http://127.0.0.1:$PORT/"

@@ -1,5 +1,4 @@
 
-# Build Angular
 FROM node:22-alpine AS build
 
 WORKDIR /app
@@ -10,12 +9,10 @@ RUN npm ci
 
 COPY . .
 
-# Configuración Angular: testing o production
 ARG BUILD_CONFIGURATION=production
 
 RUN npm run build -- --configuration=${BUILD_CONFIGURATION}
 
-# Servir Angular con Nginx
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
