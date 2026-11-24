@@ -83,4 +83,8 @@ export class UsuariosService {
   getProgramsByMsf(msf: string): Observable<Programs[]> {
     return this.http.get<Programs[]>(`${this.apiUrl}/${msf}/programas`);
   }
+
+  getUserByGUID(guid: number | string | undefined | null): Observable<Usuarios> {
+    return this.http.get<Usuarios>(`${this.apiUrl}/guid/${guid}`);
+  }
 }

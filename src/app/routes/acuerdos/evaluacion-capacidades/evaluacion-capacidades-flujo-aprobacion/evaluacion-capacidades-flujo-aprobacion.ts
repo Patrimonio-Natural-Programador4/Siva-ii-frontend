@@ -97,8 +97,6 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   documentsRecieved: any = {};
 
   ngOnInit(): void {
-    this.getCheckDocumets();
-
     const guid = this.route.snapshot.paramMap.get('guid');
     if (guid) {
       this.guidEvaluacion = guid;
@@ -230,8 +228,8 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
     });
   }
 
-  private getCheckDocumets(abrirModal = false) {
-    this.checkDocumentsService.getCheckDocuments().subscribe({
+  private getCheckDocumets(abrirModal = false, guid: string) {
+    this.checkDocumentsService.getCheckDocuments(guid).subscribe({
       next: data => {
         this.documentsRecieved = JSON.parse(data.mensaje ?? '{}');
         console.table(this.documentosConColor);
@@ -265,7 +263,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
   }
 
   reviewDcos() {
-    this.getCheckDocumets(true);
+    this.getCheckDocumets(true, this.guidEvaluacion);
   }
 
   private cargarAsignacionesResponsable(approvalRequestId: number | undefined): void {

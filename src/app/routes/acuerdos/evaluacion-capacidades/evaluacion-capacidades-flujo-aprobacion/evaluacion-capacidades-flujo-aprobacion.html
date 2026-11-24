@@ -94,32 +94,6 @@
                   || '--' }}</div>
               </div>
 
-              <div class="row_a">
-                <div class="cell_a info_b" style="flex: 1">URL SharePoint</div>
-                <div class="cell_a info_a" style="flex: 3">
-                  <div class="sp-url">
-                    <mat-form-field appearance="outline" subscriptSizing="dynamic"
-                      class="sp-url__field">
-                      <input matInput name="urlSharepoint" [(ngModel)]="urlSharepoint"
-                        placeholder="https://..." />
-                    </mat-form-field>
-
-                    <button mat-stroked-button color="primary" type="button"
-                      class="sp-url__btn sp-url__btn--icon" (click)="guardarUrlSharepoint()"
-                      [disabled]="isSavingUrl" title="Guardar" aria-label="Guardar URL">
-                      <mat-spinner *ngIf="isSavingUrl" diameter="18"></mat-spinner>
-                      <mat-icon *ngIf="!isSavingUrl">save</mat-icon>
-                    </button>
-
-                    <a *ngIf="evaluacion.url_sharepoint_ec" mat-stroked-button color="primary"
-                      class="sp-url__btn sp-url__btn--icon" [href]="evaluacion.url_sharepoint_ec"
-                      target="_blank" rel="noopener noreferrer" title="Abrir en SharePoint"
-                      aria-label="Abrir en SharePoint">
-                      <mat-icon>open_in_new</mat-icon>
-                    </a>
-                  </div>
-                </div>
-              </div>
 
             </div>
 
@@ -207,6 +181,36 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsDocumentos"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsDocumentos"></tr>
               </table>
+
+            </div>
+
+            <div class="row_a" style="margin-top: 1.5rem; align-items: center">
+              <div class="cell_a info_b"
+                style="flex: 0 0 350px; display: flex; align-items: center">
+                URL sharepoint evaluación de capacidades:</div>
+              <div class="cell_a info_a" style="flex: 1">
+                <div class="sp-url">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic"
+                    class="sp-url__field">
+                    <input matInput name="urlSharepoint" [(ngModel)]="urlSharepoint"
+                      placeholder="https://..." />
+                  </mat-form-field>
+
+                  <button mat-stroked-button color="primary" type="button"
+                    class="sp-url__btn sp-url__btn--icon" (click)="guardarUrlSharepoint()"
+                    [disabled]="isSavingUrl" title="Guardar" aria-label="Guardar URL">
+                    <mat-spinner *ngIf="isSavingUrl" diameter="18"></mat-spinner>
+                    <mat-icon *ngIf="!isSavingUrl">save</mat-icon>
+                  </button>
+
+                  <a *ngIf="evaluacion.url_sharepoint_ec" mat-stroked-button color="primary"
+                    class="sp-url__btn sp-url__btn--icon" [href]="evaluacion.url_sharepoint_ec"
+                    target="_blank" rel="noopener noreferrer" title="Abrir en SharePoint"
+                    aria-label="Abrir en SharePoint">
+                    <mat-icon>open_in_new</mat-icon>
+                  </a>
+                </div>
+              </div>
             </div>
 
             <ng-template #noDocumentos>

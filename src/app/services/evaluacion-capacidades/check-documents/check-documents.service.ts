@@ -11,7 +11,7 @@ export class CheckDocumentsService {
   private apiUrl = `${environment.apiUrl2}/tipo-documentos-evaluacion-capacidades`;
   private http = inject(HttpClient);
 
-  getCheckDocuments(): Observable<CheckDocumentsResponseModel> {
-    return this.http.get<CheckDocumentsResponseModel>(this.apiUrl);
+  getCheckDocuments(guid: string): Observable<CheckDocumentsResponseModel> {
+    return this.http.get<CheckDocumentsResponseModel>(`${this.apiUrl}/${guid}`);
   }
 }
