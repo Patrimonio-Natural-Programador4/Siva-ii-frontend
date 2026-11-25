@@ -1,0 +1,40 @@
+<h2 class="text-center" mat-dialog-title>Estado documentación</h2>
+
+<p class="mb-3  text-center">
+  <strong>{{ cargados }}</strong> de <strong>{{ documentos.length }}</strong> documentos cargados
+</p>
+
+<mat-dialog-content>
+
+  <table class="table table-sm align-middle mb-6">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th class="text-center">Documento</th>
+        <th class="text-center">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (doc of documentos; track doc.id; let i = $index) {
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{ doc.description }}</td>
+        <td class="text-center">
+          <span class="estado" [class.ok]="doc.color === 'green'">
+            <mat-icon>{{ doc.color === 'green' ? 'check_circle' : 'cancel' }}</mat-icon>
+            {{ doc.color === 'green' ? 'Cargado' : 'Pendiente' }}
+          </span>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>
