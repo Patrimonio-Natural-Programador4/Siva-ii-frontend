@@ -218,6 +218,7 @@ export class EvaluacionCapacidadesFlujoAprobacion implements OnInit {
         };
 
         console.log('C. accionesAprobacion:', this.accionesAprobacion);
+        console.log('D. asignacionesResponsable:', response);
         this.cargarAsignacionesResponsable(this.evaluacion.approval_request_id);
       },
       error: err => {

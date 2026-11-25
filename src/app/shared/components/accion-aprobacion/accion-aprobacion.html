@@ -12,8 +12,7 @@
       placeholder="Escriba sus comentarios"
     ></textarea>
   </div>
-
-   @if (rolesDisponiblesAsignar.length) {
+   @if (rolesDisponiblesAsignar.length && data.tipoAccion != 'AJUSTAR') {
     <div class="table-responsive mb-3 mt-3">
       <h5>Asignación de roles y responsables</h5>
       <table class="table table-bordered align-middle">
