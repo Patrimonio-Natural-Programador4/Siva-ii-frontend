@@ -23,7 +23,7 @@ export class EvaluacionCapacidadesModel {
   person?: string;
   persons_id?: number;
   capacity_assessments_state?: string;
-  capacity_assessments_states_id?: number;
+  capacity_assessments_states_id?: number | undefined;
   modalitie?: string | null;
   modality_id?: number | null;
   approval_request_id?: number;
@@ -33,6 +33,9 @@ export class EvaluacionCapacidadesModel {
   pillar_id?: number;
   pilar?: string;
   is_deleted?: boolean | null;
+  current_step?: number;
+  user_session?: number;
+  full_name?: string;
 
   constructor(data?: Partial<EvaluacionCapacidadesModel>) {
     Object.assign(this, data);
@@ -69,6 +72,9 @@ export interface EvaluacionCapacidadListSP {
   guid_msft_adjustment?: string;
   total_records?: number;
   is_deleted?: boolean | null;
+  current_step?: number;
+  user_session?: number;
+  full_name?: string;
 }
 
 export interface AccionSolicitudAprobacionCapacidad {

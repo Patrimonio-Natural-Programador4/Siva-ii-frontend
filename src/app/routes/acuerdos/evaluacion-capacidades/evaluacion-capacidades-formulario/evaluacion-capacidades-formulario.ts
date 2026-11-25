@@ -36,6 +36,7 @@ import { PilaresService } from 'src/app/services/pilares/pilares.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { map, of, switchMap } from 'rxjs';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'evaluacion-capacidades-formulario',
@@ -149,6 +150,11 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     }
   }
 
+  getImplementerbyid(id: number | undefined) {
+    const implemeterSelected = this.implementers.find(i => i.id == id);
+    return implemeterSelected?.acronym;
+  }
+
   guardarEvaluacionCapacidades(enviarAprobacion = false): void {
     if (this.isLoading) return;
     this.isLoading = true;
@@ -156,7 +162,10 @@ export class EvaluacionCapacidadesFormulario implements OnInit {
     const codigo$ = this.guidEvaCapacidades
       ? of(this.evaCapacidadesData.codigo)
       : this.EvaluacionCapacidadesService.getCodigoNumeroMayor().pipe(
-          map(r => `${this.code}-${(parseInt(r.mensaje, 10) || 0) + 1}`)
+          map(
+            r =>
+              `${this.getImplementerbyid(this.evaCapacidadesData.implementer_id)}-${(parseInt(r.mensaje, 10) || 0) + 1}`
+          )
         );
 
     codigo$

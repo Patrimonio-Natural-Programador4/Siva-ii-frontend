@@ -28,6 +28,10 @@ import { ProgramsService } from 'src/app/services/programs.service';
 import { Programs } from 'src/app/models/programs';
 import { EstudiosPreviosService } from 'src/app/services/estudios-previos/estudios-previos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '@core/authentication/auth.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { Usuarios } from 'src/app/models/usuarios';
 
 @Component({
   selector: 'app-evaluaciones-capacidad-listar',
@@ -61,6 +65,10 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   readonly paginator = viewChild(MatPaginator);
   readonly evCapacidadesTable = new MatTableDataSource<EvaluacionCapacidadesModel>([]);
   private readonly EstudiosPreviosService = inject(EstudiosPreviosService);
+  private readonly auth = inject(AuthService);
+  private readonly UsuarioService = inject(UsuariosService);
+
+  user = toSignal(this.auth.user());
   columnas = [
     'posicion',
     'nombre',
@@ -77,6 +85,7 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
     'fecha_fin',
     'modalidad',  */
     'estado',
+    'paso',
     'acciones',
   ];
   readonly pageSizeOptions = [20];
@@ -90,11 +99,16 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
   id_programa: number[] = [];
   id_ev: number[] = [];
 
+  usuarioFound: Usuarios = {};
+
   ngOnInit(): void {
     this.getEvaluaciones();
     this.listarEstados();
     this.listarProgramas();
     this.listarEstudiosPrevios();
+    console.log(' USER', this.user());
+
+    this.getUserByGuid(this.user()?.id);
   }
   ngAfterViewInit(): void {}
   getEvaluaciones(): void {
@@ -186,6 +200,17 @@ export class ListarEvaluacionesCapacidad implements OnInit, AfterViewInit {
     this.ProgramsService.getPrograms().subscribe({
       next: r => {
         this.programs = r;
+        this.cdr.detectChanges();
+      },
+      error: e => console.error(e),
+    });
+  }
+
+  getUserByGuid(guid: number | string | undefined | null) {
+    this.UsuarioService.getUserByGUID(guid).subscribe({
+      next: r => {
+        this.usuarioFound = r;
+        console.log('this.usuarioFound    ', this.usuarioFound);
         this.cdr.detectChanges();
       },
       error: e => console.error(e),
