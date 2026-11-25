@@ -1,4 +1,3 @@
-# Build Angular
 
 FROM node:22-alpine AS build
 
@@ -10,9 +9,9 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build -- --configuration production
+ARG BUILD_CONFIGURATION=production
 
-# Servir Angular con Nginx
+RUN npm run build -- --configuration=${BUILD_CONFIGURATION}
 
 FROM nginx:alpine
 
