@@ -93,19 +93,7 @@
               </select>
             </div>
 
-            <!-- PID -->
-            <div class="col-md-4 mb-3">
-              <label for="pid" class="form-label font-weight-bold">PID</label>
-              <select id="pid" name="pid_id" class="form-select"
-                [(ngModel)]="evaCapacidadesData.pid_id">
-                <option value="" disabled selected>Seleccione un PID</option>
-                @for (pid of pids; track pid.id || $index) {
-                <option [value]="pid.id">
-                  {{ pid.name }}
-                </option>
-                }
-              </select>
-            </div>
+            
 
             <!-- pilar -->
             <div class="col-md-4 mb-3">
@@ -116,6 +104,20 @@
                 @for (pilar of pilares; track pilar.id || $index) {
                 <option [value]="pilar.id">
                   {{ pilar.name }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <!-- PID -->
+            <div class="col-md-4 mb-3" *ngIf="evaCapacidadesData.pillar_id != 4">
+              <label for="pid" class="form-label font-weight-bold">PID</label>
+              <select id="pid" name="pid_id" class="form-select"
+                [(ngModel)]="evaCapacidadesData.pid_id">
+                <option value="" disabled selected>Seleccione un PID</option>
+                @for (pid of pids; track pid.id || $index) {
+                <option [value]="pid.id">
+                  {{ pid.name }}
                 </option>
                 }
               </select>
